@@ -16,11 +16,22 @@ namespace Facilit.Controllers
             return View();
         }
 
+        public ActionResult Cadastro()
+        {
+            return View();
+        }
+
+        public ActionResult Registro()
+        {
+            return View();
+
+        }
+
         public ActionResult VerificarLogin(Usuario class_usuario) 
         {
             using(var conexao = new Conexao())
             {
-                string str_select = "SELECT * FROM tb_usuarios WHERE nome_usuario = @user OR nome_competo = @nome AND senha_usuario = @password";
+                string str_select = "SELECT * FROM tb_usuarios WHERE nome_usuario = @user OR nome_completo = @nome AND senha_usuario = @password";
 
                 using (MySqlCommand comando = new MySqlCommand(str_select, conexao._conn))
                 {
@@ -33,7 +44,7 @@ namespace Facilit.Controllers
                     dr.Read();
                     if (dr.HasRows)
                     {
-                        return RedirectToAction("Menu");
+                        return RedirectToAction("Registro");
                     }
                     else
                     {

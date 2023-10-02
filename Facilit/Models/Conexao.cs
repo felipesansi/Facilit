@@ -24,10 +24,10 @@ namespace Facilit.Models
         public void Conectar()
         {
             string str_conexao = "Server =" + _server;
-            str_conexao += "Port =" + _port;
-            str_conexao += "Database =" + _database;
-            str_conexao += "Uid =" + _uid;
-            str_conexao += "Pwd =" + _pwd;
+            str_conexao += "; Port =" + _port;
+            str_conexao += "; Database =" + _database;
+            str_conexao += "; Uid =" + _uid;
+            str_conexao += "; Pwd =" + _pwd;
 
             _conn = new MySqlConnection(str_conexao);
             
