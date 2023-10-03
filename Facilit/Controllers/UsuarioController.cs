@@ -26,30 +26,37 @@ namespace Facilit.Controllers
             return View();
 
         }
+        public ActionResult Administrador() 
+        {
+            return View();
+        }
 
         public ActionResult VerificarLogin(Usuario class_usuario) 
         {
             using(var conexao = new Conexao())
             {
-                string str_select = "SELECT * FROM tb_usuarios WHERE nome_usuario = @user OR nome_completo = @nome AND senha_usuario = @password";
+                string str_select = "select * from tb_usuarios where nome_usuario = @nome_usuario " +
+                    "and senha_usuario = @senha and adm =true"
+                    ;
 
                 using (MySqlCommand comando = new MySqlCommand(str_select, conexao._conn))
                 {
-                    comando.Parameters.AddWithValue("@user", class_usuario.Nome_Usuario);
+                    comando.Parameters.AddWithValue("@nome_usuario", class_usuario.Nome_Usuario);
 
-                    comando.Parameters.AddWithValue("@nome", class_usuario.Nome_completo);
-                    comando.Parameters.AddWithValue("@password" ,class_usuario.Senha_Usuario);
+                    comando.Parameters.AddWithValue("@senha" ,class_usuario.Senha_Usuario);
+
 
                     MySqlDataReader dr = comando.ExecuteReader();
                     dr.Read();
                     if (dr.HasRows)
                     {
-                        return RedirectToAction("Registro");
+                        return RedirectToAction("Administrador");
                     }
                     else
                     {
                        
                         return RedirectToAction("Index");
+                       
                     }
 
                 }

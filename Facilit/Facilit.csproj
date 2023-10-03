@@ -235,6 +235,7 @@
     <Content Include="Views\Usuario\_Frmlogin.cshtml" />
     <Content Include="Views\Usuario\Registro.cshtml" />
     <Content Include="Views\Usuario\Cadastro.cshtml" />
+    <Content Include="Views\Usuario\Administrador.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
