@@ -8,7 +8,7 @@ namespace Facilit.Models
 {
     public class Conexao : IDisposable
     {
-      public  MySqlConnection _conn;
+      public MySqlConnection _conn;
 
         private readonly string _server = "127.0.0.1";
         private readonly string _port = "3306";

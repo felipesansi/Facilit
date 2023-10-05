@@ -2,6 +2,7 @@
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -28,6 +29,26 @@ namespace Facilit.Controllers
         }
         public ActionResult Administrador() 
         {
+            string sql = "select * from tb_usuarios";
+            using(var conexao = new Conexao())
+            {
+                using (MySqlCommand cmd = new MySqlCommand(sql, conexao._conn)) 
+                {
+                    var lista_usuarios = new List<Usuario>(); //  criação de uma lista de dados de todos os usuários
+                    MySqlDataReader leitura = cmd.ExecuteReader();
+                  
+                    while(leitura.Read()) // enquanto tiver dados
+                    {
+                        var prop_usuario = new Usuario
+                        {
+                            Nome_completo = Convert.ToString(leitura["nome_completo"]),
+
+                        };
+                    }
+
+
+                }
+            }
             return View();
         }
 
@@ -61,6 +82,10 @@ namespace Facilit.Controllers
 
                 }
             }
+        }
+        public ActionResult RecuperarSenha()
+        {
+            return View();  
         }
     }
 }
