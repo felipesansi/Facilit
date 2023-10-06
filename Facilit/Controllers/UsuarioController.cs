@@ -42,7 +42,7 @@ namespace Facilit.Controllers
                         var prop_usuario = new Usuario
                         {
                             Nome_completo = Convert.ToString(leitura["nome_completo"]),
-
+                            Email = Convert.ToString(leitura["email"]),
                         };
                     }
 
@@ -57,7 +57,7 @@ namespace Facilit.Controllers
             using(var conexao = new Conexao())
             {
                 string str_select = "select * from tb_usuarios where nome_usuario = @nome_usuario " +
-                    "and senha_usuario = @senha and adm =true"
+                    "and senha_usuario = @senha "
                     ;
 
                 using (MySqlCommand comando = new MySqlCommand(str_select, conexao._conn))
@@ -67,17 +67,24 @@ namespace Facilit.Controllers
                     comando.Parameters.AddWithValue("@senha" ,class_usuario.Senha_Usuario);
 
 
-                    MySqlDataReader dr = comando.ExecuteReader();
-                    dr.Read();
-                    if (dr.HasRows)
+                    MySqlDataReader leitura = comando.ExecuteReader();
+                    leitura.Read();
+                    if (leitura.HasRows)
                     {
-                        return RedirectToAction("Administrador");
+                        bool adm = Convert.ToBoolean(leitura["adm"]);
+
+                        if (adm)
+                        {
+                            return RedirectToAction("Administrador", "Usuario");
+                        }
+                        else
+                        {
+                            return RedirectToAction("Registro", "Usuario");
+                        }
                     }
                     else
                     {
-                       
-                        return RedirectToAction("Index");
-                       
+                        return RedirectToAction("Index", "Usuario");
                     }
 
                 }
