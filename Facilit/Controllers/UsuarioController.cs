@@ -43,7 +43,12 @@ namespace Facilit.Controllers
                         {
                             Nome_completo = Convert.ToString(leitura["nome_completo"]),
                             Email = Convert.ToString(leitura["email"]),
+                            Nome_Usuario = Convert.ToString(leitura["nome_usuario"]),
+                            Senha_Usuario = Convert.ToString(leitura["senha_usuario"]),
+                            Adm = Convert.ToBoolean(leitura["adm"])
+
                         };
+                        lista_usuarios.Add(prop_usuario);
                     }
 
 
@@ -51,7 +56,7 @@ namespace Facilit.Controllers
             }
             return View();
         }
-
+        
         public ActionResult VerificarLogin(Usuario class_usuario) 
         {
             using(var conexao = new Conexao())
@@ -94,5 +99,30 @@ namespace Facilit.Controllers
         {
             return View();  
         }
+        public ActionResult NovoUsuario(Usuario usuario)
+        {
+            string sql_insert = "insert into usuarios (nome_completo, email, nome_usuario, senha_usuario, adm) values " +
+                "(@nc, @em, @nu, @su, @ad)";
+            using (var conexao = new Conexao())
+            {
+
+                using (MySqlCommand comando = new MySqlCommand(sql_insert, conexao._conn))
+                {
+                    comando.Parameters.AddWithValue("@nc",usuario.Nome_completo);
+                    comando.Parameters.AddWithValue("@em",usuario.Email);
+                    comando.Parameters.AddWithValue("@nu",usuario.Nome_Usuario);
+                    comando.Parameters.AddWithValue("@su",usuario.Senha_Usuario);
+                    comando.Parameters.AddWithValue("@ad",usuario.Adm);
+
+                    comando.ExecuteNonQuery();
+
+                    return RedirectToAction("Administrador", "Usuario");
+                }
+                
+            }
+        }
+
+
     }
+
 }
