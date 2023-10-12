@@ -101,7 +101,13 @@ namespace Facilit.Controllers
         }
         public ActionResult NovoUsuario(Usuario usuario)
         {
-            string sql_insert = "insert into usuarios (nome_completo, email, nome_usuario, senha_usuario, adm) values " +
+            if (usuario.Nome_completo ==string.Empty|| usuario.Email==string.Empty||usuario.Nome_Usuario ==string.Empty || usuario.Senha_Usuario == string.Empty)
+            {
+                ModelState.AddModelError("campo vazio", "Existem campos vazios");
+                return View("Cadastro","Usuario");
+            }
+
+            string sql_insert = "insert into tb_usuarios (nome_completo, email, nome_usuario, senha_usuario, adm) values " +
                 "(@nc, @em, @nu, @su, @ad)";
             using (var conexao = new Conexao())
             {
@@ -120,6 +126,29 @@ namespace Facilit.Controllers
                 }
                 
             }
+
+        }
+        bool existe = false;
+        private bool ExisteUsuario(Usuario usuario)
+        {
+            string sql_select = "select * from tb_usuarios where nome_usuario = @nome_usuario";
+
+            using(var conexao = new Conexao())
+            {
+                using (var comando = new MySqlCommand( sql_select, conexao._conn))
+                {
+                    comando.Parameters.AddWithValue("@nome_usuario", usuario.Nome_Usuario);
+                    MySqlDataReader leitura = comando.ExecuteReader();
+
+                    if ( leitura.HasRows ) 
+                    {
+                        existe = true;
+                    }
+
+                }
+            }
+
+            return existe;
         }
 
 

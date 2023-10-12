@@ -4,5 +4,11 @@
     ViewBag.Title = "Administrador";
 }
 
-<h2>Administrador</h2>
-@Html.ActionLink("Cadastro de usuários","Cadastro")
+<h2>Menu Administrador</h2>
+<hr />
+
+<form  action="@Url.Action("Cadastro", "Usuario")">
+
+    <button type="submit" class="btn btn-primary"> Cadastar usuários </button>
+
+</form>

@@ -1,11 +1,18 @@
 ﻿@model Facilit.Models.Usuario
 
-<h1>Cadastre-se</h1>
-@Html.Partial("_Frmlogin")
-<br />
-<div>
-    <input type="submit" value="Cadatre-se" class="btn btn-primary" />
-</div>
+<h1>Cadastre usuário</h1>
+
+
+@using (Html.BeginForm("NovoUsuario", "Usuario"))
+{
+
+    @Html.Partial("_Frmlogin")
+    <br />
+    <div>
+        <input type="submit" value="Cadastre-se" class="btn btn-primary" />
+    </div>
+}
+
 <br />
 <div>
     @Html.ActionLink("Voltar ao Administrador", "Administrador")
