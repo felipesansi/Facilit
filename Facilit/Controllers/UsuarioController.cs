@@ -67,10 +67,17 @@ namespace Facilit.Controllers
             if (string.IsNullOrWhiteSpace(usuario.Nome_Usuario) || string.IsNullOrWhiteSpace(usuario.Email) ||
                 string.IsNullOrWhiteSpace(usuario.Nome_Usuario))
             {
+
+                ModelState.AddModelError("", "Preencha todos os campos");
                 return RedirectToAction("Cadastro", "Usuario");
 
+
             }
-         
+
+
+
+
+
             else
             {
                 string sql_insert = "insert into tb_usuarios (nome_completo, email, nome_usuario, senha_usuario) values " +
