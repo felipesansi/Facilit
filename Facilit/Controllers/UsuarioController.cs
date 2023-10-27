@@ -72,11 +72,15 @@ namespace Facilit.Controllers
                 return RedirectToAction("Cadastro", "Usuario");
 
 
+            } 
+
+            else if(existe = ExisteUsuario(usuario))
+            {
+                ModelState.AddModelError("", "Nome de usuário já existe. Escolha outro nome de usuário.");
+                return RedirectToAction("Cadastro", "Usuario");
             }
 
-
-
-
+           
 
             else
             {
