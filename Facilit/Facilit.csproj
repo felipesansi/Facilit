@@ -236,6 +236,7 @@
     <Content Include="Views\Usuario\Cadastro.cshtml" />
     <Content Include="Views\Usuario\RecuperarSenha.cshtml" />
     <Content Include="Views\Usuario\_Frmlogin.cshtml" />
+    <Content Include="Views\Usuario\EmailEnviado.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

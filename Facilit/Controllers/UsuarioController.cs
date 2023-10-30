@@ -127,6 +127,18 @@ namespace Facilit.Controllers
             }
 
             return existe;
+
+           
+        }
+        ActionResult EmailEnviado()
+        {
+             return View(); 
+        }
+        private ActionResult EnviarEmail(string destinatario)
+        {
+            string remetente = "facilit.site@gmail.com", senha_remetente = "FelipeMatheus", stmp = "smtp.gmail.com";
+            int port = 587;
+            return RedirectToAction(" EmailEnviado", "Usuario");
         }
 
 
