@@ -73,15 +73,15 @@ namespace Facilit.Controllers
                 return RedirectToAction("Cadastro", "Usuario");
 
 
-            } 
+            }
 
-            else if(existe = ExisteUsuario(usuario))
+            else if (existe = ExisteUsuario(usuario))
             {
                 ModelState.AddModelError("", "Nome de usuário já existe. Escolha outro nome de usuário.");
                 return RedirectToAction("Cadastro", "Usuario");
             }
 
-           
+
 
             else
             {
@@ -106,20 +106,20 @@ namespace Facilit.Controllers
                 }
             }
 
-        } 
+        }
         bool existe = false;
         private bool ExisteUsuario(Usuario usuario)
         {
             string sql_select = "select * from tb_usuarios where nome_usuario = @nome_usuario";
 
-            using(var conexao = new Conexao())
+            using (var conexao = new Conexao())
             {
-                using (var comando = new MySqlCommand( sql_select, conexao._conn))
+                using (var comando = new MySqlCommand(sql_select, conexao._conn))
                 {
                     comando.Parameters.AddWithValue("@nome_usuario", usuario.Nome_Usuario);
                     MySqlDataReader leitura = comando.ExecuteReader();
 
-                    if ( leitura.HasRows ) 
+                    if (leitura.HasRows)
                     {
                         existe = true;
                     }
@@ -129,25 +129,25 @@ namespace Facilit.Controllers
 
             return existe;
 
-           
+
         }
-        
-       public ActionResult EmailEnviado()
+
+        public ActionResult EmailEnviado()
         {
-             return View(); 
+            return View();
         }
         bool existe_email = false;
 
         bool EmailUsuario(string email)
         {
-            using(var conexao = new Conexao())
+            using (var conexao = new Conexao())
             {
                 string sql = "select * from tb_usuario where  email = @email";
-              
-                using (var comando = new MySqlCommand(sql,conexao._conn))
+
+                using (var comando = new MySqlCommand(sql, conexao._conn))
                 {
-                  
-                    comando.Parameters.AddWithValue("@email",email);
+
+                    comando.Parameters.AddWithValue("@email", email);
 
                     MySqlDataReader leitura = comando.ExecuteReader();
                     if (leitura.HasRows)
@@ -157,7 +157,7 @@ namespace Facilit.Controllers
                     }
                     else
                     {
-                            existe_email = false;
+                        existe_email = false;
 
                     }
                 }
@@ -170,34 +170,8 @@ namespace Facilit.Controllers
             int port = 587;
 
 
-            if (EmailUsuario(destinatario))
-            {
-                using (var conexao = new Conexao())
-                {
-                    string sql = " Select * from tb_usuario where email = @email";
-                    using ( var comando = new MySqlCommand(sql, conexao._conn))
-                    {
-                        comando.Parameters.AddWithValue("@email", destinatario);
-                        MySqlDataReader leitura = comando.ExecuteReader();
 
-                        if (leitura.HasRows)
-                        {
-                            Usuario usuario = new Usuario();
-                            usuario.Nome_completo = leitura.GetString(1);   // modelo nome recebe a letura do select na posição 1
-                            usuario.Nome_Usuario = leitura.GetString(3);   // modelo nome de user recebe a letura do select na posição 3
-                            usuario.Email = leitura.GetString(2);         // modelo email recebe a letura do select na posição 2
-                            usuario.Senha_Usuario =leitura.GetString(4);  // modelo senha recebe a letura do select na posição 4
-
-
-                        }
-                    }
-                }
-            }
-            
-            return RedirectToAction(" EmailEnviado", "Usuario");
+            return RedirectToAction("Index", "Home");
         }
-
-
     }
-
 }
