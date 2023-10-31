@@ -1,4 +1,5 @@
 ﻿using Facilit.Models;
+using Microsoft.Ajax.Utilities;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -130,14 +131,69 @@ namespace Facilit.Controllers
 
            
         }
-        ActionResult EmailEnviado()
+        
+       public ActionResult EmailEnviado()
         {
              return View(); 
         }
-        private ActionResult EnviarEmail(string destinatario)
+        bool existe_email = false;
+
+        bool EmailUsuario(string email)
+        {
+            using(var conexao = new Conexao())
+            {
+                string sql = "select * from tb_usuario where  email = @email";
+              
+                using (var comando = new MySqlCommand(sql,conexao._conn))
+                {
+                  
+                    comando.Parameters.AddWithValue("@email",email);
+
+                    MySqlDataReader leitura = comando.ExecuteReader();
+                    if (leitura.HasRows)
+                    {
+                        existe_email = true;
+
+                    }
+                    else
+                    {
+                            existe_email = false;
+
+                    }
+                }
+            }
+            return existe_email;
+        }
+        public ActionResult EnviarEmail(string destinatario)
         {
             string remetente = "facilit.site@gmail.com", senha_remetente = "FelipeMatheus", stmp = "smtp.gmail.com";
             int port = 587;
+
+
+            if (EmailUsuario(destinatario))
+            {
+                using (var conexao = new Conexao())
+                {
+                    string sql = " Select * from tb_usuario where email = @email";
+                    using ( var comando = new MySqlCommand(sql, conexao._conn))
+                    {
+                        comando.Parameters.AddWithValue("@email", destinatario);
+                        MySqlDataReader leitura = comando.ExecuteReader();
+
+                        if (leitura.HasRows)
+                        {
+                            Usuario usuario = new Usuario();
+                            usuario.Nome_completo = leitura.GetString(1);   // modelo nome recebe a letura do select na posição 1
+                            usuario.Nome_Usuario = leitura.GetString(3);   // modelo nome de user recebe a letura do select na posição 3
+                            usuario.Email = leitura.GetString(2);         // modelo email recebe a letura do select na posição 2
+                            usuario.Senha_Usuario =leitura.GetString(4);  // modelo senha recebe a letura do select na posição 4
+
+
+                        }
+                    }
+                }
+            }
+            
             return RedirectToAction(" EmailEnviado", "Usuario");
         }
 
