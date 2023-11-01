@@ -139,7 +139,7 @@ namespace Facilit.Controllers
         }
         bool existe_email = false;
 
-        bool EmailUsuario(string email)
+      private  bool EmailExistente(Usuario usuario)
         {
             using (var conexao = new Conexao())
             {
@@ -148,7 +148,7 @@ namespace Facilit.Controllers
                 using (var comando = new MySqlCommand(sql, conexao._conn))
                 {
 
-                    comando.Parameters.AddWithValue("@email", email);
+                    comando.Parameters.AddWithValue("@email", usuario.Email);
 
                     MySqlDataReader leitura = comando.ExecuteReader();
                     if (leitura.HasRows)
@@ -165,11 +165,15 @@ namespace Facilit.Controllers
             }
             return existe_email;
         }
-        public ActionResult EnviarEmail(string destinatario)
+        public ActionResult EnviarEmail(Usuario usuario)
         {
             string remetente = "facilit.site@gmail.com", senha_remetente = "FelipeMatheus", stmp = "smtp.gmail.com";
             int port = 587;
 
+            if (EmailExistente(usuario.Email))
+            {
+
+            }
 
 
             return RedirectToAction("EmailEnviado", "Usuario");
