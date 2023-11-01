@@ -2,6 +2,7 @@
 using Microsoft.Ajax.Utilities;
 using MySql.Data.MySqlClient;
 using System;
+using System.Net.Mail;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -171,7 +172,7 @@ namespace Facilit.Controllers
 
 
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("EmailEnviado", "Usuario");
         }
     }
 }
