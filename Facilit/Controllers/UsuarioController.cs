@@ -24,12 +24,7 @@ namespace Facilit.Controllers
             return View();
         }
 
-        public ActionResult Registro()
-        {
-            return View();
-
-        }
-
+       
 
         public ActionResult VerificarLogin(Usuario class_usuario)
         {
@@ -49,7 +44,7 @@ namespace Facilit.Controllers
                     leitura.Read();
                     if (leitura.HasRows)
                     {
-                        return RedirectToAction("Registro", "Usuario");
+                        return RedirectToAction("Registro", "Webcan");
 
                     }
                     else
@@ -139,7 +134,7 @@ namespace Facilit.Controllers
         }
         bool existe_email = false;
 
-      private  bool EmailExistente(Usuario usuario)
+      private  bool EmailExistente(string  remetente)
         {
             using (var conexao = new Conexao())
             {
@@ -148,7 +143,7 @@ namespace Facilit.Controllers
                 using (var comando = new MySqlCommand(sql, conexao._conn))
                 {
 
-                    comando.Parameters.AddWithValue("@email", usuario.Email);
+                    comando.Parameters.AddWithValue("@email",remetente);
 
                     MySqlDataReader leitura = comando.ExecuteReader();
                     if (leitura.HasRows)
@@ -165,12 +160,12 @@ namespace Facilit.Controllers
             }
             return existe_email;
         }
-        public ActionResult EnviarEmail(Usuario usuario)
+        public ActionResult EnviarEmail(string destinatario)
         {
             string remetente = "facilit.site@gmail.com", senha_remetente = "FelipeMatheus", stmp = "smtp.gmail.com";
             int port = 587;
 
-            if (EmailExistente(usuario.Email))
+            if (EmailExistente(destinatario))
             {
 
             }
