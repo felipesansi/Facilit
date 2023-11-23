@@ -162,11 +162,33 @@ namespace Facilit.Controllers
         }
         public ActionResult EnviarEmail(string destinatario)
         {
+
             string remetente = "facilit.site@gmail.com", senha_remetente = "FelipeMatheus", stmp = "smtp.gmail.com";
             int port = 587;
 
-            if (EmailExistente(destinatario))
+
+
+            using (var conexao =new Conexao()) 
             {
+                string sql = "select * from tb_usuario where email =@email";
+                using(var comando = new MySqlCommand( sql, conexao._conn))
+                {
+                    MySqlDataReader leitura;
+                    if (EmailExistente(destinatario))
+                    {
+
+                        comando.Parameters.AddWithValue("@email", destinatario);
+
+                        leitura = comando.ExecuteReader();
+                        if (leitura.Read())
+                        {
+                            string nome = leitura.GetString(1);
+                            string email = leitura.GetString(2);
+                            string nome_usuario = leitura.GetString(3);
+                            string senha = leitura.GetString(4);
+                        }
+                    }
+                }
 
             }
 
