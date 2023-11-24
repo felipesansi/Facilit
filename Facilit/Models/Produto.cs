@@ -10,6 +10,6 @@ namespace Facilit.Models
         public string Token{ get; set; }
         public string Formato{ get; set; }
         public int Id{ get; set; }
-       
+       public bool Validacao { get; set; } = false;
     }
 }
