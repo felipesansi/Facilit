@@ -15,9 +15,10 @@ namespace Facilit.Scripts
         public async Task<Produto> interacao(int id)
         {
             HttpClient client = new HttpClient();
-            var response = await client.GetStringAsync($"https://api.tiny.com.br/api2/pedido.obter.php{id}");
+            var json_string = await client.GetStringAsync($"https://api.tiny.com.br/api2/pedido.obter.php{id}");
 
-            var json_string = await response.Content.ReadAsStringAsync();
+
+
             var jsonObject = JsonConvert.DeserializeObject <Produto>(json_string);
 
             if (jsonObject != null)
@@ -26,7 +27,7 @@ namespace Facilit.Scripts
             }
             else
             {
-                new Produto
+              return  new Produto
                 {
                     Validacao = true
                 };
