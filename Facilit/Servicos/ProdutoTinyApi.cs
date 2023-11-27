@@ -26,7 +26,7 @@ namespace Facilit.Servicos
             // Resultado tá sendo convertido em string já que ainda não existe o objeto que reflete com o real retorno.
             // TODO: Criar classes que sejam coerentes com o que a API retorna para fazer a conversão corretamente.
             var resultadoConvertidoEmString = await response.Content.ReadAsStringAsync();
-            return resultadoConvertidoEmString
+            return resultadoConvertidoEmString;
         }
     }
 }
