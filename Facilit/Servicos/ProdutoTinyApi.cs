@@ -1,17 +1,16 @@
-﻿using System;
+﻿using Facilit.Models;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Net.Http;
-using Newtonsoft.Json;
 using System.Threading.Tasks;
-using Facilit.Models;
+using System.Web;
 
-namespace Facilit.Scripts
+namespace Facilit.Servicos
 {
-    public class ProdutoTynyServicos
+    public class ProdutoTinyApi
     {
-
         public async Task<Produto> interacao(int id)
         {
             HttpClient client = new HttpClient();
@@ -19,7 +18,7 @@ namespace Facilit.Scripts
 
 
 
-            var jsonObject = JsonConvert.DeserializeObject <Produto>(json_string);
+            var jsonObject = JsonConvert.DeserializeObject<Produto>(json_string);
 
             if (jsonObject != null)
             {
@@ -27,7 +26,7 @@ namespace Facilit.Scripts
             }
             else
             {
-              return  new Produto
+                return new Produto
                 {
                     Validacao = true
                 };
@@ -36,6 +35,5 @@ namespace Facilit.Scripts
 
 
         }
-
     }
 }
