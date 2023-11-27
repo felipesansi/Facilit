@@ -11,29 +11,22 @@ namespace Facilit.Servicos
 {
     public class ProdutoTinyApi
     {
-        public async Task<Produto> interacao(int id)
+        public async Task<string> ListarProdutos(/*string tokenTiny*/)
         {
-            HttpClient client = new HttpClient();
-            var json_string = await client.GetStringAsync($"https://api.tiny.com.br/api2/pedido.obter.php{id}");
+            // Para teste, iremos deixar o valor do token fixo aqui dentro.
+            string tokenTiny = "02011b49e5399d62d999007a8952642c85cca50bc310b49fdd6c3674fdff4b2a";
+            string formatoRetorno = "json";
 
+            // Requisição HttpRest
+            var client = new HttpClient();
+            var request = new HttpRequestMessage(HttpMethod.Get, $"https://api.tiny.com.br/api2/pdv.produtos.php?token={tokenTiny}&formato={formatoRetorno}");
+            var response = await client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
 
-
-            var jsonObject = JsonConvert.DeserializeObject<Produto>(json_string);
-
-            if (jsonObject != null)
-            {
-                return jsonObject;
-            }
-            else
-            {
-                return new Produto
-                {
-                    Validacao = true
-                };
-
-            }
-
-
+            // Resultado tá sendo convertido em string já que ainda não existe o objeto que reflete com o real retorno.
+            // TODO: Criar classes que sejam coerentes com o que a API retorna para fazer a conversão corretamente.
+            var resultadoConvertidoEmString = await response.Content.ReadAsStringAsync();
+            return resultadoConvertidoEmString
         }
     }
 }
