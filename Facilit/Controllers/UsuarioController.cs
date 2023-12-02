@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Renci.SshNet;
 
 namespace Facilit.Controllers
 {
@@ -24,7 +25,7 @@ namespace Facilit.Controllers
             return View();
         }
 
-       
+       bool existe =false;
 
         public ActionResult VerificarLogin(Usuario class_usuario)
         {
@@ -71,16 +72,22 @@ namespace Facilit.Controllers
 
             }
 
+
             else if (existe = ExisteUsuario(usuario))
             {
                 ModelState.AddModelError("", "Nome de usuário já existe. Escolha outro nome de usuário.");
                 return RedirectToAction("Cadastro", "Usuario");
             }
-
-
+           
+            else if(usuario.Nome_Usuario.Length <4 || usuario.Senha_Usuario.Length < 4)
+            {
+                ModelState.AddModelError("", "Usuario ou Senha tem menos de 4 digitos ");
+                return RedirectToAction("Cadastro", "Usuario");
+            }
 
             else
             {
+
                 string sql_insert = "insert into tb_usuarios (nome_completo, email, nome_usuario, senha_usuario) values " +
                     "(@nc, @em, @nu, @su )";
                 using (var conexao = new Conexao())
@@ -103,9 +110,10 @@ namespace Facilit.Controllers
             }
 
         }
-        bool existe = false;
+     
         private bool ExisteUsuario(Usuario usuario)
         {
+            Session["existe"] = false;
             string sql_select = "select * from tb_usuarios where nome_usuario = @nome_usuario";
 
             using (var conexao = new Conexao())
@@ -117,7 +125,7 @@ namespace Facilit.Controllers
 
                     if (leitura.HasRows)
                     {
-                        existe = true;
+                        Session["existe"]  = true;
                     }
 
                 }
