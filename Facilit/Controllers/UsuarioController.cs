@@ -20,12 +20,53 @@ namespace Facilit.Controllers
             return View();
         }
 
+        public ActionResult Perfis_usuario()
+        {
+
+            using (Conexao conexao = new Conexao())
+            {
+                string sql_select = "select * from tb_usuarios where excluido = false  ";
+
+                using (MySqlCommand comando = new MySqlCommand(sql_select, conexao._conn))
+                {
+                    MySqlDataReader leitura = comando.ExecuteReader();
+
+                    if (leitura.HasRows)
+                    {
+                        var listaUsuario = new List<Usuario>();
+                        while (leitura.Read())
+                        {
+                            var usuario = new Usuario
+                            {
+                                Id = Convert.ToInt32(leitura["id"]),
+                                Nome_completo = Convert.ToString(leitura["nome_completo"]),
+                                Email = Convert.ToString(leitura["email"]),
+                                Nome_Usuario = Convert.ToString(leitura["nome_usuario"]),
+
+
+                            };
+                            listaUsuario.Add(usuario);
+
+                        }
+                        return View(listaUsuario);
+
+                    }
+                    else
+                    {
+                        ViewBag.buscar = true;
+                        return RedirectToAction("Registro", "Webcan");
+                    }
+                }
+
+            }
+        }
+
         public ActionResult Cadastro()
         {
             return View();
         }
 
-       bool existe =false;
+        bool existe = false;
 
         public ActionResult VerificarLogin(Usuario class_usuario)
         {
@@ -50,158 +91,163 @@ namespace Facilit.Controllers
                     }
                     else
                     {
+                        ViewBag.ErroLogar = true;
                         return RedirectToAction("Index", "Usuario");
                     }
 
                 }
             }
         }
-        public ActionResult RecuperarSenha()
-        {
-            return View();
-        }
-        public ActionResult NovoUsuario(Usuario usuario)
-        {
-            if (string.IsNullOrWhiteSpace(usuario.Nome_Usuario) || string.IsNullOrWhiteSpace(usuario.Email) ||
-                string.IsNullOrWhiteSpace(usuario.Nome_Usuario))
+       
+
+            public ActionResult RecuperarSenha()
             {
+                return View();
+            }
+            public ActionResult NovoUsuario(Usuario usuario)
+            {
+                if (string.IsNullOrWhiteSpace(usuario.Nome_Usuario) || string.IsNullOrWhiteSpace(usuario.Email) ||
+                    string.IsNullOrWhiteSpace(usuario.Nome_Usuario))
+                {
 
-                ModelState.AddModelError("", "Preencha todos os campos");
-                return RedirectToAction("Cadastro", "Usuario");
+                  ViewBag.CamposVazios = true;
+                    return RedirectToAction("Cadastro", "Usuario");
 
+
+                }
+
+
+                else if (existe = ExisteUsuario(usuario))
+                {
+                    ViewBag.UsuarioExiste = true;
+                    return RedirectToAction("Cadastro", "Usuario");
+                }
+
+                else if (usuario.Nome_Usuario.Length < 4 || usuario.Senha_Usuario.Length < 4)
+                {
+                    ViewBag.MinimoDigitos = true;
+                    return RedirectToAction("Cadastro", "Usuario");
+                }
+
+                else
+                {
+
+                    string sql_insert = "insert into tb_usuarios (nome_completo, email, nome_usuario, senha_usuario) values " +
+                        "(@nc, @em, @nu, @su )";
+                    using (var conexao = new Conexao())
+                    {
+
+                        using (MySqlCommand comando = new MySqlCommand(sql_insert, conexao._conn))
+                        {
+                            comando.Parameters.AddWithValue("@nc", usuario.Nome_completo);
+                            comando.Parameters.AddWithValue("@em", usuario.Email);
+                            comando.Parameters.AddWithValue("@nu", usuario.Nome_Usuario);
+                            comando.Parameters.AddWithValue("@su", usuario.Senha_Usuario);
+
+
+                            comando.ExecuteNonQuery();
+
+                            return RedirectToAction("Index", "Usuario");
+                        }
+
+
+                    }
+                }
 
             }
 
-
-            else if (existe = ExisteUsuario(usuario))
+            private bool ExisteUsuario(Usuario usuario)
             {
-                ModelState.AddModelError("", "Nome de usuário já existe. Escolha outro nome de usuário.");
-                return RedirectToAction("Cadastro", "Usuario");
-            }
-           
-            else if(usuario.Nome_Usuario.Length <4 || usuario.Senha_Usuario.Length < 4)
-            {
-                ModelState.AddModelError("", "Usuario ou Senha tem menos de 4 digitos ");
-                return RedirectToAction("Cadastro", "Usuario");
-            }
+                Session["existe"] = false;
+                string sql_select = "select * from tb_usuarios where nome_usuario = @nome_usuario";
 
-            else
-            {
-
-                string sql_insert = "insert into tb_usuarios (nome_completo, email, nome_usuario, senha_usuario) values " +
-                    "(@nc, @em, @nu, @su )";
                 using (var conexao = new Conexao())
                 {
-
-                    using (MySqlCommand comando = new MySqlCommand(sql_insert, conexao._conn))
+                    using (var comando = new MySqlCommand(sql_select, conexao._conn))
                     {
-                        comando.Parameters.AddWithValue("@nc", usuario.Nome_completo);
-                        comando.Parameters.AddWithValue("@em", usuario.Email);
-                        comando.Parameters.AddWithValue("@nu", usuario.Nome_Usuario);
-                        comando.Parameters.AddWithValue("@su", usuario.Senha_Usuario);
+                        comando.Parameters.AddWithValue("@nome_usuario", usuario.Nome_Usuario);
+                        MySqlDataReader leitura = comando.ExecuteReader();
 
-
-                        comando.ExecuteNonQuery();
-
-                        return RedirectToAction("Index", "Usuario");
-                    }
-
-                }
-            }
-
-        }
-     
-        private bool ExisteUsuario(Usuario usuario)
-        {
-            Session["existe"] = false;
-            string sql_select = "select * from tb_usuarios where nome_usuario = @nome_usuario";
-
-            using (var conexao = new Conexao())
-            {
-                using (var comando = new MySqlCommand(sql_select, conexao._conn))
-                {
-                    comando.Parameters.AddWithValue("@nome_usuario", usuario.Nome_Usuario);
-                    MySqlDataReader leitura = comando.ExecuteReader();
-
-                    if (leitura.HasRows)
-                    {
-                        Session["existe"]  = true;
-                    }
-
-                }
-            }
-
-            return existe;
-
-
-        }
-
-        public ActionResult EmailEnviado()
-        {
-            return View();
-        }
-        bool existe_email = false;
-
-      private  bool EmailExistente(string  remetente)
-        {
-            using (var conexao = new Conexao())
-            {
-                string sql = "select * from tb_usuario where  email = @email";
-
-                using (var comando = new MySqlCommand(sql, conexao._conn))
-                {
-
-                    comando.Parameters.AddWithValue("@email",remetente);
-
-                    MySqlDataReader leitura = comando.ExecuteReader();
-                    if (leitura.HasRows)
-                    {
-                        existe_email = true;
-
-                    }
-                    else
-                    {
-                        existe_email = false;
-
-                    }
-                }
-            }
-            return existe_email;
-        }
-        public ActionResult EnviarEmail(string destinatario)
-        {
-
-            string remetente = "facilit.site@gmail.com", senha_remetente = "FelipeMatheus", stmp = "smtp.gmail.com";
-            int port = 587;
-
-
-
-            using (var conexao =new Conexao()) 
-            {
-                string sql = "select * from tb_usuario where email =@email";
-                using(var comando = new MySqlCommand( sql, conexao._conn))
-                {
-                    MySqlDataReader leitura;
-                    if (EmailExistente(destinatario))
-                    {
-
-                        comando.Parameters.AddWithValue("@email", destinatario);
-
-                        leitura = comando.ExecuteReader();
-                        if (leitura.Read())
+                        if (leitura.HasRows)
                         {
-                            string nome = leitura.GetString(1);
-                            string email = leitura.GetString(2);
-                            string nome_usuario = leitura.GetString(3);
-                            string senha = leitura.GetString(4);
+                            Session["existe"] = true;
+                        }
+
+                    }
+                }
+
+                return existe;
+
+
+            }
+
+
+            public ActionResult EmailEnviado()
+            {
+                return View();
+            }
+            bool existe_email = false;
+
+            private bool EmailExistente(string remetente)
+            {
+                using (var conexao = new Conexao())
+                {
+                    string sql = "select * from tb_usuario where  email = @email";
+
+                    using (var comando = new MySqlCommand(sql, conexao._conn))
+                    {
+
+                        comando.Parameters.AddWithValue("@email", remetente);
+
+                        MySqlDataReader leitura = comando.ExecuteReader();
+                        if (leitura.HasRows)
+                        {
+                            existe_email = true;
+
+                        }
+                        else
+                        {
+                            existe_email = false;
+
                         }
                     }
                 }
-
+                return existe_email;
             }
+            public ActionResult EnviarEmail(string destinatario)
+            {
+
+                string remetente = "facilit.site@gmail.com", senha_remetente = "FelipeMatheus", stmp = "smtp.gmail.com";
+                int port = 587;
 
 
-            return RedirectToAction("EmailEnviado", "Usuario");
+
+                using (var conexao = new Conexao())
+                {
+                    string sql = "select * from tb_usuario where email =@email";
+                    using (var comando = new MySqlCommand(sql, conexao._conn))
+                    {
+                        MySqlDataReader leitura;
+                        if (EmailExistente(destinatario))
+                        {
+
+                            comando.Parameters.AddWithValue("@email", destinatario);
+
+                            leitura = comando.ExecuteReader();
+                            if (leitura.Read())
+                            {
+                                string nome = leitura.GetString(1);
+                                string email = leitura.GetString(2);
+                                string nome_usuario = leitura.GetString(3);
+                                string senha = leitura.GetString(4);
+                            }
+                        }
+                    }
+
+                }
+
+
+                return RedirectToAction("EmailEnviado", "Usuario");
+            }
         }
-    }
-}
+    } 

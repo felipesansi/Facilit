@@ -1,7 +1,12 @@
 ﻿@model Facilit.Models.Usuario
 
 <h1>Cadastre usuário</h1>
-
+@if (ViewBag.CamposVazios == true)
+{
+    <div>
+        Preencha todos os Campos
+    </div>
+}
 
 @using (Html.BeginForm("NovoUsuario", "Usuario"))
 {
