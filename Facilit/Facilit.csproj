@@ -245,6 +245,7 @@
     <Content Include="Views\Usuario\_Frmlogin.cshtml" />
     <Content Include="Views\Usuario\EmailEnviado.cshtml" />
     <Content Include="Views\Usuario\Perfis_usuario.cshtml" />
+    <Content Include="Views\Usuario\Editar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

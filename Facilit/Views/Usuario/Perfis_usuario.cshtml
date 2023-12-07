@@ -4,14 +4,13 @@
     ViewBag.Title = "Perfis_usuario";
 }
 
-@using (Html.BeginForm("TodosUsuarios", "Usuario"))
-{
-    <h2>Perfis_usuario</h2>
 
-    <p>
-        @Html.ActionLink("Create New", "Create")
-    </p>
 
+    <h2>Todos os usuários</h2>
+
+
+<input />
+    
     <table class="table">
         <tr>
             <th>
@@ -23,10 +22,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Nome_Usuario)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Senha_Usuario)
-            </th>
-
+     
             <th></th>
         </tr>
 
@@ -47,11 +43,12 @@
                 </td>
 
                 <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                    @Html.ActionLink("Editar", "Editar", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) 
                 </td>
             </tr>
         }
     </table>
-}
+<p>
+   @Html.ActionLink("<---- Resgistar seu produto", "Registro", "Webcan")
+</p>

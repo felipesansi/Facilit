@@ -61,6 +61,45 @@ namespace Facilit.Controllers
             }
         }
 
+        public ActionResult Editar(int id)
+        {
+            string str_editar = "select * from tb_usuarios where id = @id";
+
+            using(Conexao conexao = new Conexao()) 
+            {
+       
+                using(MySqlCommand comando = new MySqlCommand(str_editar, conexao._conn))
+                {
+
+                   
+                    comando.Parameters.AddWithValue("@id", id);
+
+                    MySqlDataReader leitura = comando.ExecuteReader();
+                    leitura.Read();
+                    if (leitura.HasRows)
+                    {
+
+                        var usuario = new Usuario
+                        {
+                            Nome_completo = Convert.ToString(leitura["nome_completo"]),
+                            Email = Convert.ToString(leitura["email"]),
+                            Nome_Usuario = Convert.ToString(leitura["nome_usuario"]),
+                            Senha_Usuario = Convert.ToString(leitura["senha_usuario"]),
+                        };
+                        return View(usuario);
+
+                    }
+                    else
+                    {
+                        ViewBag.excluido = true;
+                        return RedirectToAction("Perfis_usuario", "Usuario");
+                    }
+                }
+            }
+
+
+      
+        }
         public ActionResult Cadastro()
         {
             return View();
