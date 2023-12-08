@@ -19,7 +19,7 @@ namespace Facilit.Controllers
         {
             return View();
         }
-
+      
         public ActionResult Perfis_usuario()
         {
 
@@ -42,7 +42,7 @@ namespace Facilit.Controllers
                                 Nome_completo = Convert.ToString(leitura["nome_completo"]),
                                 Email = Convert.ToString(leitura["email"]),
                                 Nome_Usuario = Convert.ToString(leitura["nome_usuario"]),
-
+                                Criado = Convert.ToDateTime(leitura["criado"])
 
                             };
                             listaUsuario.Add(usuario);
@@ -60,7 +60,36 @@ namespace Facilit.Controllers
 
             }
         }
+        public ActionResult atualizarUsuario(Usuario usuario)
+        {
+            {
+                
 
+                string sql_insert = "update tb_usuarios set " +
+                    "nome_completo = @nc, email = @em , nome_usuario = @nu, senha_usuario = @su, alterado = @alterado where id = @id";
+
+                using (var conexao = new Conexao())
+                {
+
+                    using (MySqlCommand comando = new MySqlCommand(sql_insert, conexao._conn))
+                    {
+                        comando.Parameters.AddWithValue("@nc", usuario.Nome_completo);
+                        comando.Parameters.AddWithValue("@em", usuario.Email);
+                        comando.Parameters.AddWithValue("@nu", usuario.Nome_Usuario);
+                        comando.Parameters.AddWithValue("@su", usuario.Senha_Usuario);
+                        comando.Parameters.AddWithValue("@alterado", DateTime.Now);
+                        comando.Parameters.AddWithValue("@id", usuario.Id);
+
+                        comando.ExecuteNonQuery();
+
+                        return RedirectToAction("Index", "Usuario");
+                    }
+
+
+                }
+            }
+        }
+    
         public ActionResult Editar(int id)
         {
             string str_editar = "select * from tb_usuarios where id = @id";
@@ -106,7 +135,7 @@ namespace Facilit.Controllers
         }
 
         bool existe = false;
-
+        [HttpPost]
         public ActionResult VerificarLogin(Usuario class_usuario)
         {
             using (var conexao = new Conexao())
@@ -143,7 +172,8 @@ namespace Facilit.Controllers
             {
                 return View();
             }
-            public ActionResult NovoUsuario(Usuario usuario)
+        [HttpPost]
+        public ActionResult NovoUsuario(Usuario usuario)
             {
                 if (string.IsNullOrWhiteSpace(usuario.Nome_Usuario) || string.IsNullOrWhiteSpace(usuario.Email) ||
                     string.IsNullOrWhiteSpace(usuario.Nome_Usuario))
@@ -171,17 +201,19 @@ namespace Facilit.Controllers
                 else
                 {
 
-                    string sql_insert = "insert into tb_usuarios (nome_completo, email, nome_usuario, senha_usuario) values " +
-                        "(@nc, @em, @nu, @su )";
-                    using (var conexao = new Conexao())
-                    {
+                string sql_insert = "insert into tb_usuarios (nome_completo, email, nome_usuario, senha_usuario, criado) values " +
+"(@nc, @em, @nu, @su, @criado)";
 
+                using (var conexao = new Conexao())
+                    {
+                  
                         using (MySqlCommand comando = new MySqlCommand(sql_insert, conexao._conn))
                         {
                             comando.Parameters.AddWithValue("@nc", usuario.Nome_completo);
                             comando.Parameters.AddWithValue("@em", usuario.Email);
                             comando.Parameters.AddWithValue("@nu", usuario.Nome_Usuario);
                             comando.Parameters.AddWithValue("@su", usuario.Senha_Usuario);
+                        comando.Parameters.AddWithValue("@criado", DateTime.Now);
 
 
                             comando.ExecuteNonQuery();
@@ -195,7 +227,8 @@ namespace Facilit.Controllers
 
             }
 
-            private bool ExisteUsuario(Usuario usuario)
+        [HttpPost]
+        private bool ExisteUsuario(Usuario usuario)
             {
                 Session["existe"] = false;
                 string sql_select = "select * from tb_usuarios where nome_usuario = @nome_usuario";

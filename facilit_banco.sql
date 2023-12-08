@@ -7,5 +7,7 @@ nome_completo varchar(255),
 email varchar(255),
 nome_usuario varchar(255),
 senha_usuario varchar(255),
-excluido boolean
+excluido boolean default 0,
+criado datetime, 
+alterado datetime
 );
