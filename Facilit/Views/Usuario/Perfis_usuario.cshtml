@@ -18,7 +18,7 @@
             <th scope="col">E-mail</th>
             <th scope="col">Nome de usuário</th>
             <th scope="col">Data de cadastro</th>
-            <th scope="col">Data de alteração</th>
+        
 
 
             <th></th>
@@ -44,9 +44,7 @@
                     @Html.DisplayFor(modelItem => item.Criado)
                 </td>
 
-                <td>
-                    @Html.DisplayFor(modelItem => item.Alterado)
-                </td>
+             
 
                 <td>
                     @Html.ActionLink("Editar", "Editar", new { id = item.Id })  

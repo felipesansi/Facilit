@@ -38,12 +38,11 @@ namespace Facilit.Controllers
                         {
                             var usuario = new Usuario
                             {
-                                Id = Convert.ToInt32(leitura["id"]),
                                 Nome_completo = Convert.ToString(leitura["nome_completo"]),
                                 Email = Convert.ToString(leitura["email"]),
                                 Nome_Usuario = Convert.ToString(leitura["nome_usuario"]),
                                 Criado = Convert.ToDateTime(leitura["criado"]),
-                                Alterado = Convert.ToDateTime(leitura["alterado"])
+
                             };
                             listaUsuario.Add(usuario);
 
@@ -296,7 +295,7 @@ namespace Facilit.Controllers
 
                 using (var conexao = new Conexao())
                 {
-                    string sql = "select * from tb_usuario where email =@email";
+                    string sql = "select * from tb_usuarios where email =@email";
                     using (var comando = new MySqlCommand(sql, conexao._conn))
                     {
                         MySqlDataReader leitura;
