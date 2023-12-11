@@ -42,8 +42,8 @@ namespace Facilit.Controllers
                                 Nome_completo = Convert.ToString(leitura["nome_completo"]),
                                 Email = Convert.ToString(leitura["email"]),
                                 Nome_Usuario = Convert.ToString(leitura["nome_usuario"]),
-                                Criado = Convert.ToDateTime(leitura["criado"])
-
+                                Criado = Convert.ToDateTime(leitura["criado"]),
+                                Alterado = Convert.ToDateTime(leitura["alterado"])
                             };
                             listaUsuario.Add(usuario);
 
@@ -141,7 +141,7 @@ namespace Facilit.Controllers
             using (var conexao = new Conexao())
             {
                 string str_select = "select * from tb_usuarios where nome_usuario = @nome_usuario " +
-                    "and senha_usuario = @senha";
+                    "and senha_usuario = @senha and excluido = false";
 
                 using (MySqlCommand comando = new MySqlCommand(str_select, conexao._conn))
                 {
@@ -179,7 +179,7 @@ namespace Facilit.Controllers
                     string.IsNullOrWhiteSpace(usuario.Nome_Usuario))
                 {
 
-                  ViewBag.CamposVazios = true;
+                ViewBag.CamposVazios = true;
                     return RedirectToAction("Cadastro", "Usuario");
 
 

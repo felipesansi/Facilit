@@ -3,9 +3,7 @@
 <h1>Cadastre usuário</h1>
 @if (ViewBag.CamposVazios == true)
 {
-    <div>
-        Preencha todos os Campos
-    </div>
+    <button type="button" class="btn btn-danger btn -sm btn-close" da-bs-dismiss="aler" aria-label="close">X</button>
 }
 
 @using (Html.BeginForm("NovoUsuario", "Usuario"))
@@ -14,6 +12,7 @@
     @Html.Partial("_Frmlogin")
     <br />
     <div>
+
         <input type="submit" value="Cadastre-se" class="btn btn-primary" />
     </div>
 }
