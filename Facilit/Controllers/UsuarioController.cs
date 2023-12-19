@@ -304,7 +304,7 @@ namespace Facilit.Controllers
 
                             comando.Parameters.AddWithValue("@email", destinatario);
 
-                            leitura = comando.ExecuteReader();
+                            leitura = comando.ExecuteReader();//dffd
                             if (leitura.Read())
                             {
                                 string nome = leitura.GetString(1);
