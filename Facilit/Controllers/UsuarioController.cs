@@ -108,7 +108,7 @@ namespace Facilit.Controllers
                     {
 
                         var usuario = new Usuario
-                        {
+                        {    Id = Convert.ToInt32(leitura["id"]),
                             Nome_completo = Convert.ToString(leitura["nome_completo"]),
                             Email = Convert.ToString(leitura["email"]),
                             Nome_Usuario = Convert.ToString(leitura["nome_usuario"]),
