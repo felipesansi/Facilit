@@ -44,18 +44,16 @@
                     @Html.DisplayFor(modelItem => item.Criado)
                 </td>
 
-             
+
 
                 <td>
                     @Html.DisplayFor(modelItem => item.Alterado)
                 </td>
 
                 <td>
-                    @Html.ActionLink("Editar", "Editar", new { id = item.Id })  
-            
-
-
+                    @Html.ActionLink("Editar", "Editar", new { id = item.Id }, new { @class = "btn btn-danger" })
                 </td>
+
             </tr>
         }
     </table>
