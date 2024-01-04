@@ -206,7 +206,9 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="imagens\img login.jpeg" />
+    <Content Include="imagens\amico.png" />
+    <Content Include="imagens\imagem cadastrar.png" />
+    <Content Include="imagens\imagem login.png" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -250,6 +252,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="fotos\" />
     <Folder Include="Views\Produto\" />
   </ItemGroup>
   <ItemGroup>

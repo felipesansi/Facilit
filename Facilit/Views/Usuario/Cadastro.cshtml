@@ -1,23 +1,27 @@
 ﻿@model Facilit.Models.Usuario
 
 <h1>Cadastre usuário</h1>
-@if (ViewBag.CamposVazios == true)
-{
-    <button type="button" class="btn btn-danger btn -sm btn-close" da-bs-dismiss="aler" aria-label="close">X</button>
-}
 
-@using (Html.BeginForm("NovoUsuario", "Usuario"))
-{
+            @if (ViewBag.CamposVazios == true)
+            {
+                <button type="button" class="btn btn-danger btn -sm btn-close" da-bs-dismiss="aler" aria-label="close">X</button>
+            }
 
-    @Html.Partial("_Frmlogin")
-    <br />
-    <div>
+            @using (Html.BeginForm("NovoUsuario", "Usuario"))
+            {
 
-        <input type="submit" value="Cadastre-se" class="btn btn-primary" />
-    </div>
-}
+                @Html.Partial("_Frmlogin")
+               <br />
+                <div>
 
+                    <input type="submit" value="Cadastre-se" class="btn btn-primary" />
+                </div>
+            }
+     
 <br />
+    
 <div>
-    @Html.ActionLink("Voltar ao Login", "Index")
+    @Html.ActionLink("Voltar ao login", "Index", "Usuario", null, new { @class = "btn btn-secondary" })
 </div>
+
+  
