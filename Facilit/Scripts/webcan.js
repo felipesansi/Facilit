@@ -22,39 +22,32 @@
 //    document.body.appendChild(link);
 //});
 
+document.addEventListener("DOMContentLoaded", function () {
+    const video = document.querySelector('video');
+    const canvas = document.querySelector('canvas');
+    const botao = document.getElementById('btn_salvar'); 
 
-//$(document).ready(function () {
-//    var video = document.querySelector('video');
-//    var canvas = document.querySelector('canvas');
-//    var context = canvas.getContext('2d');
-//    var button = document.querySelector('#button');
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            video.srcObject = stream;
+        })
+        .catch(erro => {
+            console.error('Erro ao abrir a câmera :', erro);
+        });
 
-//    navigator.mediaDevices.getUserMedia({ video: true })
-//        .then(function (stream) {
-//            video.srcObject = stream;
-//            video.play();
-//        });
+    botao.addEventListener('click', function () {
+        const context = canvas.getContext('2d');
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dados_imagem = canvas.toDataURL('image/jpg');
 
-//    button.addEventListener('click', function () {
-//        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-//        var dataUrl = canvas.toDataURL('image/png');
-
-//        // Aqui você pode enviar 'dataUrl' para o servidor para salvar a imagem
-//        $.ajax({
-//            url: 'C:\Users\Felipe\source\repos\Facilit\Facilit\fotos',  // Substitua por seu URL
-//            type: 'POST',
-//            data: { image: dataUrl },
-//            success: function (response) {
-//                console.log('Imagem salva com sucesso');
-//            },
-//            error: function (error) {
-//                console.log('Erro ao salvar a imagem', error);
-//            }
-//        });
-//    });
-//});
-
-
-
-    
+        $.ajax({
+            type: "POST",
+            url: "/WebcanController/SalvarFoto",
  
+            data: { dados_imagem: dados_imagem },
+            success: function (response) {
+                console.log(response);
+            },
+        });
+    });
+});
