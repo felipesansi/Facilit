@@ -11,7 +11,7 @@ namespace Facilit.Servicos
 {
     public class ProdutoTinyApi
     {
-        public async Task<string> ListarProdutos(/*string tokenTiny*/)
+        public async Task<string> ListarProdutos(string token)
         {
             // Para teste, iremos deixar o valor do token fixo aqui dentro.
             string tokenTiny = "02011b49e5399d62d999007a8952642c85cca50bc310b49fdd6c3674fdff4b2a";

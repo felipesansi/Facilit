@@ -46,7 +46,10 @@ document.addEventListener("DOMContentLoaded", function () {
             url: "/Webcan/SalvarFoto",
             data: { dados_imagem: dados_imagem },
             success: function (response) {
-                console.log(response);
+                if (response.sucesso) {
+
+                    alert(response.mensagem);
+                }
             },
         });
     });
