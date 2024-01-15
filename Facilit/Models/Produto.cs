@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
 namespace Facilit.Models
 {
+    [JsonObject]
     public class Produto
     {
         public string Token{ get; set; }
