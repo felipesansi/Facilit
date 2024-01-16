@@ -1,13 +1,20 @@
 ﻿@model Facilit.Models.Usuario
 
 @{
-    ViewBag.Title = "RecuperarSenha";
+    ViewBag.Title = "Recuperar Senha";
 }
 
 <h2>Recuperar Senha</h2>
+@if (!String.IsNullOrEmpty(ViewBag.erro))
+{
+    <div class="alert alert-danger">
+        @ViewBag.erro
+    </div>
+}
 
 
-@using (Html.BeginForm())
+
+@using (Html.BeginForm("EnviarEmail","Usuario"))
 {
     @Html.AntiForgeryToken()
 
