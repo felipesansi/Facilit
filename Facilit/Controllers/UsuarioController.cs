@@ -54,8 +54,8 @@ namespace Facilit.Controllers
                     }
                     else
                     {
-                        ViewBag.buscar = true;
-                        return RedirectToAction("Registro", "Webcan");
+                        
+                        return RedirectToAction("Index", "Webcan");
                     }
                 }
 
@@ -63,11 +63,26 @@ namespace Facilit.Controllers
         }
         public ActionResult atualizarUsuario(Usuario usuario)
         {
+            if (string.IsNullOrWhiteSpace(usuario.Nome_Usuario) || string.IsNullOrWhiteSpace(usuario.Email) ||
+                string.IsNullOrWhiteSpace(usuario.Nome_Usuario) || string.IsNullOrWhiteSpace(usuario.Senha_Usuario))
+            {
+                TempData["Mensagem"] = "A algum campo vazio";
+                return RedirectToAction("Editar", "Usuario", new { id = usuario.Id });
+            }
+
+
+            else if (usuario.Nome_Usuario.Length < 4 || usuario.Senha_Usuario.Length < 4)
+            {
+                TempData["Mensagem"] = "Usuário ou senha com menos de 4 caracteres";
+
+                return RedirectToAction("Editar", "Usuario", new { id = usuario.Id });
+
+            }
+            else
             {
 
-
                 string sql_insert = "update tb_usuarios set " +
-                    "nome_completo = @nc, email = @em , nome_usuario = @nu, senha_usuario = @su, alterado = @alterado where id = @id";
+                        "nome_completo = @nc, email = @em , nome_usuario = @nu, senha_usuario = @su, alterado = @alterado where id = @id";
 
                 using (var conexao = new Conexao())
                 {
@@ -131,6 +146,70 @@ namespace Facilit.Controllers
 
 
         }
+
+
+        public ActionResult Excluir(int id)
+        {
+            string str_editar = "select * from tb_usuarios where id = @id";
+
+            using (Conexao conexao = new Conexao())
+            {
+
+                using (MySqlCommand comando = new MySqlCommand(str_editar, conexao._conn))
+                {
+
+
+                    comando.Parameters.AddWithValue("@id", id);
+
+                    MySqlDataReader leitura = comando.ExecuteReader();
+                    leitura.Read();
+                    if (leitura.HasRows)
+                    {
+
+                        var usuario = new Usuario
+                        {
+                            Id = Convert.ToInt32(leitura["id"]),
+                            Nome_completo = Convert.ToString(leitura["nome_completo"]),
+                            Email = Convert.ToString(leitura["email"]),
+                            Nome_Usuario = Convert.ToString(leitura["nome_usuario"]),
+                            Senha_Usuario = Convert.ToString(leitura["senha_usuario"]),
+                        };
+                        return View(usuario);
+
+                    }
+                    else
+                    {
+                        ViewBag.excluido = true;
+                        return RedirectToAction("Perfis_usuario", "Usuario");
+                    }
+                }
+            }
+
+
+
+        }
+
+
+
+        public ActionResult Softdelete(Usuario usuario)
+        {
+            string str_delete = "update tb_usuarios set excluido = true, alterado = @alterado where id = @id";
+            using(Conexao conexao = new Conexao())
+            {
+                using(MySqlCommand comando = new MySqlCommand(str_delete,conexao._conn))
+                { 
+                    comando.Parameters.AddWithValue("id", usuario.Id);    
+                   
+                    comando.Parameters.AddWithValue("@alterado", DateTime.Now);
+                   
+                    comando.ExecuteNonQuery();
+
+                    return RedirectToAction("Perfis_usuario", "Usuario");
+                }
+
+            }
+        }
+        
         public ActionResult Cadastro()
         {
             return View();
@@ -161,7 +240,7 @@ namespace Facilit.Controllers
                     }
                     else
                     {
-                        ViewBag.ErroLogar = true;
+                        TempData["Mensagem"] = "Usuário ou senha incorretos";
                         return RedirectToAction("Index", "Usuario");
                     }
 
@@ -177,26 +256,25 @@ namespace Facilit.Controllers
         [HttpPost]
         public ActionResult NovoUsuario(Usuario usuario)
         {
+
             if (string.IsNullOrWhiteSpace(usuario.Nome_Usuario) || string.IsNullOrWhiteSpace(usuario.Email) ||
-                string.IsNullOrWhiteSpace(usuario.Nome_Usuario))
+      string.IsNullOrWhiteSpace(usuario.Nome_completo) || string.IsNullOrEmpty(usuario.Senha_Usuario))
             {
+                // Define a mensagem
+                TempData["Mensagem"] = "A algum campo vazio";
 
-                ViewBag.CamposVazios = true;
                 return RedirectToAction("Cadastro", "Usuario");
-
-
             }
-
-
-            else if (existe = ExisteUsuario(usuario))
+            else if (existe == ExisteUsuario(usuario))
             {
-                ViewBag.UsuarioExiste = true;
+                TempData["Mensagem"] = "Já existe uma conta com este usuário";
                 return RedirectToAction("Cadastro", "Usuario");
             }
 
             else if (usuario.Nome_Usuario.Length < 4 || usuario.Senha_Usuario.Length < 4)
             {
-                ViewBag.MinimoDigitos = true;
+                TempData["Mensagem"] = "Usuário ou senha com menos de 4 caracteres";
+
                 return RedirectToAction("Cadastro", "Usuario");
             }
 
@@ -284,14 +362,15 @@ namespace Facilit.Controllers
 
         public ActionResult EnviarEmail(Usuario usuario)
         {
-            string remetente = "facilit.site@gmail.com", senha_remetente = "FelipeMatheus", stmp = "smtp.gmail.com";
+         
+            string remetente = "facilit.site@gmail.com", senha_remetente = "trwn qsch rwze anar", stmp = "smtp.gmail.com";
             int port = 587;
 
             if (EmailExistente(usuario))
             {
                 using (var conexao = new Conexao())
                 {
-                    string sql = "select * from tb_usuarios where email =@email";
+                    string sql = "select * from tb_usuarios  where email = @email and excluido = false";
                     using (var comando = new MySqlCommand(sql, conexao._conn))
                     {
                         comando.Parameters.AddWithValue("@email", usuario.Email);
@@ -316,30 +395,33 @@ namespace Facilit.Controllers
                                 client = new SmtpClient(stmp);
                                 client.Port = port;
                                 client.EnableSsl = true;
+
+
+
                                 
                                 msg = new MailMessage();
                                 msg.To.Add(usuario.Email);
                                 msg.From = new MailAddress(remetente);
+                                
 
                                 msg.Subject = "Solicitação de Recuperação de senha - Facilit";
                                 msg.Body = " Olá, " + nome +  "sua Senha : " + senha +  " \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n Este e-mail é automático.\nNão responda";
 
 
-                                msg.IsBodyHtml = false;
+                                msg.IsBodyHtml = true;
 
                                 msg.Priority = MailPriority.High;
 
                                 client.Send(msg);
 
-
-
-                            
-
+                                return RedirectToAction("EmailEnviado", "Usuario");
+                                
 
                             }
                             catch (Exception ex)
                             { 
                                 ViewBag.erro = "Ocorreu um erro ao enviar o e-mail: " + ex.Message;
+                                
                             }
 
                         }
@@ -347,7 +429,7 @@ namespace Facilit.Controllers
                 }
             }
 
-            return RedirectToAction("EmailEnviado", "Usuario");
+            return RedirectToAction("RecuperarSenha", "Usuario");
         }
 
 

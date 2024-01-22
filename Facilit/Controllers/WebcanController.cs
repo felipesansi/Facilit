@@ -16,7 +16,7 @@ namespace Facilit.Controllers
     {
 
 
-        //[HttpGet]
+        [HttpGet]
         //public async Task<ActionResult> Registro()
         //{
         //    string token = "02011b49e5399d62d999007a8952642c85cca50bc310b49fdd6c3674fdff4b2a";
@@ -85,8 +85,9 @@ namespace Facilit.Controllers
             return Json(new { sucesso = true, mensagem = "Foto salva com sucesso" });
 
         }
+    
 
-        //    //public async Task<ActionResult> Registro()
+        ////    //public async Task<ActionResult> Registro()
         //{ 
         //    string token = "02011b49e5399d62d999007a8952642c85cca50bc310b49fdd6c3674fdff4b2a";
         //ProdutoTinyApi api = new ProdutoTinyApi();

@@ -15,13 +15,13 @@
         <tr>
             <th scope="col">Id</th>
             <th scope="col">Nome completo</th>
-            <th scope="col">E-mail</th>
             <th scope="col">Nome de usuário</th>
             <th scope="col">Data de cadastro</th>
             <th scope="col">Data de alteração</th>
+            <th scope="col">Ações</th>
 
 
-            <th></th>
+
         </tr>
 
         @foreach (var item in Model)
@@ -33,9 +33,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Nome_completo)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
+
                 <td>
                     @Html.DisplayFor(modelItem => item.Nome_Usuario)
                 </td>
@@ -49,9 +47,12 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Alterado)
                 </td>
-
+               
                 <td>
-                    @Html.ActionLink("Editar", "Editar", new { id = item.Id }, new { @class = "btn btn-danger" })
+                    @Html.ActionLink("Editar", "Editar", new { id = item.Id }, new { @class = "btn btn-primary" })
+                </td>
+                <td>
+                    @Html.ActionLink("Excuir", "Excluir", new { id = item.Id }, new { @class = "btn btn-danger" })
                 </td>
 
             </tr>

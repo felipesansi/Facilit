@@ -250,6 +250,7 @@
     <Content Include="Views\Usuario\EmailEnviado.cshtml" />
     <Content Include="Views\Usuario\Perfis_usuario.cshtml" />
     <Content Include="Views\Usuario\Editar.cshtml" />
+    <Content Include="Views\Usuario\Excluir.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

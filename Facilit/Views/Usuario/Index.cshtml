@@ -3,6 +3,26 @@
 @{
     ViewBag.Title = "Index";
 }
+@if (!String.IsNullOrEmpty(TempData["Mensagem"] as string))
+{
+<div id="mensagem">
+    <div class="alert alert-danger">
+        @TempData["Mensagem"]
+    </div>
+</div>
+}
+
+<script>
+    setTimeout(function () {
+        var caixa_mensagem = document.getElementById('mensagem');
+        if (caixa_mensagem) {
+            caixa_mensagem.style.display = 'none';
+
+        }
+
+    }, 2000);
+</script>
+
 
 <div class="container">
     <div class="row">
@@ -15,48 +35,48 @@
             {
                 @Html.AntiForgeryToken()
 
-        <div class="form-horizontal">
-            <h4>Seja bem-vindo(a) | Informe suas Credenciais</h4>
-            <br />
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-horizontal">
+                    <h4>Seja bem-vindo(a) | Informe suas Credenciais</h4>
+                    <br />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.Nome_Usuario, " Usuário:", htmlAttributes: new { @class = "control-label col-md-6" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Nome_Usuario, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Nome_Usuario, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            
-            <div class="form-group">
-                @Html.LabelFor(model => model.Senha_Usuario, "Senha:", htmlAttributes: new { @class = "control-label col-md-6" })
-                <div class="col-md-10">
-                    @Html.PasswordFor(model => model.Senha_Usuario, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Senha_Usuario, "", new { @class = "text-danger" })
-                </div>
-            </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Nome_Usuario, " Usuário:", htmlAttributes: new { @class = "control-label col-md-6" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Nome_Usuario, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Nome_Usuario, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
 
-            <p>
-                @Html.ActionLink("Esqueci minha senha", "RecuperarSenha", "Usuario")
-            </p>
-            <br />
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Login" class="btn btn-primary" />
-                </div>
-                <br />
-                <div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Senha_Usuario, "Senha:", htmlAttributes: new { @class = "control-label col-md-6" })
+                        <div class="col-md-10">
+                            @Html.PasswordFor(model => model.Senha_Usuario, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Senha_Usuario, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
                     <p>
-                        @Html.ActionLink("Não tenho cadastro", "Cadastro", "Usuario", null, new { @class = "btn btn-secondary" })
+                        @Html.ActionLink("Esqueci minha senha", "RecuperarSenha", "Usuario")
                     </p>
+                    <br />
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Login" class="btn btn-primary" />
+                        </div>
+                        <br />
+                        <div>
+                            <p>
+                                @Html.ActionLink("Não tenho cadastro", "Cadastro", "Usuario", null, new { @class = "btn btn-secondary" })
+                            </p>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
                 <br />
             }
         </div>
 
-        
+
         <div class="col-md-6 text-right">
             <img src="~/imagens/imagem login.png" alt="Imagem ilústrativa de login" class="img-fluid" />
         </div>

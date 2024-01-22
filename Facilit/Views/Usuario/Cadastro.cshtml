@@ -1,27 +1,48 @@
 ﻿@model Facilit.Models.Usuario
+@{
+    ViewBag.Title = "Cadastro";
+}
+
+
+@if (!String.IsNullOrEmpty(TempData["Mensagem"] as string))
+{   
+    <div id="mensagem">
+        <div class="alert alert-danger">
+            @TempData["Mensagem"]
+        </div>
+    </div>
+}
+ 
+<script>
+    setTimeout(function () {
+        var caixa_mensagem = document.getElementById('mensagem');
+        if (caixa_mensagem) {
+            caixa_mensagem.style.display = 'none';
+
+        }
+
+    }, 2000);
+</script>
+
 
 <h1>Cadastre usuário</h1>
 
-            @if (ViewBag.CamposVazios == true)
-            {
-                <button type="button" class="btn btn-danger btn -sm btn-close" da-bs-dismiss="aler" aria-label="close">X</button>
-            }
 
-            @using (Html.BeginForm("NovoUsuario", "Usuario"))
-            {
 
-                @Html.Partial("_Frmlogin")
-               <br />
-                <div>
+@using (Html.BeginForm("NovoUsuario", "Usuario"))
+{
 
-                    <input type="submit" value="Cadastre-se" class="btn btn-primary" />
-                </div>
-            }
-     
+    @Html.Partial("_Frmlogin")
+    <br />
+    <div>
+
+        <input type="submit" value="Cadastre-se" class="btn btn-primary" />
+    </div>
+}
+
 <br />
-    
+
 <div>
     @Html.ActionLink("Voltar ao login", "Index", "Usuario", null, new { @class = "btn btn-secondary" })
 </div>
 
-  
