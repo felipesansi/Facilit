@@ -60,8 +60,11 @@ namespace Facilit.Controllers
         //    // Substitua isso com a lógica real que você tiver
         //    return "Nome do Cliente";
         //}
+
+        
         public ActionResult Registro()
         {
+            
             return View();
         }
         [HttpPost]

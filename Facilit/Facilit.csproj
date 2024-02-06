@@ -210,6 +210,7 @@
     <Content Include="imagens\amico.png" />
     <Content Include="imagens\imagem cadastrar.png" />
     <Content Include="imagens\imagem login.png" />
+    <Content Include="imagens\editar.png" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />

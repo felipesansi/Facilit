@@ -2,62 +2,89 @@
 
 @{
     ViewBag.Title = "Listagem de usuários";
+
+}
+
+<h2 style="text-align:center">Listagem os usuários</h2>
+
+<hr />
+
+@if (!String.IsNullOrEmpty(TempData["Mensagem"] as string))
+{
+<div id="mensagem">
+    <div class="alert alert-danger">
+        @TempData["Mensagem"]
+    </div>
+</div>
+}
+
+<script>
+    setTimeout(function () {
+        var caixa_mensagem = document.getElementById('mensagem');
+        if (caixa_mensagem) {
+            caixa_mensagem.style.display = 'none';
+
+        }
+
+    }, 2000);
+</script>
+
+@using (Html.BeginForm("PesqusarUsuario", "Usuario", FormMethod.Get))
+{
+    <div class="form-group">
+        @Html.TextBox("nome", null, new { @class = "form-control", placeholder = "Digite o nome do usuário" })
+        <button type="submit" class="btn btn-dark">Pesquisar</button>
+    </div>
 }
 
 
+<table class="table">
+    <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Nome completo</th>
+        <th scope="col">Nome de usuário</th>
+        <th scope="col">Data de cadastro</th>
+        <th scope="col">Data de alteração</th>
+        <th scope="col">Ações</th>
 
-    <h2 >Listagem os usuários</h2>
 
 
-<input />
-    
-    <table class="table">
+    </tr>
+
+    @foreach (var item in Model)
+    {
         <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Nome completo</th>
-            <th scope="col">Nome de usuário</th>
-            <th scope="col">Data de cadastro</th>
-            <th scope="col">Data de alteração</th>
-            <th scope="col">Ações</th>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nome_completo)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Nome_Usuario)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Criado)
+            </td>
 
 
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Alterado)
+            </td>
+
+            <td>
+                @Html.ActionLink("Editar", "Editar", new { id = item.Id }, new { @class = "btn btn-primary" })
+            </td>
+            <td>
+                @Html.ActionLink("Excuir", "Excluir", new { id = item.Id }, new { @class = "btn btn-danger" })
+            </td>
 
         </tr>
-
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Nome_completo)
-                </td>
-
-                <td>
-                    @Html.DisplayFor(modelItem => item.Nome_Usuario)
-                </td>
-
-                <td>
-                    @Html.DisplayFor(modelItem => item.Criado)
-                </td>
-
-
-
-                <td>
-                    @Html.DisplayFor(modelItem => item.Alterado)
-                </td>
-               
-                <td>
-                    @Html.ActionLink("Editar", "Editar", new { id = item.Id }, new { @class = "btn btn-primary" })
-                </td>
-                <td>
-                    @Html.ActionLink("Excuir", "Excluir", new { id = item.Id }, new { @class = "btn btn-danger" })
-                </td>
-
-            </tr>
-        }
-    </table>
-    <p>
-        @Html.ActionLink("VOLTAR", "Registro", "Webcan", null, new { @class = "btn btn-secondary" })
-    </p>
+    }
+</table>
+<p>
+    @Html.ActionLink("VOLTAR", "Registro", "Webcan", null, new { @class = "btn btn-secondary" })
+</p>

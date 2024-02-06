@@ -4,17 +4,34 @@
     ViewBag.Title = "Recuperar Senha";
 }
 
-<h2>Recuperar Senha</h2>
-@if (!String.IsNullOrEmpty(ViewBag.erro))
+@if (!String.IsNullOrEmpty(TempData["Mensagem"] as string))
 {
-    <div class="alert alert-danger">
-        @ViewBag.erro
+    <div id="mensagem">
+        <div class="alert alert-danger">
+            @TempData["Mensagem"]
+        </div>
     </div>
 }
 
+<script>
+    setTimeout(function () {
+        var caixa_mensagem = document.getElementById('mensagem');
+        if (caixa_mensagem) {
+            caixa_mensagem.style.display = 'none';
+
+        }
+
+    }, 2000);
+</script>
 
 
-@using (Html.BeginForm("EnviarEmail","Usuario"))
+<h2>Recuperar Senha</h2>
+
+
+
+
+
+@using (Html.BeginForm("EnviarEmail", "Usuario"))
 {
     @Html.AntiForgeryToken()
 
@@ -28,7 +45,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "falano@gmail.com" } })
             @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -45,9 +62,9 @@
     </div>
 
 }
-
+<br />
 <div>
-    @Html.ActionLink("<--- login", "Index")
+    @Html.ActionLink("Voltar ao login", "Index", "Usuario", null, new { @class = "btn btn-secondary" })
 </div>
 
 @section Scripts {
