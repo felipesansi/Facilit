@@ -333,7 +333,10 @@ namespace Facilit.Controllers
             }
         }
 
-
+        public ActionResult NovaSenha()
+        {
+            return View();
+        }
         public ActionResult RecuperarSenha()
         {
             return View();
@@ -424,6 +427,28 @@ namespace Facilit.Controllers
             string email = TempData["Email"] as string;
             return View((object)email);
         }
+        public static string GerarTokenUnico()
+        {
+            string token = Guid.NewGuid().ToString();
+
+            return token;
+        }
+        private void SalvarToken(string email , string token)
+        {
+            DateTime data_expedicao = DateTime.Now.AddMinutes(5);
+
+            string sql_updade = "update tb_usuarios set token = @token, token_expiracao = @expiracao where email = @email";
+            using (Conexao conexao = new Conexao())
+            {
+                using (MySqlCommand comando = new MySqlCommand(sql_updade,conexao._conn))
+                {
+                    comando.Parameters.AddWithValue("@token", token);
+                    comando.Parameters.AddWithValue("@expiracao", data_expedicao);
+                    comando.Parameters.AddWithValue("@email",email);
+                    comando.ExecuteNonQuery();
+                }
+            }
+        }
 
         private bool EmailExistente(Usuario usuario)
         {
@@ -471,9 +496,27 @@ namespace Facilit.Controllers
 
                             // config para enviar email 
 
+
+                            string token = GerarTokenUnico();
+
+                            SalvarToken(email, token);
+                            
+                            string link_nova_senha = Url.Action("NovaSenha", "Usuario", new { token = token }, Request.Url.Scheme);
+                            string corpo = "Prezado " + nome + "," +
+                                "\n\nEspero que esteja bem." +
+                                " \n\nEstamos entrando em contato porque foi solicitada uma recuperação de senha para a sua conta." +
+                                " \n\nPor favor, siga o link abaixo para redefinir sua senha:  " + link_nova_senha +
+                                "\n\nSe você não solicitou esta recuperação ou se precisar de assistência adicional, " +
+                                "não hesite em nos contatar imediatamente. Agradecemos sua atenção e cooperação. \n\nAtenciosamente, Felipe F. " +
+                                "\n\n Facilit";
+
+
+
+                            string remetente = "facilit.site@outlook.com", Smtp = "smtp-mail.outlook.com", senha_email = "FelipeMatheus";
+
                             try
                             {
-                                SmtpClient client = new SmtpClient("smtp-mail.outlook.com");
+                                SmtpClient client = new SmtpClient(Smtp);
 
                                 client.Port = 587;
                                 
@@ -481,21 +524,21 @@ namespace Facilit.Controllers
                                 
                                 client.UseDefaultCredentials = false;
                                 
-                                NetworkCredential credential = new NetworkCredential("facilit.site@outlook.com","FelipeMatheus");
+                                NetworkCredential credential = new NetworkCredential(remetente,senha_email);
                                 client.EnableSsl = true;
                                 client.Credentials = credential;
                                 client.Timeout = 10000;
                                 MailMessage e_mail = new MailMessage();
                                 
-                                e_mail.From = new MailAddress("facilit.site@outlook.com");
+                                e_mail.From = new MailAddress(remetente);
                                 TempData["email"] = usuario.Email;
                                 e_mail.To.Add(usuario.Email);
 
                                 e_mail.Subject = "Solicitação de Recuperação de senha - Facilit";
 
-                                e_mail.Body = "Olá, " + nome + ", sua Senha : " + senha + " \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n Este e-mail é automático.\nNão responda";
+                                e_mail.Body =corpo;
                               
-                                e_mail.IsBodyHtml = true;
+                                e_mail.IsBodyHtml = false;
 
                                 client.Send(e_mail);
                                  return RedirectToAction("EmailEnviado", "Usuario");
@@ -520,6 +563,8 @@ namespace Facilit.Controllers
             return RedirectToAction("RecuperarSenha", "Usuario");
         }
 
+        
 
     }
 }
+
