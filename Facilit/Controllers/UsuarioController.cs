@@ -333,9 +333,19 @@ namespace Facilit.Controllers
             }
         }
 
-        public ActionResult NovaSenha()
+        public ActionResult NovaSenha( string token)
         {
-            return View();
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToAction("RecuperarSenha", "Usuario");
+            }
+            bool verificado = VerificarToken(token);
+
+            if (!verificado)
+            {
+                return RedirectToAction("RecuperarSenha", "Usuario");
+            }
+            return View("NovaSenha");
         }
         public ActionResult RecuperarSenha()
         {
@@ -440,15 +450,18 @@ namespace Facilit.Controllers
             string sql_updade = "update tb_usuarios set token = @token, token_expiracao = @expiracao where email = @email";
             using (Conexao conexao = new Conexao())
             {
-                using (MySqlCommand comando = new MySqlCommand(sql_updade,conexao._conn))
+                using (MySqlCommand comando = new MySqlCommand(sql_updade, conexao._conn))
                 {
                     comando.Parameters.AddWithValue("@token", token);
                     comando.Parameters.AddWithValue("@expiracao", data_expedicao);
-                    comando.Parameters.AddWithValue("@email",email);
+                    comando.Parameters.AddWithValue("@email", email);
                     comando.ExecuteNonQuery();
                 }
             }
+
         }
+    
+        
 
         private bool EmailExistente(Usuario usuario)
         {
@@ -506,7 +519,7 @@ namespace Facilit.Controllers
                                 "\n\nEspero que esteja bem." +
                                 " \n\nEstamos entrando em contato porque foi solicitada uma recuperação de senha para a sua conta." +
                                 " \n\nPor favor, siga o link abaixo para redefinir sua senha:  " + link_nova_senha +
-                                "\n\nSe você não solicitou esta recuperação ou se precisar de assistência adicional, " +
+                                "\n\nEste link tem a duração de  5 minutos.\b\b\n\n você não solicitou esta recuperação ou se precisar de assistência adicional, " +
                                 "não hesite em nos contatar imediatamente. Agradecemos sua atenção e cooperação. \n\nAtenciosamente, Felipe F. " +
                                 "\n\n Facilit";
 
@@ -561,6 +574,42 @@ namespace Facilit.Controllers
             }
 
             return RedirectToAction("RecuperarSenha", "Usuario");
+        }
+      
+        
+        private bool VerificarToken(string token)
+        {
+            bool verificado = false;
+           
+            DateTime data_atual = DateTime.Now;
+
+            string sql_contar = "select count(*) from tb_usuarios where token = @token and token_expiracao > @dataAtual";
+
+            try
+            {
+                using(Conexao conexao = new Conexao())
+                {
+                    using(MySqlCommand comando = new MySqlCommand(sql_contar, conexao._conn))
+                    { 
+                        comando.Parameters.AddWithValue("@token", token);
+                        comando.Parameters.AddWithValue("@dataAtual", data_atual);
+
+                         int contador = Convert.ToInt32(comando.ExecuteScalar());
+                        verificado = contador > 0;
+                    }
+               
+                    
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                TempData["Mensagem"] = "Ocorreu um erro: " + ex;
+
+
+                
+            }
+            return verificado;
         }
 
         
