@@ -73,7 +73,7 @@ namespace Facilit.Controllers
 
         public ActionResult PesqusarUsuario(string nome)
         {
-            using(Conexao conexao = new Conexao())
+            using (Conexao conexao = new Conexao())
             {
                 string str_pesquisa = "select * from tb_usuarios where excluido = false and nome_completo like @p_nome";
 
@@ -88,8 +88,8 @@ namespace Facilit.Controllers
                     }
                     if (leitura.HasRows)
                     {
-                      var listaUsuario = new List<Usuario>();
-                        while(leitura.Read())
+                        var listaUsuario = new List<Usuario>();
+                        while (leitura.Read())
                         {
                             var usuario = new Usuario
                             {
@@ -113,13 +113,13 @@ namespace Facilit.Controllers
                     }
 
                 }
-                
+
             }
 
         }
         public ActionResult atualizarUsuario(Usuario usuario)
         {
-            if (Session["logado"]!= null)
+            if (Session["logado"] != null)
             {
 
                 if (string.IsNullOrWhiteSpace(usuario.Nome_Usuario) || string.IsNullOrWhiteSpace(usuario.Email) ||
@@ -173,7 +173,7 @@ namespace Facilit.Controllers
 
         public ActionResult Editar(int id)
         {
-            if (Session["logado"]!=null)
+            if (Session["logado"] != null)
             {
                 string str_editar = "select * from tb_usuarios where id = @id";
 
@@ -251,7 +251,7 @@ namespace Facilit.Controllers
                     }
                     else
                     {
-                     
+
                         return RedirectToAction("Perfis_usuario", "Usuario");
                     }
                 }
@@ -266,14 +266,14 @@ namespace Facilit.Controllers
         public ActionResult Softdelete(Usuario usuario)
         {
             string str_delete = "update tb_usuarios set excluido = true, alterado = @alterado where id = @id";
-            using(Conexao conexao = new Conexao())
+            using (Conexao conexao = new Conexao())
             {
-                using(MySqlCommand comando = new MySqlCommand(str_delete,conexao._conn))
-                { 
-                    comando.Parameters.AddWithValue("id", usuario.Id);    
-                   
+                using (MySqlCommand comando = new MySqlCommand(str_delete, conexao._conn))
+                {
+                    comando.Parameters.AddWithValue("id", usuario.Id);
+
                     comando.Parameters.AddWithValue("@alterado", DateTime.Now);
-                   
+
                     comando.ExecuteNonQuery();
 
                     return RedirectToAction("Perfis_usuario", "Usuario");
@@ -281,14 +281,14 @@ namespace Facilit.Controllers
 
             }
         }
-        
+
         public ActionResult Cadastro()
         {
             return View();
         }
 
         bool existe = false;
-       
+
         [HttpPost]
         public ActionResult VerificarLogin(Usuario class_usuario)
         {
@@ -309,18 +309,18 @@ namespace Facilit.Controllers
                     if (leitura.HasRows)
                     {
                         Session["logado"] = true;
-                       
-                        if (Session["logado"]!= null)
+
+                        if (Session["logado"] != null)
                         {
-                               return RedirectToAction("Registro", "Webcan");
+                            return RedirectToAction("Registro", "Webcan");
                         }
                         else
                         {
                             return RedirectToAction("Index", "Usuario");
                         }
 
-                    
-                  
+
+
                     }
                     else
                     {
@@ -333,21 +333,75 @@ namespace Facilit.Controllers
             }
         }
 
-        public ActionResult NovaSenha( string token)
+        public ActionResult NovaSenha(string token, Usuario usuario)
         {
             if (string.IsNullOrEmpty(token))
             {
+                TempData["Mensagem"] = "Esse token não existe ";
                 return RedirectToAction("RecuperarSenha", "Usuario");
+
+
             }
             bool verificado = VerificarToken(token);
 
             if (!verificado)
             {
+                TempData["Mensagem"] = "O token passou do 5 minutos ";
                 return RedirectToAction("RecuperarSenha", "Usuario");
+
             }
             return View("NovaSenha");
         }
-        public ActionResult RecuperarSenha()
+        public ActionResult AtualizarSenha(Usuario usuario)
+        {
+
+
+
+            if (usuario.Senha_Usuario == usuario.Confirmar_Senha )
+            {
+                if (usuario.Senha_Usuario.Length >3 && usuario.Confirmar_Senha.Length >3  )
+                {
+                    string sql_atualizar = "update tb_usuarios set senha_usuario = @senha_usuario where email= @email";
+                    using (Conexao conexao = new Conexao())
+                    {
+                        using (MySqlCommand comando = new MySqlCommand(sql_atualizar, conexao._conn))
+                        {
+                            if (EmailExistente(usuario))
+                            {
+                                comando.Parameters.AddWithValue("@email", usuario.Email);
+                                comando.Parameters.AddWithValue("@senha_usuario", usuario.Senha_Usuario);
+                                comando.ExecuteNonQuery();
+                                TempData["Sucesso"] = "Sua senha foi atualizada com sucesso!";
+                                return RedirectToAction("Index", "Usuario");
+
+                            }
+                            else
+                            {
+                                TempData["Mensagem"] = "O e-mail não está correto";
+                            }
+
+
+                        }
+                    }
+                }
+                else
+                {
+                    TempData["Mensagem"] = "A senha deve ter mais de 3 caracteres";
+                }
+                
+
+            }
+            else
+            {
+                TempData["Mensagem"] = "As senhas não correspondem";
+            }
+            return View("NovaSenha");
+        }
+    
+
+            
+
+            public ActionResult RecuperarSenha()
         {
             return View();
         }
@@ -515,7 +569,8 @@ namespace Facilit.Controllers
                             SalvarToken(email, token);
                             
                             string link_nova_senha = Url.Action("NovaSenha", "Usuario", new { token = token }, Request.Url.Scheme);
-                            string corpo = "Prezado " + nome + "," +
+                            string corpo = "Prezado " + nome +  "," +
+                                "\n\n nome de Usuário: " + nome_usuario +
                                 "\n\nEspero que esteja bem." +
                                 " \n\nEstamos entrando em contato porque foi solicitada uma recuperação de senha para a sua conta." +
                                 " \n\nPor favor, siga o link abaixo para redefinir sua senha:  " + link_nova_senha +
@@ -525,7 +580,7 @@ namespace Facilit.Controllers
 
 
 
-                            string remetente = "facilit.site@outlook.com", Smtp = "smtp-mail.outlook.com", senha_email = "FelipeMatheus";
+                            string remetente = "facilit.site@gmail.com", Smtp = "smtp.gmail.com", senha_email = "dujr xsqy luri jzat";
 
                             try
                             {
