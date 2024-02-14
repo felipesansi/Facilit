@@ -15,206 +15,252 @@ namespace Facilit.Controllers
 {
     public class UsuarioController : Controller
     {
-        // GET: Usuario
-        public ActionResult Index()
+       
+        public ActionResult Index() //  essa é a tela de login sendo chamada
         {
             return View();
         }
 
-        public ActionResult Perfis_usuario()
+        public ActionResult Perfis_usuario() // aqui  está sendo carregada com toda estrutura para mostrar todos os usuários do sistema
         {
-
-            using (Conexao conexao = new Conexao())
+            try
             {
-                string sql_select = "select * from tb_usuarios where excluido = false  ";
 
-                using (MySqlCommand comando = new MySqlCommand(sql_select, conexao._conn))
+
+                using (Conexao conexao = new Conexao()) //instanciando a classe conexao 
                 {
-                    MySqlDataReader leitura = comando.ExecuteReader();
+                    string sql_select = "select * from tb_usuarios where excluido = false  "; //selecione todos os dados da tabela tb_usuarrios que estejam com excuido = 0
 
-                    if (Session["logado"] != null)
+                    using (MySqlCommand comando = new MySqlCommand(sql_select, conexao._conn)) // instanciando a classe mysqlcommand com  o comando e string de conexao junto
                     {
+                        MySqlDataReader leitura = comando.ExecuteReader(); //  instanciando a classe chamda leitura  que recebe o comando de executar o sql
 
-                        if (leitura.HasRows)
+                        if (Session["logado"] != null) // se o usuario estiver logado
                         {
-                            var listaUsuario = new List<Usuario>();
-                            while (leitura.Read())
+
+                            if (leitura.HasRows) // se estiver linhas para ler
                             {
-                                var usuario = new Usuario
+                                var listaUsuario = new List<Usuario>(); // criação de uma lista com as propiedade do modelo de usuario
+                                while (leitura.Read()) // enquando estiver leitura
                                 {
-                                    Id = Convert.ToInt32(leitura["id"]),
-                                    Nome_completo = Convert.ToString(leitura["nome_completo"]),
-                                    Email = Convert.ToString(leitura["email"]),
-                                    Nome_Usuario = Convert.ToString(leitura["nome_usuario"]),
-                                    Criado = Convert.ToDateTime(leitura["criado"]),
-                                    Alterado = Convert.ToDateTime(leitura["alterado"])
-                                };
-                                listaUsuario.Add(usuario);
+                                    var usuario = new Usuario // criar um obj das propiedades do modelo de usuario
+                                    {
+                                        Id = Convert.ToInt32(leitura["id"]), // o modelo de usuario na propiedade id recebe os dados já convertidos em int do banco no campo id  lido pela leitura
+                                        Nome_completo = Convert.ToString(leitura["nome_completo"]), // o modelo de usuario na propiedade nome recebe os dados já convertidos em string do banco no campo nome  lido pela leitura
+                                        Email = Convert.ToString(leitura["email"]), // como no anterior
+                                        Nome_Usuario = Convert.ToString(leitura["nome_usuario"]), // como no anterior
+                                        Criado = Convert.ToDateTime(leitura["criado"]), // como no anterior
+                                        Alterado = Convert.ToDateTime(leitura["alterado"]) // como no anterior
+                                    };
+                                    listaUsuario.Add(usuario); //adiciondo todos esses dados da linha na lista e voltando enquanto estiver linhas para serem lidas
+
+                                }
+                                return View(listaUsuario); //passando a lista para view
 
                             }
-                            return View(listaUsuario);
 
+                            else // se  não estiverem linha para ler 
+                            {
+                                return RedirectToAction("Index", "Webcan"); // retorne a  view index no controller webcan
+                            }
                         }
-
-                        else
+                        else // se o usuário não estiver logado
                         {
-                            return RedirectToAction("Index", "Usuario");
+                            return RedirectToAction("Index", "Usuario"); // retorne a  view index no controller usuario
+                           
                         }
                     }
-                    else
-                    {
 
-                        return RedirectToAction("Index", "Webcan");
-                    }
                 }
-
+            }
+            catch (Exception erro)
+            {
+                TempData["Mensagem"] = "Ocorreu um erro" + erro; 
+                return RedirectToAction("Index", "Usuario");
             }
         }
 
         public ActionResult PesqusarUsuario(string nome)
         {
-            using (Conexao conexao = new Conexao())
+            try
             {
-                string str_pesquisa = "select * from tb_usuarios where excluido = false and nome_completo like @p_nome";
-
-                using (MySqlCommand comando = new MySqlCommand(str_pesquisa, conexao._conn))
+                if (Session["logado"] != null)
                 {
-                    comando.Parameters.AddWithValue("@p_nome", "%" + nome + "%");
-
-                    MySqlDataReader leitura = comando.ExecuteReader();
-                    if (true)
+                    using (Conexao conexao = new Conexao())
                     {
+                        string str_pesquisa = "select * from tb_usuarios where excluido = false and nome_completo like @p_nome";
 
-                    }
-                    if (leitura.HasRows)
-                    {
-                        var listaUsuario = new List<Usuario>();
-                        while (leitura.Read())
+                        using (MySqlCommand comando = new MySqlCommand(str_pesquisa, conexao._conn))
                         {
-                            var usuario = new Usuario
+                            comando.Parameters.AddWithValue("@p_nome", "%" + nome + "%");
+
+                            MySqlDataReader leitura = comando.ExecuteReader();
+
+
+
+                            if (leitura.HasRows)
                             {
-                                Id = Convert.ToInt32(leitura["id"]),
-                                Nome_completo = Convert.ToString(leitura["nome_completo"]),
-                                Email = Convert.ToString(leitura["email"]),
-                                Nome_Usuario = Convert.ToString(leitura["nome_usuario"]),
-                                Criado = Convert.ToDateTime(leitura["criado"]),
-                                Alterado = Convert.ToDateTime(leitura["alterado"])
-                            };
-                            listaUsuario.Add(usuario);
+                                var listaUsuario = new List<Usuario>();
+                                while (leitura.Read())
+                                {
+                                    var usuario = new Usuario
+                                    {
+                                        Id = Convert.ToInt32(leitura["id"]),
+                                        Nome_completo = Convert.ToString(leitura["nome_completo"]),
+                                        Email = Convert.ToString(leitura["email"]),
+                                        Nome_Usuario = Convert.ToString(leitura["nome_usuario"]),
+                                        Criado = Convert.ToDateTime(leitura["criado"]),
+                                        Alterado = Convert.ToDateTime(leitura["alterado"])
+                                    };
+                                    listaUsuario.Add(usuario);
+
+                                }
+                                return View("Perfis_usuario", listaUsuario);
+
+                            }
+                            else
+                            {
+                                TempData["Mensagem"] = "Atenção: Usuário não encontrado";
+                                return View("Perfis_usuario", "Usuario");
+                            }
 
                         }
-                        return View("Perfis_usuario", listaUsuario);
 
                     }
-                    else
-                    {
-                        TempData["Mensagem"] = "Atenção: Usuário não encontrado";
-                        return View("Perfis_usuario", "Usuario");
-                    }
-
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Usuario");
                 }
 
             }
+            catch (Exception erro )
+            {
+
+                TempData["Mensagem"] = "Ocorreu um erro" + erro;
+                return RedirectToAction("Index", "Usuario");
+            }  
 
         }
         public ActionResult atualizarUsuario(Usuario usuario)
         {
-            if (Session["logado"] != null)
+            try
             {
-
-                if (string.IsNullOrWhiteSpace(usuario.Nome_Usuario) || string.IsNullOrWhiteSpace(usuario.Email) ||
-                    string.IsNullOrWhiteSpace(usuario.Nome_Usuario) || string.IsNullOrWhiteSpace(usuario.Senha_Usuario))
+                if (Session["logado"] != null)
                 {
-                    TempData["Mensagem"] = "Atenção: Há algum campo vazio";
-                    return RedirectToAction("Editar", "Usuario", new { id = usuario.Id });
-                }
+
+                    if (string.IsNullOrWhiteSpace(usuario.Nome_Usuario) || string.IsNullOrWhiteSpace(usuario.Email) ||
+                        string.IsNullOrWhiteSpace(usuario.Nome_Usuario) || string.IsNullOrWhiteSpace(usuario.Senha_Usuario))
+                    {
+                        TempData["Mensagem"] = "Atenção: Há algum campo vazio";
+                        return RedirectToAction("Editar", "Usuario", new { id = usuario.Id });
+                    }
 
 
-                else if (usuario.Nome_Usuario.Length < 4 || usuario.Senha_Usuario.Length < 4)
-                {
-                    TempData["Mensagem"] = "Usuário ou senha com menos de 4 caracteres";
+                    else if (usuario.Nome_Usuario.Length < 4 || usuario.Senha_Usuario.Length < 4)
+                    {
+                        TempData["Mensagem"] = "Usuário ou senha com menos de 4 caracteres";
 
-                    return RedirectToAction("Editar", "Usuario", new { id = usuario.Id });
+                        return RedirectToAction("Editar", "Usuario", new { id = usuario.Id });
+
+                    }
+                    else
+                    {
+
+                        string sql_insert = "update tb_usuarios set " +
+                                "nome_completo = @nc, email = @em , nome_usuario = @nu, senha_usuario = @su, alterado = @alterado where id = @id";
+
+                        using (var conexao = new Conexao())
+                        {
+
+                            using (MySqlCommand comando = new MySqlCommand(sql_insert, conexao._conn))
+                            {
+                                comando.Parameters.AddWithValue("@nc", usuario.Nome_completo);
+                                comando.Parameters.AddWithValue("@em", usuario.Email);
+                                comando.Parameters.AddWithValue("@nu", usuario.Nome_Usuario);
+                                comando.Parameters.AddWithValue("@su", usuario.Senha_Usuario);
+                                comando.Parameters.AddWithValue("@alterado", DateTime.Now);
+                                comando.Parameters.AddWithValue("@id", usuario.Id);
+
+                                comando.ExecuteNonQuery();
+
+                                return RedirectToAction("Index", "Usuario");
+                            }
+
+
+                        }
+                    }
 
                 }
                 else
                 {
-
-                    string sql_insert = "update tb_usuarios set " +
-                            "nome_completo = @nc, email = @em , nome_usuario = @nu, senha_usuario = @su, alterado = @alterado where id = @id";
-
-                    using (var conexao = new Conexao())
-                    {
-
-                        using (MySqlCommand comando = new MySqlCommand(sql_insert, conexao._conn))
-                        {
-                            comando.Parameters.AddWithValue("@nc", usuario.Nome_completo);
-                            comando.Parameters.AddWithValue("@em", usuario.Email);
-                            comando.Parameters.AddWithValue("@nu", usuario.Nome_Usuario);
-                            comando.Parameters.AddWithValue("@su", usuario.Senha_Usuario);
-                            comando.Parameters.AddWithValue("@alterado", DateTime.Now);
-                            comando.Parameters.AddWithValue("@id", usuario.Id);
-
-                            comando.ExecuteNonQuery();
-
-                            return RedirectToAction("Index", "Usuario");
-                        }
-
-
-                    }
+                    return RedirectToAction("Index", "Usuario");
                 }
-
             }
-            else
+            catch (Exception erro)
             {
+
+                TempData["Mensagem"] = "Ocorreu um erro" + erro;
                 return RedirectToAction("Index", "Usuario");
             }
         }
 
         public ActionResult Editar(int id)
         {
-            if (Session["logado"] != null)
+            try
             {
-                string str_editar = "select * from tb_usuarios where id = @id";
 
-                using (Conexao conexao = new Conexao())
+                if (Session["logado"] != null)
                 {
+                    string str_editar = "select * from tb_usuarios where id = @id";
 
-                    using (MySqlCommand comando = new MySqlCommand(str_editar, conexao._conn))
+                    using (Conexao conexao = new Conexao())
                     {
 
-
-                        comando.Parameters.AddWithValue("@id", id);
-
-                        MySqlDataReader leitura = comando.ExecuteReader();
-                        leitura.Read();
-                        if (leitura.HasRows)
+                        using (MySqlCommand comando = new MySqlCommand(str_editar, conexao._conn))
                         {
 
-                            var usuario = new Usuario
+
+                            comando.Parameters.AddWithValue("@id", id);
+
+                            MySqlDataReader leitura = comando.ExecuteReader();
+                            leitura.Read();
+                            
+                            if (leitura.HasRows)
                             {
-                                Id = Convert.ToInt32(leitura["id"]),
-                                Nome_completo = Convert.ToString(leitura["nome_completo"]),
-                                Email = Convert.ToString(leitura["email"]),
-                                Nome_Usuario = Convert.ToString(leitura["nome_usuario"]),
-                                Senha_Usuario = Convert.ToString(leitura["senha_usuario"]),
-                            };
-                            return View(usuario);
 
-                        }
-                        else
-                        {
+                                var usuario = new Usuario
+                                {
+                                    Id = Convert.ToInt32(leitura["id"]),
+                                    Nome_completo = Convert.ToString(leitura["nome_completo"]),
+                                    Email = Convert.ToString(leitura["email"]),
+                                    Nome_Usuario = Convert.ToString(leitura["nome_usuario"]),
+                                    Senha_Usuario = Convert.ToString(leitura["senha_usuario"]),
+                                };
+                                return View(usuario);
 
-                            return RedirectToAction("Perfis_usuario", "Usuario");
+                            }
+                            else
+                            {
+
+                                return RedirectToAction("Perfis_usuario", "Usuario");
+                            }
                         }
                     }
+
+
+
                 }
-
-
-
+                else
+                {
+                    return RedirectToAction("Index", "Usuario");
+                }
             }
-            else
+            catch (Exception erro)
             {
+
+
+                TempData["Mensagem"] = "Ocorreu um erro" + erro;
                 return RedirectToAction("Index", "Usuario");
             }
         }
@@ -346,7 +392,7 @@ namespace Facilit.Controllers
 
             if (!verificado)
             {
-                TempData["Mensagem"] = "O token passou do 5 minutos ";
+                TempData["Mensagem"] = "O token passou do 1 Hora ";
                 return RedirectToAction("RecuperarSenha", "Usuario");
 
             }
@@ -371,8 +417,8 @@ namespace Facilit.Controllers
                                 comando.Parameters.AddWithValue("@email", usuario.Email);
                                 comando.Parameters.AddWithValue("@senha_usuario", usuario.Senha_Usuario);
                                 comando.ExecuteNonQuery();
-                                TempData["Sucesso"] = "Sua senha foi atualizada com sucesso!";
-                                return RedirectToAction("Index", "Usuario");
+                                TempData["Sucesso"] = "Sua senha foi atualizada com sucesso!\n\n Volte ao login";
+                           
 
                             }
                             else
@@ -397,11 +443,11 @@ namespace Facilit.Controllers
             }
             return View("NovaSenha");
         }
-    
 
-            
 
-            public ActionResult RecuperarSenha()
+
+
+        public ActionResult RecuperarSenha()
         {
             return View();
         }
@@ -499,7 +545,7 @@ namespace Facilit.Controllers
         }
         private void SalvarToken(string email , string token)
         {
-            DateTime data_expedicao = DateTime.Now.AddMinutes(5);
+            DateTime data_expedicao = DateTime.Now.AddHours(1);
 
             string sql_updade = "update tb_usuarios set token = @token, token_expiracao = @expiracao where email = @email";
             using (Conexao conexao = new Conexao())
@@ -520,20 +566,28 @@ namespace Facilit.Controllers
         private bool EmailExistente(Usuario usuario)
         {
             bool existe_email = false;
-            using (var conexao = new Conexao())
+            try
             {
-                string sql = "select * from tb_usuarios where  email = @email";
-
-                using (var comando = new MySqlCommand(sql, conexao._conn))
+                using (var conexao = new Conexao())
                 {
-                    comando.Parameters.AddWithValue("@email", usuario.Email);
+                    string sql = "select * from tb_usuarios where  email = @email";
 
-                    MySqlDataReader leitura = comando.ExecuteReader();
-                    if (leitura.HasRows)
+                    using (var comando = new MySqlCommand(sql, conexao._conn))
                     {
-                        existe_email = true;
+                        comando.Parameters.AddWithValue("@email", usuario.Email);
+
+                        MySqlDataReader leitura = comando.ExecuteReader();
+                        if (leitura.HasRows)
+                        {
+                            existe_email = true;
+                        }
                     }
                 }
+            }
+            catch (Exception erro)
+            {
+
+                TempData["Mensagem"] = "Ocorreu um erro" + erro;
             }
             return existe_email;
         }
@@ -574,7 +628,7 @@ namespace Facilit.Controllers
                                 "\n\nEspero que esteja bem." +
                                 " \n\nEstamos entrando em contato porque foi solicitada uma recuperação de senha para a sua conta." +
                                 " \n\nPor favor, siga o link abaixo para redefinir sua senha:  " + link_nova_senha +
-                                "\n\nEste link tem a duração de  5 minutos.\b\b\n\n você não solicitou esta recuperação ou se precisar de assistência adicional, " +
+                                "\n\nEste link tem a duração de  1  HORA.\b\b\n\n você não solicitou esta recuperação ou se precisar de assistência adicional, " +
                                 "não hesite em nos contatar imediatamente. Agradecemos sua atenção e cooperação. \n\nAtenciosamente, Felipe F. " +
                                 "\n\n Facilit";
 
@@ -602,7 +656,7 @@ namespace Facilit.Controllers
                                 TempData["email"] = usuario.Email;
                                 e_mail.To.Add(usuario.Email);
 
-                                e_mail.Subject = "Solicitação de Recuperação de senha - Facilit";
+                                e_mail.Subject = "Solicitação de Recuperação de Senha - Facilit";
 
                                 e_mail.Body =corpo;
                               
@@ -622,6 +676,7 @@ namespace Facilit.Controllers
                     }
                 }
             }
+
             else
             {
                 TempData["Mensagem"] = "O e-mail informado não está vinculdo há nenhuma conta ";

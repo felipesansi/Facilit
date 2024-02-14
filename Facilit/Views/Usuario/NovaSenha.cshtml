@@ -27,7 +27,7 @@
                     caixa_mesangem2.style.display = 'none';
                 }
 
-            }, 2000);
+            }, 200);
         </script>
 
 
@@ -68,5 +68,6 @@
 
         <div>
             <input type="submit" value="Mudar senhar" class="btn btn-dark" />
+            @Html.ActionLink("Voltar ao login", "Index", "Usuario", null, new { @class = "btn btn-secondary" })
         </div>
     }
