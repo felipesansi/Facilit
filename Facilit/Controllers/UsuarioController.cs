@@ -75,7 +75,7 @@ namespace Facilit.Controllers
             }
             catch (Exception erro)
             {
-                TempData["Mensagem"] = "Ocorreu um erro" + erro; 
+                TempData["Mensagem"] = "Ocorreu um erro" + erro; // se hover erro está mensagem  irá aparecer
                 return RedirectToAction("Index", "Usuario");
             }
         }
@@ -146,9 +146,9 @@ namespace Facilit.Controllers
         {
             try
             {
-                if (Session["logado"] != null)
+                if (Session["logado"] != null) //se tiver logado
                 {
-
+                    // se qualquer um dos campos estiverem vazios irá aparecer uma mensagem
                     if (string.IsNullOrWhiteSpace(usuario.Nome_Usuario) || string.IsNullOrWhiteSpace(usuario.Email) ||
                         string.IsNullOrWhiteSpace(usuario.Nome_Usuario) || string.IsNullOrWhiteSpace(usuario.Senha_Usuario))
                     {
@@ -156,7 +156,7 @@ namespace Facilit.Controllers
                         return RedirectToAction("Editar", "Usuario", new { id = usuario.Id });
                     }
 
-
+                    // se os campos não estiverem vazios, mas o usuário digitar uma senha menor que 4 caracteres
                     else if (usuario.Nome_Usuario.Length < 4 || usuario.Senha_Usuario.Length < 4)
                     {
                         TempData["Mensagem"] = "Usuário ou senha com menos de 4 caracteres";
@@ -165,7 +165,7 @@ namespace Facilit.Controllers
 
                     }
                     else
-                    {
+                    { // se os campos não estiverem vazios e a senha forem maior que 3 atualize os dados
 
                         string sql_insert = "update tb_usuarios set " +
                                 "nome_completo = @nc, email = @em , nome_usuario = @nu, senha_usuario = @su, alterado = @alterado where id = @id";
@@ -179,7 +179,7 @@ namespace Facilit.Controllers
                                 comando.Parameters.AddWithValue("@em", usuario.Email);
                                 comando.Parameters.AddWithValue("@nu", usuario.Nome_Usuario);
                                 comando.Parameters.AddWithValue("@su", usuario.Senha_Usuario);
-                                comando.Parameters.AddWithValue("@alterado", DateTime.Now);
+                                comando.Parameters.AddWithValue("@alterado", DateTime.Now); // pega a data atual do sistema e armazena no banco
                                 comando.Parameters.AddWithValue("@id", usuario.Id);
 
                                 comando.ExecuteNonQuery();
