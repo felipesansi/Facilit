@@ -1,4 +1,4 @@
-/
+
 
 document.addEventListener("DOMContentLoaded", function () {
     const video = document.querySelector('video');
@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
             video.srcObject = stream;
         })
         .catch(erro => {
-            console.error('Erro ao abrir a c‚mera :', erro);
+            console.error('Erro ao abrir a c√¢mera :', erro);
         });
 
     botao.addEventListener('click', function () {
