@@ -9,8 +9,7 @@ namespace Facilit.Models
     [JsonObject]
     public class Produto
     {
-        public string Token{ get; set; }
-        public string Formato{ get; set; }
+        
         public int Id{ get; set; }
         public int Status_processamento { get; set; }
         public string Status{ get; set; }

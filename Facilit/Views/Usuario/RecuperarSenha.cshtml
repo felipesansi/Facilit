@@ -25,11 +25,10 @@
 </script>
 
 
+<header>
+    <link rel="stylesheet"href="~/Scripts/Estilo.css"/>
+</header>
 <h2>Recuperar Senha</h2>
-
-
-
-
 
 @using (Html.BeginForm("EnviarEmail", "Usuario"))
 {
@@ -45,7 +44,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "falano@gmail.com" } })
+            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "campo", placeholder = "falano@gmail.com" } })
             @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -57,14 +56,15 @@
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <br />
-            <input type="submit" value="Enviar E-mail" class="btn btn-dark" />
+            <input type="submit" value="Enviar E-mail" class="btn btn-success" />
+            @Html.ActionLink("Voltar ao login", "Index", "Usuario", null, new { @class = "btn btn-secondary" })
         </div>
     </div>
 
 }
 <br />
 <div>
-    @Html.ActionLink("Voltar ao login", "Index", "Usuario", null, new { @class = "btn btn-secondary" })
+
 </div>
 
 @section Scripts {

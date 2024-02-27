@@ -7,11 +7,11 @@ namespace Facilit.Models
 {
     public class Clientes
     {
-        public string id { get; set; }
-        public string codigo { get; set; }
-        public string nome { get; set; }
-        public string fantasia { get; set; }
-        public string tipo_pessoa { get; set; }
-        public string cpf_cnpj { get; set; }
+        public string Id { get; set; }
+        public string Codigo { get; set; }
+        public string Nome { get; set; }
+        public string Fantasia { get; set; }
+        public string Tipo_pessoa { get; set; }
+        public string Cpf_cnpj { get; set; }
     }
 }
