@@ -1,5 +1,3 @@
-
-
 document.addEventListener("DOMContentLoaded", function () {
     const video = document.querySelector('video');
     const canvas = document.querySelector('canvas');

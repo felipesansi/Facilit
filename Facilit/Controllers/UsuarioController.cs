@@ -110,7 +110,9 @@ namespace Facilit.Controllers
                                         Email = Convert.ToString(leitura["email"]),
                                         Nome_Usuario = Convert.ToString(leitura["nome_usuario"]),
                                         Criado = Convert.ToDateTime(leitura["criado"]),
-                                        Alterado = Convert.ToDateTime(leitura["alterado"])
+                                        Alterado = Convert.ToDateTime(leitura["alterado"]),
+                                        Senha_Usuario =  Convert.ToString(leitura["senha_usuario"])
+
                                     };
                                     listaUsuario.Add(usuario);
 
