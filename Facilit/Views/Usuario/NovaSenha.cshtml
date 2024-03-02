@@ -65,7 +65,9 @@
                 @Html.ValidationMessageFor(model => model.Confirmar_Senha, "", new { @class = "text-danger" })
             </div>
         </div>
-
+         
+        <br />
+      
         <div>
             <input type="submit" value="Mudar senhar" class="btn btn-dark" />
             @Html.ActionLink("Voltar ao login", "Index", "Usuario", null, new { @class = "btn btn-secondary" })

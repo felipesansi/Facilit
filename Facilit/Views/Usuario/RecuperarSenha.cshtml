@@ -41,10 +41,11 @@
 
     </div>
     <h4>Informe o E-mail Cadastrado</h4>
+    <br />
     <div class="form-group">
-        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.Email, "E-mail:", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "campo", placeholder = "falano@gmail.com" } })
+            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "campo", placeholder = "Seu e-mail" } })
             @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
         </div>
     </div>

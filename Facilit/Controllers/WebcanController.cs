@@ -17,9 +17,9 @@ namespace Facilit.Controllers
 
 
         
-        public ActionResult Registro()
+        public async Task <ActionResult> Registro()
         {
-            
+         await retorno();
             return View();
         }
         [HttpPost]
@@ -43,7 +43,13 @@ namespace Facilit.Controllers
             return Json(new { sucesso = true, mensagem = "Foto salva com sucesso" });
 
         }
-    
+
+        public async Task retorno()
+        {
+            RetornoTinyApi produto = new RetornoTinyApi();
+            await produto.ListarProdutos("02011b49e5399d62d999007a8952642c85cca50bc310b49fdd6c3674fdff4b2a");
+        }
+
 
     }
    

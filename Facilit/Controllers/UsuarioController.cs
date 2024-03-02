@@ -10,6 +10,8 @@ using System.Web;
 using System.Web.Mvc;
 using Renci.SshNet;
 using System.Net;
+using System.Threading.Tasks;
+using Facilit.Servicos;
 
 namespace Facilit.Controllers
 {
@@ -338,7 +340,7 @@ namespace Facilit.Controllers
         bool existe = false;
 
         [HttpPost]
-        public ActionResult VerificarLogin(Usuario class_usuario)
+        public ActionResult  VerificarLogin(Usuario class_usuario)
         {
             using (var conexao = new Conexao())
             {
