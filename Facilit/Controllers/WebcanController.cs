@@ -48,6 +48,8 @@ namespace Facilit.Controllers
         {
             RetornoTinyApi produto = new RetornoTinyApi();
             await produto.ListarProdutos("02011b49e5399d62d999007a8952642c85cca50bc310b49fdd6c3674fdff4b2a");
+            RetornoTinyApi cliente = new RetornoTinyApi();
+           await cliente.ListarClientes("02011b49e5399d62d999007a8952642c85cca50bc310b49fdd6c3674fdff4b2a");
         }
 
 

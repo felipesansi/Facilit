@@ -1,4 +1,5 @@
 ﻿using Facilit.Models;
+using Facilit.Models.ClienteTiny;
 using System;
 using System.Collections.Generic;
 using System.Linq;
