@@ -31,8 +31,11 @@
 
 @using (Html.BeginForm("PesqusarUsuario", "Usuario", FormMethod.Get))
 {
+    <header>
+        <link  rel="stylesheet" href="~/Scripts/Estilo.css"/>
+    </header>
     <div class="form-group">
-        @Html.TextBox("nome", null, new { @class = "form-control", placeholder = "Digite o nome do usuário" })
+        @Html.TextBox("nome", null, new { @class = "campo", placeholder = "Digite o nome do usuário" })
         <button type="submit" class="btn btn-dark">Pesquisar</button>
     </div>
 }

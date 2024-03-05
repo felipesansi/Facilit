@@ -472,6 +472,12 @@ namespace Facilit.Controllers
                 TempData["Mensagem"] = "Já existe uma conta com este usuário";
                 return RedirectToAction("Cadastro", "Usuario");
             }
+            else if (EmailExistente(usuario))
+            {
+
+                TempData["Mensagem"] = "Já existe uma conta com este e-mail";
+                return RedirectToAction("Cadastro", "Usuario");
+            }
 
             else if (usuario.Nome_Usuario.Length < 4 || usuario.Senha_Usuario.Length < 4)
             {
