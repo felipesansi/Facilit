@@ -18,57 +18,57 @@ namespace Facilit.Controllers
     public class UsuarioController : Controller
     {
        
-        public ActionResult Index() //  essa é a tela de login sendo chamada
+        public ActionResult Index() 
         {
             return View();
         }
 
-        public ActionResult Perfis_usuario() // aqui  está sendo carregada com toda estrutura para mostrar todos os usuários do sistema
+        public ActionResult Perfis_usuario() 
         {
             try
             {
 
 
-                using (Conexao conexao = new Conexao()) //instanciando a classe conexao 
+                using (Conexao conexao = new Conexao()) 
                 {
-                    string sql_select = "select * from tb_usuarios where excluido = false  "; //selecione todos os dados da tabela tb_usuarrios que estejam com excuido = 0
+                    string sql_select = "select * from tb_usuarios where excluido = false  ";
 
-                    using (MySqlCommand comando = new MySqlCommand(sql_select, conexao._conn)) // instanciando a classe mysqlcommand com  o comando e string de conexao junto
+                    using (MySqlCommand comando = new MySqlCommand(sql_select, conexao._conn)) 
                     {
-                        MySqlDataReader leitura = comando.ExecuteReader(); //  instanciando a classe chamda leitura  que recebe o comando de executar o sql
+                        MySqlDataReader leitura = comando.ExecuteReader(); 
 
-                        if (Session["logado"] != null) // se o usuario estiver logado
+                        if (Session["logado"] != null) 
                         {
 
-                            if (leitura.HasRows) // se estiver linhas para ler
+                            if (leitura.HasRows) 
                             {
-                                var listaUsuario = new List<Usuario>(); // criação de uma lista com as propiedade do modelo de usuario
-                                while (leitura.Read()) // enquando estiver leitura
+                                var listaUsuario = new List<Usuario>();
+                                while (leitura.Read()) 
                                 {
-                                    var usuario = new Usuario // criar um obj das propiedades do modelo de usuario
+                                    var usuario = new Usuario 
                                     {
-                                        Id = Convert.ToInt32(leitura["id"]), // o modelo de usuario na propiedade id recebe os dados já convertidos em int do banco no campo id  lido pela leitura
-                                        Nome_completo = Convert.ToString(leitura["nome_completo"]), // o modelo de usuario na propiedade nome recebe os dados já convertidos em string do banco no campo nome  lido pela leitura
-                                        Email = Convert.ToString(leitura["email"]), // como no anterior
-                                        Nome_Usuario = Convert.ToString(leitura["nome_usuario"]), // como no anterior
-                                        Criado = Convert.ToDateTime(leitura["criado"]), // como no anterior
-                                        Alterado = Convert.ToDateTime(leitura["alterado"]) // como no anterior
+                                        Id = Convert.ToInt32(leitura["id"]), 
+                                        Nome_completo = Convert.ToString(leitura["nome_completo"]),  
+                                        Email = Convert.ToString(leitura["email"]), 
+                                        Nome_Usuario = Convert.ToString(leitura["nome_usuario"]),
+                                        Criado = Convert.ToDateTime(leitura["criado"]),
+                                        Alterado = Convert.ToDateTime(leitura["alterado"]) 
                                     };
-                                    listaUsuario.Add(usuario); //adiciondo todos esses dados da linha na lista e voltando enquanto estiver linhas para serem lidas
+                                    listaUsuario.Add(usuario);
 
                                 }
-                                return View(listaUsuario); //passando a lista para view
+                                return View(listaUsuario); 
 
                             }
 
-                            else // se  não estiverem linha para ler 
+                            else 
                             {
-                                return RedirectToAction("Index", "Webcan"); // retorne a  view index no controller webcan
+                                return RedirectToAction("Index", "Webcan"); 
                             }
                         }
-                        else // se o usuário não estiver logado
+                        else 
                         {
-                            return RedirectToAction("Index", "Usuario"); // retorne a  view index no controller usuario
+                            return RedirectToAction("Index", "Usuario"); 
                            
                         }
                     }
@@ -77,7 +77,7 @@ namespace Facilit.Controllers
             }
             catch (Exception erro)
             {
-                TempData["Mensagem"] = "Ocorreu um erro" + erro; // se hover erro está mensagem  irá aparecer
+                TempData["Mensagem"] = "Ocorreu um erro" + erro;
                 return RedirectToAction("Index", "Usuario");
             }
         }
@@ -150,9 +150,9 @@ namespace Facilit.Controllers
         {
             try
             {
-                if (Session["logado"] != null) //se tiver logado
+                if (Session["logado"] != null) 
                 {
-                    // se qualquer um dos campos estiverem vazios irá aparecer uma mensagem
+                    
                     if (string.IsNullOrWhiteSpace(usuario.Nome_Usuario) || string.IsNullOrWhiteSpace(usuario.Email) ||
                         string.IsNullOrWhiteSpace(usuario.Nome_Usuario) || string.IsNullOrWhiteSpace(usuario.Senha_Usuario))
                     {
@@ -160,7 +160,6 @@ namespace Facilit.Controllers
                         return RedirectToAction("Editar", "Usuario", new { id = usuario.Id });
                     }
 
-                    // se os campos não estiverem vazios, mas o usuário digitar uma senha menor que 4 caracteres
                     else if (usuario.Nome_Usuario.Length < 4 || usuario.Senha_Usuario.Length < 4)
                     {
                         TempData["Mensagem"] = "Usuário ou senha com menos de 4 caracteres";
@@ -169,7 +168,7 @@ namespace Facilit.Controllers
 
                     }
                     else
-                    { // se os campos não estiverem vazios e a senha forem maior que 3 atualize os dados
+                    { 
 
                         string sql_insert = "update tb_usuarios set " +
                                 "nome_completo = @nc, email = @em , nome_usuario = @nu, senha_usuario = @su, alterado = @alterado where id = @id";
@@ -183,7 +182,7 @@ namespace Facilit.Controllers
                                 comando.Parameters.AddWithValue("@em", usuario.Email);
                                 comando.Parameters.AddWithValue("@nu", usuario.Nome_Usuario);
                                 comando.Parameters.AddWithValue("@su", usuario.Senha_Usuario);
-                                comando.Parameters.AddWithValue("@alterado", DateTime.Now); // pega a data atual do sistema e armazena no banco
+                                comando.Parameters.AddWithValue("@alterado", DateTime.Now); 
                                 comando.Parameters.AddWithValue("@id", usuario.Id);
 
                                 comando.ExecuteNonQuery();

@@ -187,6 +187,7 @@
     </Compile>
     <Compile Include="Models\ClienteTiny.cs" />
     <Compile Include="Models\Conexao.cs" />
+    <Compile Include="Models\EquiquetasTiny.cs" />
     <Compile Include="Models\ProdutoTiny.cs" />
     <Compile Include="Models\Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
