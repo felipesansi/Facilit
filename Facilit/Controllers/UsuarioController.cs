@@ -12,6 +12,7 @@ using Renci.SshNet;
 using System.Net;
 using System.Threading.Tasks;
 using Facilit.Servicos;
+using System.Data.SqlClient;
 
 namespace Facilit.Controllers
 {
@@ -60,6 +61,7 @@ namespace Facilit.Controllers
                                 return View(listaUsuario); 
 
                             }
+
 
                             else 
                             {
@@ -314,20 +316,26 @@ namespace Facilit.Controllers
 
         public ActionResult Softdelete(Usuario usuario)
         {
-            string str_delete = "update tb_usuarios set excluido = true, alterado = @alterado where id = @id";
-            using (Conexao conexao = new Conexao())
+          if (usuario.Id == 1)
             {
-                using (MySqlCommand comando = new MySqlCommand(str_delete, conexao._conn))
+                TempData["Mensagem"] = "O Sistema mantém o usuário 1 como padrão.\n Este não pode ser excluido, mas você pode atualizar os dados";
+                return RedirectToAction("Perfis_usuario", "Usuario");
+            }
+            else { 
+            string str_delete = "update tb_usuarios set excluido = true, alterado = @alterado where id = @id";
+                using (Conexao conexao = new Conexao())
                 {
-                    comando.Parameters.AddWithValue("id", usuario.Id);
+                    using (MySqlCommand comando = new MySqlCommand(str_delete, conexao._conn))
+                    {
+                        comando.Parameters.AddWithValue("id", usuario.Id);
 
-                    comando.Parameters.AddWithValue("@alterado", DateTime.Now);
+                        comando.Parameters.AddWithValue("@alterado", DateTime.Now);
 
-                    comando.ExecuteNonQuery();
+                        comando.ExecuteNonQuery();
 
-                    return RedirectToAction("Perfis_usuario", "Usuario");
+                        return RedirectToAction("Perfis_usuario", "Usuario");
+                    }
                 }
-
             }
         }
 
