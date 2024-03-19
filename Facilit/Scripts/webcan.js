@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const video = document.querySelector('video');
     const canvas = document.querySelector('canvas');
     const botao = document.getElementById('btn_salvar');
+    const proporcao = 0.75; // Defina a proporção desejada
 
     navigator.mediaDevices.getUserMedia({ video: true })
         .then(stream => {
@@ -13,9 +14,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     botao.addEventListener('click', function () {
         const context = canvas.getContext('2d');
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const dados_imagem = canvas.toDataURL('image/jpg').replace('data:image/jpeg;base64,', '').replace('data:image/png;base64,', '');
+        const videoWidth = video.videoWidth;
+        const videoHeight = video.videoHeight;
+        const capturaWidth = videoWidth;
+        const capturaHeight = videoWidth * proporcao; 
 
+        canvas.width = capturaWidth;
+        canvas.height = capturaHeight;
+
+        context.drawImage(video, 0, 0, capturaWidth, capturaHeight);
+        const dados_imagem = canvas.toDataURL('image/jpg').replace('data:image/jpeg;base64,', '').replace('data:image/png;base64,', '');
 
         $.ajax({
             type: "POST",
@@ -23,7 +31,6 @@ document.addEventListener("DOMContentLoaded", function () {
             data: { dados_imagem: dados_imagem },
             success: function (response) {
                 if (response.sucesso) {
-
                     alert(response.mensagem);
                 }
             },
