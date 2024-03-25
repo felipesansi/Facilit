@@ -181,6 +181,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\EtiquetasController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="Controllers\WebcanController.cs" />
@@ -267,6 +268,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Fotos\" />
+    <Folder Include="Views\Etiquetas\" />
     <Folder Include="Views\Produto\" />
   </ItemGroup>
   <ItemGroup>
@@ -315,6 +317,8 @@
           <DevelopmentServerPort>54188</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:44377/</IISUrl>
+          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
+          <IISAppRootUrl>http://localhost:44377/</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
