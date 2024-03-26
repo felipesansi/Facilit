@@ -264,11 +264,11 @@
     <Content Include="Views\Usuario\Editar.cshtml" />
     <Content Include="Views\Usuario\Excluir.cshtml" />
     <Content Include="Views\Usuario\NovaSenha.cshtml" />
+    <Content Include="Views\Etiquetas\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Fotos\" />
-    <Folder Include="Views\Etiquetas\" />
     <Folder Include="Views\Produto\" />
   </ItemGroup>
   <ItemGroup>

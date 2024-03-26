@@ -365,7 +365,14 @@ namespace Facilit.Controllers
                     leitura.Read();
                     if (leitura.HasRows)
                     {
+                        
+                         string nome = leitura["nome_completo"].ToString();
+                        
+                         string email = leitura["email"].ToString();
+                      
                         Session["logado"] = true;
+                        Session["nome"] = nome;
+                        Session["email"] = email;
 
                         if (Session["logado"] != null)
                         {
@@ -389,8 +396,19 @@ namespace Facilit.Controllers
                 }
             }
         }
+ 
 
-        public ActionResult NovaSenha(string token, Usuario usuario)
+
+     [HttpPost]
+        public ActionResult Logout()
+        {
+            Session.Clear();
+            return RedirectToAction("Index", "Usuario");
+        }
+    
+
+
+    public ActionResult NovaSenha(string token, Usuario usuario)
         {
             if (string.IsNullOrEmpty(token))
             {

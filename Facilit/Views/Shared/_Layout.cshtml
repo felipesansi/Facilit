@@ -1,30 +1,63 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Sistema Facilit</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
+
 <body>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var dropdownButton = document.getElementById("usuarioDropdown");
+            var dropdownMenu = document.querySelector(".dropdown-menu");
+
+            dropdownButton.addEventListener("click", function () {
+                dropdownMenu.classList.toggle("show");
+            });
+
+            window.addEventListener("click", function (event) {
+                if (!dropdownButton.contains(event.target)) {
+                    dropdownMenu.classList.remove("show");
+                }
+            });
+        });
+    </script>
+
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
         <div class="container">
-         
             <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Alternar a navegação" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
-                  
                     <li>@Html.ActionLink("Sobre", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
                     <li>@Html.ActionLink("Contato", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
                 </ul>
+                @if (Session["logado"] != null && (bool)Session["logado"])
+                {
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <button class="btn btn-dark dropdown-toggle" type="button" id="usuarioDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                @Session["nome"]
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="usuarioDropdown">
+                                <p class="dropdown-item">@Session["email"]</p>
+                                <form id="logoutForm" action="@Url.Action("Logout", "Usuario")" method="post">
+                                    <button type="submit" class="dropdown-item">Encerrar sessão</button>
+                                </form>
+                            </div>
+                        </li>
+                    </ul>
+                }
             </div>
         </div>
     </nav>
+
     <div class="container body-content">
         @RenderBody()
         <hr />
