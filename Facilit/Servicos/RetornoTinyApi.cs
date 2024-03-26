@@ -12,44 +12,56 @@ namespace Facilit.Servicos
 {
     public class RetornoTinyApi
     {
-        public async Task<string> ListarProdutos(string token)
+
+
+        string tokenTiny = "02011b49e5399d62d999007a8952642c85cca50bc310b49fdd6c3674fdff4b2a";
+        string formatoRetorno = "json";
+        public async Task<ProdutoTiny> ListarProdutos(string token)
         {
 
-            string tokenTiny = "02011b49e5399d62d999007a8952642c85cca50bc310b49fdd6c3674fdff4b2a";
-            string formatoRetorno = "json";
 
-          
+
+
             var cliente = new HttpClient();
             var requisicao = new HttpRequestMessage(HttpMethod.Get, $"https://api.tiny.com.br/api2/pdv.produtos.php?token={tokenTiny}&formato={formatoRetorno}");
             var resposta = await cliente.SendAsync(requisicao);
-           
+
             if (resposta.IsSuccessStatusCode)
             {
                 var respostaJson = await resposta.Content.ReadAsStringAsync();
-                var obj_json = JsonSerializer.Deserialize<ProdutoTiny>(respostaJson);
+                return JsonSerializer.Deserialize<ProdutoTiny>(respostaJson);
             }
-           
-            var resultadoConvertidoEmString = await resposta.Content.ReadAsStringAsync();
-            return resultadoConvertidoEmString;
+
+            return default;
+
         }
-        public async Task<string> ListarClientes(string token)
+        public async Task<ClienteTiny> ListarClientes(string token)
         {
 
-            string tokenTiny = "02011b49e5399d62d999007a8952642c85cca50bc310b49fdd6c3674fdff4b2a";
-            string formatoRetorno = "json";
-
             var cliente = new HttpClient();
-            var requisicao = new HttpRequestMessage(HttpMethod.Get, $"https://api.tiny.com.br/api2/contatos.pesquisa.php?token=02011b49e5399d62d999007a8952642c85cca50bc310b49fdd6c3674fdff4b2a&formato=json{tokenTiny}&formato={formatoRetorno}");
+            var requisicao = new HttpRequestMessage(HttpMethod.Get, $"https://api.tiny.com.br/api2/contatos.pesquisa.php?token={tokenTiny}&formato={formatoRetorno}");
             var resposta = await cliente.SendAsync(requisicao);
             if (resposta.IsSuccessStatusCode)
             {
                 var respostaJson = await resposta.Content.ReadAsStringAsync();
-                var obj_json = JsonSerializer.Deserialize<ClienteTiny>(respostaJson);
+                return JsonSerializer.Deserialize<ClienteTiny>(respostaJson);
             }
 
+            return default;
+        }
+        //fazendo api ainda
+        public async Task<EquiquetasTiny> ObterEquita(string token)
+        {
+            var cliente = new HttpClient();
+            var requisicao = new HttpRequestMessage(HttpMethod.Get, $"https://api.tiny.com.br/api2/expedicao.obter.etiquetas.php?token={tokenTiny}&formato={formatoRetorno}");
 
-            var resultadoConvertidoEmString = await resposta.Content.ReadAsStringAsync();
-            return resultadoConvertidoEmString;
+            var resposta = await cliente.SendAsync(requisicao);
+            if (resposta.IsSuccessStatusCode)
+            {
+                var respostaJson = await resposta.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<EquiquetasTiny>(respostaJson);
+            }
+            return default;
         }
     }
 }
