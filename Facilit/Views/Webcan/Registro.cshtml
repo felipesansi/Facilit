@@ -1,9 +1,29 @@
 ﻿@model Facilit.Models.Usuario
-@{ 
+@{
     ViewBag.Title = "Registro";
 
 
 }
+@if (!String.IsNullOrEmpty(TempData["Mensagem"] as string))
+{
+    <div id="mensagem">
+        <div class="alert alert-danger">
+            @TempData["Mensagem"]
+        </div>
+    </div>
+}
+
+<script>
+    setTimeout(function () {
+        var caixa_mensagem = document.getElementById('mensagem');
+        if (caixa_mensagem) {
+            caixa_mensagem.style.display = 'none';
+
+        }
+
+    }, 2000);
+</script>
+
 
 @Html.ActionLink("Ver Perfis de usuário", "Perfis_usuario", "Usuario", null, new { @class = "btn btn-primary" })
 <hr />

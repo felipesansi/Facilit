@@ -369,14 +369,17 @@ namespace Facilit.Controllers
                          string nome = leitura["nome_completo"].ToString();
                         
                          string email = leitura["email"].ToString();
+                         int id = leitura.GetInt32("id");
                       
                         Session["logado"] = true;
                         Session["nome"] = nome;
                         Session["email"] = email;
+                        Session["id_usuario"] = id;
 
-                        if (Session["logado"] != null)
+                        if (Session["logado"] != null && Session["id_usuario"] !=null)
                         {
-                            return RedirectToAction("Registro", "Webcan");
+                            int id_usuario = (int)Session["id_usuario"];
+                            return RedirectToAction("Registro", "Webcan",new {id = id_usuario});
                         }
                         else
                         {

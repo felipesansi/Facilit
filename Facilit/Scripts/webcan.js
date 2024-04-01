@@ -34,6 +34,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (response.sucesso) {
                     alert(response.mensagem);
                 }
+                else {
+                    alert(response.mensagem);
+                }
             },
         });
     });
