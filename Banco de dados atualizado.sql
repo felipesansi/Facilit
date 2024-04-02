@@ -22,7 +22,7 @@ CREATE TABLE `bd_facilit`.`tb_fotos`
   `nome_produto` VARCHAR(255) NULL,
   `nome_cliente` VARCHAR(255) NULL,
   `data_tirada` DATETIME NOT NULL,
-  `link_foto` VARCHAR(255) NOT NULL,
+  `link_foto` VARCHAR(255)  NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_usuario_idx` (`id_usuario` ASC) VISIBLE,
   CONSTRAINT `fk_usuario`

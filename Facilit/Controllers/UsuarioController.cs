@@ -379,7 +379,7 @@ namespace Facilit.Controllers
                         if (Session["logado"] != null && Session["id_usuario"] !=null)
                         {
                             int id_usuario = (int)Session["id_usuario"];
-                            return RedirectToAction("Registro", "Webcan",new {id = id_usuario});
+                            return RedirectToAction("Registro", "Webcan");
                         }
                         else
                         {

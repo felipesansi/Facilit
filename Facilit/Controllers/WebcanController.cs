@@ -19,8 +19,8 @@ namespace Facilit.Controllers
     {
         string tokenTiny = "02011b49e5399d62d999007a8952642c85cca50bc310b49fdd6c3674fdff4b2a";
         string mensagem;
-
-        public async Task<ActionResult> Registro(int id)
+        int usuario_id;
+        public async Task<ActionResult> Registro()
         {
             RetornoTinyApi produto = new RetornoTinyApi();
             var produtos = await produto.ListarProdutos(tokenTiny);
@@ -33,7 +33,6 @@ namespace Facilit.Controllers
             var clientes = await cliente.ListarClientes(tokenTiny);
             var dropdown_cliente = clientes.retorno.contatos.Select(s => new { Id = s.contato.id, cliente = s.contato.nome, Nome =s.contato.nome}).ToList();
             ViewBag.Clientes = new SelectList(dropdown_cliente, "Nome", "Cliente" );
-            int id_usurio_controller = id;
             return View();
         }
         [HttpPost]
@@ -54,12 +53,14 @@ namespace Facilit.Controllers
                 DateTime data = DateTime.Now;
                 string nome_arquivo = $"Produto_{produto_selecionado}_Cliente_{cliente_selecionado}.jpg";
                 nome_arquivo = Remover_caracteres(nome_arquivo);
+                usuario_id = (int)Session["id_usuario"];
                 string caminho_imagem = Path.Combine(caminho_diretorio, nome_arquivo);
                 System.IO.File.WriteAllBytes(caminho_imagem, vet_bytes);
 
-                
+                Salvar_dados(produto_selecionado, cliente_selecionado, usuario_id, data);
 
                 return Json(new { sucesso = true, mensagem = "Foto salva com sucesso! \n" + nome_arquivo });
+               
             }
            
                return Json(new { sucesso = false, mensagem = "Erro ao salvar a foto. Produto ou cliente não selecionados." });
@@ -74,11 +75,12 @@ namespace Facilit.Controllers
 
       private string Salvar_dados(string produto, string cliente, int id, DateTime data)
         {
+
             try
             {
-                using (Conexao conexao = new Conexao())
+                using ( var conexao = new Conexao())
                 {
-                    string sql_insert = "insert into tb_fotos(id_usuario,nome_produto, nome_cliente,data_tirada) values (@id_u, @np, @nc,@dt)";
+                    string sql_insert = "insert into tb_fotos(id_usuario,nome_produto,nome_cliente,data_tirada) values (@id_u, @np, @nc,@dt)";
 
                     using(MySqlCommand comando = new MySqlCommand(sql_insert,conexao._conn)) 
                     { 
@@ -86,15 +88,37 @@ namespace Facilit.Controllers
                         comando.Parameters.AddWithValue("@np",produto);
                         comando.Parameters.AddWithValue("@nc",cliente);
                         comando.Parameters.AddWithValue("@dt",data);
+                        comando.ExecuteNonQuery();
                     }
                 }
             }
             catch (Exception erro)
             {
 
-                throw;
+              TempData["mensagem"] = "Ocorreu um erro: " + erro.Message;
             }
             return mensagem;
+        }
+        private void Trazer_dados()
+        {
+            try
+            {
+
+                using (var conexao = new Conexao())
+                {
+                    string select_join = "SELECT tb_usuarios.nome_completo, tb_fotos.nome_produto, tb_fotos.nome_cliente, tb_fotos.data_tirada FROM tb_usuarios JOIN tb_fotos ON tb_usuarios.id = tb_fotos.id_usuario and tb_usuarios.excluido =false; \r\n";
+                    using (MySqlCommand comando = new MySqlCommand(select_join,conexao._conn))
+                    {
+                        comando.ExecuteNonQuery();
+                    }
+                }
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
    
