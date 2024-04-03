@@ -99,17 +99,36 @@ namespace Facilit.Controllers
             }
             return mensagem;
         }
-        private void Trazer_dados()
+        public ActionResult Gerador_pdf()
         {
             try
             {
 
                 using (var conexao = new Conexao())
                 {
-                    string select_join = "SELECT tb_usuarios.nome_completo, tb_fotos.nome_produto, tb_fotos.nome_cliente, tb_fotos.data_tirada FROM tb_usuarios JOIN tb_fotos ON tb_usuarios.id = tb_fotos.id_usuario and tb_usuarios.excluido =false; \r\n";
+                    string select_join = "select tb_usuarios.nome_completo, tb_fotos.nome_produto, tb_fotos.nome_cliente, tb_fotos.data_tirada, tb_fotos.id from tb_usuarios join tb_fotos on tb_usuarios.id = tb_fotos.id_usuario and tb_usuarios.excluido =false";
                     using (MySqlCommand comando = new MySqlCommand(select_join,conexao._conn))
                     {
-                        comando.ExecuteNonQuery();
+            
+                      MySqlDataReader leitura = comando.ExecuteReader();
+                        if (leitura.HasRows)
+                        {
+                            var lista_join = new List<pdf>();
+                            while (leitura.Read())
+                            {
+                                var pdf = new pdf()
+                                {
+                                    id_fotos = Convert.ToInt32(leitura["id"]),
+                                    nome_completo = Convert.ToString(leitura["nome_completo"]),
+                                    nome_produto = Convert.ToString(leitura["nome_produto"]),
+                                    nome_cliente = Convert.ToString(leitura["nome_cliente"]),
+                                    data_tirada = Convert.ToDateTime(leitura["data_tirada"])
+                                };
+                                lista_join.Add(pdf);
+                            } 
+                            return View(lista_join);
+                        }
+
                     }
                 }
 
@@ -119,6 +138,7 @@ namespace Facilit.Controllers
 
                 throw;
             }
+            return View();
         }
     }
    

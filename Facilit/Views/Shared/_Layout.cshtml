@@ -47,6 +47,11 @@
                             </button>
                             <div class="dropdown-menu" aria-labelledby="usuarioDropdown">
                                 <p class="dropdown-item">@Session["email"]</p>
+
+                                <form id="logoutForm" action="@Url.Action("Perfis_usuario", "Usuario")" method="post">
+                                    <button type="submit" class="dropdown-item">Ver perfis</button>
+                                </form>
+
                                 <form id="logoutForm" action="@Url.Action("Logout", "Usuario")" method="post">
                                     <button type="submit" class="dropdown-item">Encerrar sessão</button>
                                 </form>
