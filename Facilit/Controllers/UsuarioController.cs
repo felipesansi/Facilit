@@ -21,6 +21,7 @@ namespace Facilit.Controllers
        
         public ActionResult Index() 
         {
+            ViewBag.MostrarBotoes = true;
             return View();
         }
 

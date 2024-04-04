@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using System.Web.Helpers;
 using System.Web.Mvc;
 using System.Web.UI.WebControls;
+using iTextSharp.text.pdf;
+using iTextSharp.text;
 
 namespace Facilit.Controllers
 {
@@ -103,42 +105,88 @@ namespace Facilit.Controllers
         {
             try
             {
-
                 using (var conexao = new Conexao())
                 {
-                    string select_join = "select tb_usuarios.nome_completo, tb_fotos.nome_produto, tb_fotos.nome_cliente, tb_fotos.data_tirada, tb_fotos.id from tb_usuarios join tb_fotos on tb_usuarios.id = tb_fotos.id_usuario and tb_usuarios.excluido =false";
-                    using (MySqlCommand comando = new MySqlCommand(select_join,conexao._conn))
+                    string select_join = "SELECT tb_usuarios.nome_completo, tb_fotos.nome_produto, " +
+                                         "tb_fotos.nome_cliente, tb_fotos.data_tirada, tb_fotos.id " +
+                                         "FROM tb_usuarios JOIN tb_fotos " +
+                                         "ON tb_usuarios.id = tb_fotos.id_usuario AND tb_usuarios.excluido = false";
+
+                    using (MySqlCommand comando = new MySqlCommand(select_join, conexao._conn))
                     {
-            
-                      MySqlDataReader leitura = comando.ExecuteReader();
+                        MySqlDataReader leitura = comando.ExecuteReader();
+
                         if (leitura.HasRows)
                         {
-                            var lista_join = new List<pdf>();
+                            // Configuração do documento
+                            Document documento = new Document();
+                            MemoryStream ms = new MemoryStream();
+                            PdfWriter escreve = PdfWriter.GetInstance(documento, ms);
+                            
+                            documento.Open();
+
+                           
+                            PdfPTable tabela = new PdfPTable(5); // instância da tabela com 5 colunas
+                            Font fonte_noto = FontFactory.GetFont("Noto Sans",12,Font.BOLD);
+
+                            float paddingPadrao = 5f;
+
+                            PdfPCell coluna_funcionario = new PdfPCell(new Phrase("Nome do Funcionário",fonte_noto));
+                            coluna_funcionario.BackgroundColor = BaseColor.LIGHT_GRAY;
+                            coluna_funcionario.PaddingRight = paddingPadrao;
+                            coluna_funcionario.PaddingLeft = paddingPadrao;
+                            tabela.AddCell(coluna_funcionario);
+
+
+                            PdfPCell coluna_Produto  = new PdfPCell(new Phrase("Nome do Produto", fonte_noto));
+                            coluna_Produto.BackgroundColor = BaseColor.LIGHT_GRAY;
+                            coluna_Produto.PaddingRight = paddingPadrao;
+                            coluna_Produto.PaddingLeft = paddingPadrao;
+                            tabela.AddCell(coluna_Produto);
+
+
+                            PdfPCell coluna_cliente = new PdfPCell(new Phrase("Nome do Cliente", fonte_noto));
+                            coluna_cliente.BackgroundColor = BaseColor.LIGHT_GRAY;
+                            coluna_cliente.PaddingRight = paddingPadrao;
+                            coluna_cliente.PaddingLeft = paddingPadrao;
+                            tabela.AddCell(coluna_cliente);
+
+                            PdfPCell coluna_data = new PdfPCell(new Phrase("Data de Emissão da Foto", fonte_noto));
+                            coluna_data.BackgroundColor = BaseColor.LIGHT_GRAY;
+                            tabela.AddCell(coluna_data);
+
+                            PdfPCell coluna_id = new PdfPCell(new Phrase("Ordem das emissão das Fotos", fonte_noto));
+                            coluna_id.BackgroundColor = BaseColor.LIGHT_GRAY;
+                            tabela.AddCell(coluna_id);
+
                             while (leitura.Read())
                             {
-                                var pdf = new pdf()
-                                {
-                                    id_fotos = Convert.ToInt32(leitura["id"]),
-                                    nome_completo = Convert.ToString(leitura["nome_completo"]),
-                                    nome_produto = Convert.ToString(leitura["nome_produto"]),
-                                    nome_cliente = Convert.ToString(leitura["nome_cliente"]),
-                                    data_tirada = Convert.ToDateTime(leitura["data_tirada"])
-                                };
-                                lista_join.Add(pdf);
-                            } 
-                            return View(lista_join);
-                        }
+                                tabela.AddCell(leitura["nome_completo"].ToString());
+                                tabela.AddCell(leitura["nome_produto"].ToString());
+                                tabela.AddCell(leitura["nome_cliente"].ToString());
+                                tabela.AddCell(Convert.ToDateTime(leitura["data_tirada"]).ToString("dd/MM/yyyy HH:mm:ss"));
+                                tabela.AddCell(Convert.ToInt16(leitura["id"]).ToString());
 
+                            }
+
+                            documento.Add(tabela);
+                            documento.Close();
+
+                            byte[] fileBytes = ms.ToArray();
+                            return File(fileBytes, "application/pdf", "Dados Sistema Facilit.pdf");
+                        }
                     }
                 }
-
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                TempData["mensagem"] = "Ocorreu um erro ao gerar o PDF: " + ex.Message;
+                return RedirectToAction("Registro"); 
             }
-            return View();
+
+            
+            TempData["mensagem"] = "Não há dados para gerar o PDF.";
+            return RedirectToAction("Registro");
         }
     }
    

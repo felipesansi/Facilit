@@ -27,6 +27,7 @@
         });
     </script>
 
+
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
         <div class="container">
             <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Alternar a navegação" aria-controls="navbarSupportedContent"
@@ -37,6 +38,14 @@
                 <ul class="navbar-nav flex-grow-1">
                     <li>@Html.ActionLink("Sobre", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
                     <li>@Html.ActionLink("Contato", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+                    @if (ViewBag.MostrarBotoes == true)
+                    {
+                        <ul class="navbar-nav ml-auto">
+                            <li> @Html.ActionLink("Cadastre-se", "Cadastro", "Usuario", null, new { @class = "btn btn-success" })</li>
+                            <li> @Html.ActionLink("Login", "Index", "Usuario", null, new { @class = "btn btn-primary" })</li>
+                        </ul>
+
+                    }
                 </ul>
                 @if (Session["logado"] != null && (bool)Session["logado"])
                 {
