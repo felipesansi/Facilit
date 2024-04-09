@@ -103,14 +103,22 @@ namespace Facilit.Controllers
         }
         public ActionResult Gerador_pdf()
         {
+
             try
             {
                 using (var conexao = new Conexao())
                 {
-                    string select_join = "SELECT tb_usuarios.nome_completo, tb_fotos.nome_produto, " +
-                                         "tb_fotos.nome_cliente, tb_fotos.data_tirada, tb_fotos.id " +
-                                         "FROM tb_usuarios JOIN tb_fotos " +
-                                         "ON tb_usuarios.id = tb_fotos.id_usuario AND tb_usuarios.excluido = false";
+                    // Consulta para contar o número total de fotos tiradas nos últimos 10 dias
+                    string countQuery = "SELECT COUNT(tb_fotos.id) AS total_fotos " +
+                                        "FROM tb_usuarios " +
+                                        "JOIN tb_fotos ON tb_usuarios.id = tb_fotos.id_usuario AND tb_usuarios.excluido = false " +
+                                        "WHERE tb_fotos.data_tirada >= DATE_SUB(CURDATE(), INTERVAL 10 DAY)";
+
+                    MySqlCommand countCommand = new MySqlCommand(countQuery, conexao._conn);
+                    int totalFotos = Convert.ToInt32(countCommand.ExecuteScalar());
+
+                    string select_join = "SELECT  tb_usuarios.id, tb_usuarios.nome_completo, tb_fotos.nome_produto, tb_fotos.nome_cliente," +
+                        " tb_fotos.data_tirada FROM tb_usuarios JOIN tb_fotos ON tb_usuarios.id = tb_fotos.id_usuario AND tb_usuarios.excluido = false WHERE tb_fotos.data_tirada >= DATE_SUB(CURDATE(), INTERVAL 10 DAY)";
 
                     using (MySqlCommand comando = new MySqlCommand(select_join, conexao._conn))
                     {
@@ -119,57 +127,92 @@ namespace Facilit.Controllers
                         if (leitura.HasRows)
                         {
                             // Configuração do documento
-                            Document documento = new Document();
+                            Document documento = new Document(PageSize.A4);
                             MemoryStream ms = new MemoryStream();
                             PdfWriter escreve = PdfWriter.GetInstance(documento, ms);
-                            
+
                             documento.Open();
 
-                           
+
                             PdfPTable tabela = new PdfPTable(5); // instância da tabela com 5 colunas
-                            Font fonte_noto = FontFactory.GetFont("Noto Sans",12,Font.BOLD);
+                            float[] largura_das_colunas = new float[] { 15f, 70f, 60f, 60f, 70f };
+                            tabela.SetTotalWidth(largura_das_colunas);
+                            Font fonte = FontFactory.GetFont("HELVETICA", 12);
 
-                            float paddingPadrao = 5f;
+                            PdfPCell Titulo = new PdfPCell(new Phrase("Tabela Sistema Facilit", fonte));
+                            Titulo.Colspan = 5;
+                            Titulo.HorizontalAlignment = Element.ALIGN_CENTER;
+                            Titulo.Phrase.Font.Size = 18;
+                            Titulo.Border = PdfPCell.NO_BORDER;
+                            Titulo.PaddingBottom = 25f;
+                            tabela.AddCell(Titulo);
 
-                            PdfPCell coluna_funcionario = new PdfPCell(new Phrase("Nome do Funcionário",fonte_noto));
+
+
+                            PdfPCell coluna_id = new PdfPCell(new Phrase("Id", fonte));
+                            coluna_id.BackgroundColor = BaseColor.LIGHT_GRAY;
+                            coluna_id.PaddingLeft = 5;
+                            tabela.AddCell(coluna_id);
+
+
+
+                            PdfPCell coluna_funcionario = new PdfPCell(new Phrase("Funcionário", fonte));
+
                             coluna_funcionario.BackgroundColor = BaseColor.LIGHT_GRAY;
-                            coluna_funcionario.PaddingRight = paddingPadrao;
-                            coluna_funcionario.PaddingLeft = paddingPadrao;
+
+
                             tabela.AddCell(coluna_funcionario);
 
 
-                            PdfPCell coluna_Produto  = new PdfPCell(new Phrase("Nome do Produto", fonte_noto));
+                            PdfPCell coluna_Produto = new PdfPCell(new Phrase("Produto", fonte));
                             coluna_Produto.BackgroundColor = BaseColor.LIGHT_GRAY;
-                            coluna_Produto.PaddingRight = paddingPadrao;
-                            coluna_Produto.PaddingLeft = paddingPadrao;
+                            coluna_Produto.PaddingLeft = 10;
                             tabela.AddCell(coluna_Produto);
 
 
-                            PdfPCell coluna_cliente = new PdfPCell(new Phrase("Nome do Cliente", fonte_noto));
+                            PdfPCell coluna_cliente = new PdfPCell(new Phrase("Cliente", fonte));
+
                             coluna_cliente.BackgroundColor = BaseColor.LIGHT_GRAY;
-                            coluna_cliente.PaddingRight = paddingPadrao;
-                            coluna_cliente.PaddingLeft = paddingPadrao;
+
+                            coluna_cliente.PaddingLeft = 10;
+
                             tabela.AddCell(coluna_cliente);
 
-                            PdfPCell coluna_data = new PdfPCell(new Phrase("Data de Emissão da Foto", fonte_noto));
+                            PdfPCell coluna_data = new PdfPCell(new Phrase("Data da Foto", fonte));
                             coluna_data.BackgroundColor = BaseColor.LIGHT_GRAY;
+
                             tabela.AddCell(coluna_data);
 
-                            PdfPCell coluna_id = new PdfPCell(new Phrase("Ordem das emissão das Fotos", fonte_noto));
-                            coluna_id.BackgroundColor = BaseColor.LIGHT_GRAY;
-                            tabela.AddCell(coluna_id);
 
                             while (leitura.Read())
                             {
+                                tabela.AddCell(Convert.ToInt16(leitura["id"]).ToString());
                                 tabela.AddCell(leitura["nome_completo"].ToString());
                                 tabela.AddCell(leitura["nome_produto"].ToString());
                                 tabela.AddCell(leitura["nome_cliente"].ToString());
                                 tabela.AddCell(Convert.ToDateTime(leitura["data_tirada"]).ToString("dd/MM/yyyy HH:mm:ss"));
-                                tabela.AddCell(Convert.ToInt16(leitura["id"]).ToString());
+                                
 
                             }
-
+;
                             documento.Add(tabela);
+
+
+                           
+                            Paragraph contadorParagrafo = new Paragraph($"Total de fotos tiradas nos últimos 10 dias: {totalFotos}", new iTextSharp.text.Font(iTextSharp.text.Font.FontFamily.HELVETICA, 14, iTextSharp.text.Font.BOLD));
+                            contadorParagrafo.PaddingTop = 10;
+                            contadorParagrafo.Alignment = Element.ALIGN_CENTER;
+                            documento.Add(contadorParagrafo);
+
+
+                            string escrito = "Estes dados sofrem alterações a cada 10 dias";
+                            Paragraph paragrafo = new Paragraph(escrito, new iTextSharp.text.Font(iTextSharp.text.Font.FontFamily.TIMES_ROMAN, 16, iTextSharp.text.Font.ITALIC));
+                            paragrafo.PaddingTop = 10;
+                            documento.Add(paragrafo);
+
+
+                           
+
                             documento.Close();
 
                             byte[] fileBytes = ms.ToArray();
@@ -181,14 +224,15 @@ namespace Facilit.Controllers
             catch (Exception ex)
             {
                 TempData["mensagem"] = "Ocorreu um erro ao gerar o PDF: " + ex.Message;
-                return RedirectToAction("Registro"); 
+                return RedirectToAction("Registro");
             }
 
-            
+
             TempData["mensagem"] = "Não há dados para gerar o PDF.";
             return RedirectToAction("Registro");
         }
+
     }
-   
+
 
 }

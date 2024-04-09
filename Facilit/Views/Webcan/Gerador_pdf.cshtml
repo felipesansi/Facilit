@@ -1,57 +1,7 @@
-﻿@model IEnumerable<Facilit.Models.pdf>
-
+﻿
 @{
     ViewBag.Title = "Gerador_pdf";
 }
 
 <h2>Gerador_pdf</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.id_fotos)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.nome_completo)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.nome_produto)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.nome_cliente)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.data_tirada)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.id_fotos)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.nome_completo)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.nome_produto)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.nome_cliente)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.data_tirada)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-        </td>
-    </tr>
-}
-
-</table>
