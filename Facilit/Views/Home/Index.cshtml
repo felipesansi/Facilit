@@ -1,11 +1,16 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Index";
 }
+
 <body>
     <div class="container position-relative">
         <section>
-            <img src="~/imagens/IM" />
+            <img src="~/imagens/Untitled.png" alt="imagem de um computador" class="img-fluid" style="width: 5000px; height:auto; margin: 0;">
         </section>
+        <div class="position-absolute top-50 start-50 translate-middle text-center">
+            <p class="text-light">Olá, bem-vindo(a) ao SiStema Facilit </p>
+            <p class="text-light">o sistema que facilita sua vida </p>
+            @Html.ActionLink("cadastre-se", "Cadastro", "Usuario", null, new { @class = "btn btn-secondary" })
+        </div>
     </div>
 </body>
