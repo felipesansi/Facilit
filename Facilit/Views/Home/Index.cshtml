@@ -1,16 +1,15 @@
-﻿@{
-    ViewBag.Title = "Index";
-}
-
-<body>
+﻿<body class="index-page">
     <div class="container position-relative">
         <section>
-            <img src="~/imagens/Untitled.png" alt="imagem de um computador" class="img-fluid" style="width: 5000px; height:auto; margin: 0;">
+            <img src="~/imagens/Untitled.png" alt="imagem de um computador" class="" style="width: 1354px; height: 753px; margin: 0;">
+            <div class="position-absolute top-50 start-50 translate-middle text-center">
+                <p class="text-light custom-text">Olá, bem-vindo(a) ao Sistema Facilit</p>
+                <p class="text-light custom-text-small">O sistema que facilita sua vida</p>
+                @Html.ActionLink("cadastre-se", "Cadastro", "Usuario", null, new { @class = "btn btn-secondary" })
+            </div>
+            <div class="position-absolute translate-middle text-center col-md-6" ">
+                <p class="text-light text-dark">Nosso sistema web oferece uma solução completa para gerenciar fotos na nuvem através do OneDrive, garantindo armazenamento seguro e acessível.<br /> Além disso, automatizamos a emissão de PDFs personalizados, incluindo o nome do usuário do sistema, para uma experiência mais personalizada e profissional. Com a capacidade de redimensionamento para sites de terceiros, como impressão de notas fiscais e etiquetas,<br /> proporcionamos uma integração perfeita em diversas plataformas,<br /> facilitando a gestão de documentos e otimizando processos de negócios.</p>
+            </div>
         </section>
-        <div class="position-absolute top-50 start-50 translate-middle text-center">
-            <p class="text-light">Olá, bem-vindo(a) ao SiStema Facilit </p>
-            <p class="text-light">o sistema que facilita sua vida </p>
-            @Html.ActionLink("cadastre-se", "Cadastro", "Usuario", null, new { @class = "btn btn-secondary" })
-        </div>
     </div>
 </body>

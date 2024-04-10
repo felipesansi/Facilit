@@ -33,8 +33,8 @@ namespace Facilit.Controllers
 
             RetornoTinyApi cliente = new RetornoTinyApi();
             var clientes = await cliente.ListarClientes(tokenTiny);
-            var dropdown_cliente = clientes.retorno.contatos.Select(s => new { Id = s.contato.id, cliente = s.contato.nome, Nome =s.contato.nome}).ToList();
-            ViewBag.Clientes = new SelectList(dropdown_cliente, "Nome", "Cliente" );
+            var dropdown_cliente = clientes.retorno.contatos.Select(s => new { Id = s.contato.id, cliente = s.contato.nome, Nome = s.contato.nome }).ToList();
+            ViewBag.Clientes = new SelectList(dropdown_cliente, "Nome", "Cliente");
             return View();
         }
         [HttpPost]
@@ -44,7 +44,8 @@ namespace Facilit.Controllers
             {
                 TempData["mensagem"] = "Selecione o produto e o cliente";
             }
-            else {
+            else
+            {
                 byte[] vet_bytes = Convert.FromBase64String(dados_imagem);
                 string caminho_diretorio = Server.MapPath("~/Fotos");
 
@@ -62,34 +63,34 @@ namespace Facilit.Controllers
                 Salvar_dados(produto_selecionado, cliente_selecionado, usuario_id, data);
 
                 return Json(new { sucesso = true, mensagem = "Foto salva com sucesso! \n" + nome_arquivo });
-               
+
             }
-           
-               return Json(new { sucesso = false, mensagem = "Erro ao salvar a foto. Produto ou cliente não selecionados." });
+
+            return Json(new { sucesso = false, mensagem = "Erro ao salvar a foto. Produto ou cliente não selecionados." });
 
         }
-    
+
         private string Remover_caracteres(string caracter)
         {
             string padrao = "[" + Regex.Escape(new string(Path.GetInvalidFileNameChars())) + "]";
             return Regex.Replace(caracter, padrao, "");
         }
 
-      private string Salvar_dados(string produto, string cliente, int id, DateTime data)
+        private string Salvar_dados(string produto, string cliente, int id, DateTime data)
         {
 
             try
             {
-                using ( var conexao = new Conexao())
+                using (var conexao = new Conexao())
                 {
                     string sql_insert = "insert into tb_fotos(id_usuario,nome_produto,nome_cliente,data_tirada) values (@id_u, @np, @nc,@dt)";
 
-                    using(MySqlCommand comando = new MySqlCommand(sql_insert,conexao._conn)) 
-                    { 
+                    using (MySqlCommand comando = new MySqlCommand(sql_insert, conexao._conn))
+                    {
                         comando.Parameters.AddWithValue("@id_u", id);
-                        comando.Parameters.AddWithValue("@np",produto);
-                        comando.Parameters.AddWithValue("@nc",cliente);
-                        comando.Parameters.AddWithValue("@dt",data);
+                        comando.Parameters.AddWithValue("@np", produto);
+                        comando.Parameters.AddWithValue("@nc", cliente);
+                        comando.Parameters.AddWithValue("@dt", data);
                         comando.ExecuteNonQuery();
                     }
                 }
@@ -97,18 +98,16 @@ namespace Facilit.Controllers
             catch (Exception erro)
             {
 
-              TempData["mensagem"] = "Ocorreu um erro: " + erro.Message;
+                TempData["mensagem"] = "Ocorreu um erro: " + erro.Message;
             }
             return mensagem;
         }
         public ActionResult Gerador_pdf()
         {
-
             try
             {
                 using (var conexao = new Conexao())
                 {
-                    // Consulta para contar o número total de fotos tiradas nos últimos 10 dias
                     string countQuery = "SELECT COUNT(tb_fotos.id) AS total_fotos " +
                                         "FROM tb_usuarios " +
                                         "JOIN tb_fotos ON tb_usuarios.id = tb_fotos.id_usuario AND tb_usuarios.excluido = false " +
@@ -122,114 +121,91 @@ namespace Facilit.Controllers
 
                     using (MySqlCommand comando = new MySqlCommand(select_join, conexao._conn))
                     {
-                        MySqlDataReader leitura = comando.ExecuteReader();
-
-                        if (leitura.HasRows)
+                        using (MySqlDataReader leitura = comando.ExecuteReader())
                         {
-                            // Configuração do documento
-                            Document documento = new Document(PageSize.A4);
-                            MemoryStream ms = new MemoryStream();
-                            PdfWriter escreve = PdfWriter.GetInstance(documento, ms);
-
-                            documento.Open();
-
-
-                            PdfPTable tabela = new PdfPTable(5); // instância da tabela com 5 colunas
-                            float[] largura_das_colunas = new float[] { 15f, 70f, 60f, 60f, 70f };
-                            tabela.SetTotalWidth(largura_das_colunas);
-                            Font fonte = FontFactory.GetFont("HELVETICA", 12);
-
-                            PdfPCell Titulo = new PdfPCell(new Phrase("Tabela Sistema Facilit", fonte));
-                            Titulo.Colspan = 5;
-                            Titulo.HorizontalAlignment = Element.ALIGN_CENTER;
-                            Titulo.Phrase.Font.Size = 18;
-                            Titulo.Border = PdfPCell.NO_BORDER;
-                            Titulo.PaddingBottom = 25f;
-                            tabela.AddCell(Titulo);
-
-
-
-                            PdfPCell coluna_id = new PdfPCell(new Phrase("Id", fonte));
-                            coluna_id.BackgroundColor = BaseColor.LIGHT_GRAY;
-                            coluna_id.PaddingLeft = 5;
-                            tabela.AddCell(coluna_id);
-
-
-
-                            PdfPCell coluna_funcionario = new PdfPCell(new Phrase("Funcionário", fonte));
-
-                            coluna_funcionario.BackgroundColor = BaseColor.LIGHT_GRAY;
-
-
-                            tabela.AddCell(coluna_funcionario);
-
-
-                            PdfPCell coluna_Produto = new PdfPCell(new Phrase("Produto", fonte));
-                            coluna_Produto.BackgroundColor = BaseColor.LIGHT_GRAY;
-                            coluna_Produto.PaddingLeft = 10;
-                            tabela.AddCell(coluna_Produto);
-
-
-                            PdfPCell coluna_cliente = new PdfPCell(new Phrase("Cliente", fonte));
-
-                            coluna_cliente.BackgroundColor = BaseColor.LIGHT_GRAY;
-
-                            coluna_cliente.PaddingLeft = 10;
-
-                            tabela.AddCell(coluna_cliente);
-
-                            PdfPCell coluna_data = new PdfPCell(new Phrase("Data da Foto", fonte));
-                            coluna_data.BackgroundColor = BaseColor.LIGHT_GRAY;
-
-                            tabela.AddCell(coluna_data);
-
-
-                            while (leitura.Read())
+                            if (leitura.HasRows)
                             {
-                                tabela.AddCell(Convert.ToInt16(leitura["id"]).ToString());
-                                tabela.AddCell(leitura["nome_completo"].ToString());
-                                tabela.AddCell(leitura["nome_produto"].ToString());
-                                tabela.AddCell(leitura["nome_cliente"].ToString());
-                                tabela.AddCell(Convert.ToDateTime(leitura["data_tirada"]).ToString("dd/MM/yyyy HH:mm:ss"));
-                                
+                                Document documento = new Document(PageSize.A4);
+                                MemoryStream ms = new MemoryStream();
+                                PdfWriter escreve = PdfWriter.GetInstance(documento, ms);
 
+                                documento.Open();
+
+                                PdfPTable tabela = new PdfPTable(5);
+                                float[] largura_das_colunas = new float[] { 15f, 70f, 60f, 60f, 70f };
+                                tabela.SetTotalWidth(largura_das_colunas);
+                                Font fonte = FontFactory.GetFont("HELVETICA", 12);
+
+                                PdfPCell Titulo = new PdfPCell(new Phrase("Tabela Sistema Facilit", fonte));
+                                Titulo.Colspan = 5;
+                                Titulo.HorizontalAlignment = Element.ALIGN_CENTER;
+                                Titulo.Phrase.Font.Size = 18;
+                                Titulo.Border = PdfPCell.NO_BORDER;
+                                Titulo.PaddingBottom = 25f;
+                                tabela.AddCell(Titulo);
+
+                                PdfPCell coluna_id = new PdfPCell(new Phrase("Id", fonte));
+                                coluna_id.BackgroundColor = BaseColor.LIGHT_GRAY;
+                                coluna_id.PaddingLeft = 5;
+                                tabela.AddCell(coluna_id);
+
+                                PdfPCell coluna_funcionario = new PdfPCell(new Phrase("Funcionário", fonte));
+                                coluna_funcionario.BackgroundColor = BaseColor.LIGHT_GRAY;
+                                tabela.AddCell(coluna_funcionario);
+
+                                PdfPCell coluna_Produto = new PdfPCell(new Phrase("Produto", fonte));
+                                coluna_Produto.BackgroundColor = BaseColor.LIGHT_GRAY;
+                                coluna_Produto.PaddingLeft = 10;
+                                tabela.AddCell(coluna_Produto);
+
+                                PdfPCell coluna_cliente = new PdfPCell(new Phrase("Cliente", fonte));
+                                coluna_cliente.BackgroundColor = BaseColor.LIGHT_GRAY;
+                                coluna_cliente.PaddingLeft = 10;
+                                tabela.AddCell(coluna_cliente);
+
+                                PdfPCell coluna_data = new PdfPCell(new Phrase("Data da Foto", fonte));
+                                coluna_data.BackgroundColor = BaseColor.LIGHT_GRAY;
+                                tabela.AddCell(coluna_data);
+
+                                while (leitura.Read())
+                                {
+                                    tabela.AddCell(Convert.ToInt16(leitura["id"]).ToString());
+                                    tabela.AddCell(leitura["nome_completo"].ToString());
+                                    tabela.AddCell(leitura["nome_produto"].ToString());
+                                    tabela.AddCell(leitura["nome_cliente"].ToString());
+                                    tabela.AddCell(Convert.ToDateTime(leitura["data_tirada"]).ToString("dd/MM/yyyy HH:mm:ss"));
+                                }
+
+                                documento.Add(tabela);
+
+                                Paragraph contadorParagrafo = new Paragraph($"Total de fotos tiradas nos últimos 10 dias: {totalFotos}", new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD));
+                                contadorParagrafo.PaddingTop = 10;
+                                contadorParagrafo.Alignment = Element.ALIGN_CENTER;
+                                documento.Add(contadorParagrafo);
+
+                                string escrito = "Esses dados sofrem alterações a cada 10 dias";
+                                Paragraph paragrafo = new Paragraph(escrito, new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.ITALIC));
+                                paragrafo.PaddingTop = 10;
+                                paragrafo.Alignment = Element.ALIGN_CENTER;
+                                documento.Add(paragrafo);
+
+                                documento.Close();
+
+                                byte[] fileBytes = ms.ToArray();
+                                return File(fileBytes, "application/pdf", "Dados Sistema Facilit.pdf");
                             }
-;
-                            documento.Add(tabela);
-
-
-                           
-                            Paragraph contadorParagrafo = new Paragraph($"Total de fotos tiradas nos últimos 10 dias: {totalFotos}", new iTextSharp.text.Font(iTextSharp.text.Font.FontFamily.HELVETICA, 14, iTextSharp.text.Font.BOLD));
-                            contadorParagrafo.PaddingTop = 10;
-                            contadorParagrafo.Alignment = Element.ALIGN_CENTER;
-                            documento.Add(contadorParagrafo);
-
-
-                            string escrito = "Estes dados sofrem alterações a cada 10 dias";
-                            Paragraph paragrafo = new Paragraph(escrito, new iTextSharp.text.Font(iTextSharp.text.Font.FontFamily.TIMES_ROMAN, 16, iTextSharp.text.Font.ITALIC));
-                            paragrafo.PaddingTop = 10;
-                            documento.Add(paragrafo);
-
-
-                           
-
-                            documento.Close();
-
-                            byte[] fileBytes = ms.ToArray();
-                            return File(fileBytes, "application/pdf", "Dados Sistema Facilit.pdf");
                         }
                     }
                 }
+
+                TempData["mensagem"] = "Não há dados para gerar o PDF.";
+                return RedirectToAction("Registro");
             }
             catch (Exception ex)
             {
                 TempData["mensagem"] = "Ocorreu um erro ao gerar o PDF: " + ex.Message;
                 return RedirectToAction("Registro");
             }
-
-
-            TempData["mensagem"] = "Não há dados para gerar o PDF.";
-            return RedirectToAction("Registro");
         }
 
     }

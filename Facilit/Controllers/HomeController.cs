@@ -16,14 +16,14 @@ namespace Facilit.Controllers
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
-
+            ViewBag.MostrarBotoes = true;
             return View();
         }
 
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";
-
+            ViewBag.MostrarBotoes = true;
             return View();
         }
     }
