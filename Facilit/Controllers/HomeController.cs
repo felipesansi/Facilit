@@ -8,7 +8,7 @@ namespace Facilit.Controllers
 {
     public class HomeController : Controller
     {
-       public ActionResult Index()
+        public ActionResult Index()
         {
             ViewBag.MostrarBotoes = true;
             return View();

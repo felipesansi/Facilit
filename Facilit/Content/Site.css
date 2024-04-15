@@ -1,9 +1,11 @@
-﻿
-/* Estilos específicos para a página Index do HomeController */
+﻿/* Estilos específicos para a página Index do HomeController */
 .index-page .body-content {
     margin: 0;
     padding: 0;
+    border: 0;
+    
 }
+
 
 .index-page .navbar-nav {
     margin-right: 0; /* Remove a margem à direita dos itens da navbar */
@@ -30,9 +32,7 @@
 }
 
 
-
 /* Set padding to keep content from hitting the edges */
-
 .body-content {
     margin-top: 15px;
     padding-left: 15px;

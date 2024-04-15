@@ -35,14 +35,44 @@
     <div class="form-group row">
         <div class="col-md-6">
             <h6>Produtos</h6>
+            <input type="text" id="searchProdutos" class="form-control" placeholder="Pesquisar produtos...">
             @Html.DropDownList("Produtos", ViewBag.Produtos as SelectList, "-- Selecione aqui o Produto", htmlAttributes: new { @class = "form-control", @id = "drop_produtos" })
         </div>
         <div class="col-md-6">
             <h6>Clientes</h6>
-
+            <input type="text" id="searchClientes" class="form-control" placeholder="Pesquisar clientes...">
             @Html.DropDownList("Clientes", ViewBag.Clientes as SelectList, "-- Selecione aqui o Cliente", htmlAttributes: new { @class = "form-control", @id = "drop_clientes" })
         </div>
     </div>
+
+    @section Scripts {
+        <script>
+            $(document).ready(function () {
+                $('#searchProdutos').on('keyup', function () {
+                    var searchText = $(this).val().toLowerCase();
+                    $('#drop_produtos option').each(function () {
+                        if ($(this).text().toLowerCase().indexOf(searchText) === -1) {
+                            $(this).hide();
+                        } else {
+                            $(this).show();
+                        }
+                    });
+                });
+
+                $('#searchClientes').on('keyup', function () {
+                    var searchText = $(this).val().toLowerCase();
+                    $('#drop_clientes option').each(function () {
+                        if ($(this).text().toLowerCase().indexOf(searchText) === -1) {
+                            $(this).hide();
+                        } else {
+                            $(this).show();
+                        }
+                    });
+                });
+            });
+        </script>
+    }
+
     <br />
 
     <div class="container ">
@@ -57,8 +87,12 @@
             </div>
         </div>
     </div>
+
+    <a href="https://accounts.tiny.com.br/realms/tiny/protocol/openid-connect/auth?client_id=tiny-webapp&redirect_uri=https://erp.tiny.com.br/login&scope=openid&response_type=code" class="btn btn-info" target="_blank">Imprimir etiquetas</a>
+
     <button id="btn_salvar" class="btn btn-outline-success">Tirar e salvar foto</button>
-    @Html.ActionLink("gerar PDF ", "Gerador_pdf", "Webcan", null, new { @class = "btn btn-secundary" })
+
+    @Html.ActionLink("gerar PDF ", "Gerador_pdf", "Webcan", null, new { @class = "btn btn-secondary" })
 
 
     <script src="~/Scripts/webcan.js"></script>
