@@ -262,7 +262,6 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Chaves\facilit-415117-3b43cbc3ea24.json" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
-    <Content Include="Scripts\Estilo.css" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.js" />

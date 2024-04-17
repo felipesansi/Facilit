@@ -38,6 +38,18 @@
     padding-left: 15px;
     padding-right: 15px;
 }
+.campo {
+    border-radius: 10px;
+    margin: 10px 5px 20px;
+    font-size: 16px;
+    padding: 10px;
+    border: 1px solid #2f2fbe;
+    background: #D8D8D8;
+    color: blue;
+    width:300px;
+}
+
+
 
 /* Override the default bootstrap behavior where horizontal description lists 
    will truncate terms that are too long to fit in the left column 

@@ -342,6 +342,8 @@ namespace Facilit.Controllers
 
         public ActionResult Cadastro()
         {
+
+            ViewBag.MostrarBotoes = true;
             return View();
         }
 
@@ -404,7 +406,7 @@ namespace Facilit.Controllers
 
 
      [HttpPost]
-        public ActionResult Logout()
+      public ActionResult Logout()
         {
             Session.Clear();
             return RedirectToAction("Index", "Usuario");
@@ -412,7 +414,7 @@ namespace Facilit.Controllers
     
 
 
-    public ActionResult NovaSenha(string token, Usuario usuario)
+      public ActionResult NovaSenha(string token, Usuario usuario)
         {
             if (string.IsNullOrEmpty(token))
             {
@@ -431,6 +433,7 @@ namespace Facilit.Controllers
             }
             return View("NovaSenha");
         }
+        
         public ActionResult AtualizarSenha(Usuario usuario)
         {
 
@@ -476,9 +479,6 @@ namespace Facilit.Controllers
             }
             return View("NovaSenha");
         }
-
-
-
 
         public ActionResult RecuperarSenha()
         {
@@ -576,12 +576,15 @@ namespace Facilit.Controllers
             string email = TempData["Email"] as string;
             return View((object)email);
         }
+      
         public static string GerarTokenUnico()
         {
             string token = Guid.NewGuid().ToString();
 
             return token;
         }
+      
+        
         private void SalvarToken(string email , string token)
         {
             DateTime data_expedicao = DateTime.Now.AddHours(1);

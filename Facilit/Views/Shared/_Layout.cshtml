@@ -36,7 +36,7 @@
             </button>
             <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
-                    <li>@Html.ActionLink("Sobre", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+                    <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
                     <li>@Html.ActionLink("Contato", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
                     @if (ViewBag.MostrarBotoes == true)
                     {
@@ -55,7 +55,7 @@
                 {
                     <ul class="navbar-nav">
                         <li class="nav-item dropdown">
-                            <button class="btn btn-dark dropdown-toggle" type="button" id="usuarioDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button class="btn btn-primary dropdown-toggle" type="button" id="usuarioDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 @Session["nome"]
                             </button>
                             <div class="dropdown-menu" aria-labelledby="usuarioDropdown">
