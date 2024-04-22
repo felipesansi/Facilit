@@ -49,19 +49,7 @@ namespace Facilit.Servicos
 
             return default;
         }
-        //fazendo api ainda
-        public async Task<EquiquetasTiny> ObterEquita(string token)
-        {
-            var cliente = new HttpClient();
-            var requisicao = new HttpRequestMessage(HttpMethod.Get, $"https://api.tiny.com.br/api2/expedicao.obter.etiquetas.php?token={tokenTiny}&formato={formatoRetorno}");
-
-            var resposta = await cliente.SendAsync(requisicao);
-            if (resposta.IsSuccessStatusCode)
-            {
-                var respostaJson = await resposta.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<EquiquetasTiny>(respostaJson);
-            }
-            return default;
-        }
+        
+      
     }
 }

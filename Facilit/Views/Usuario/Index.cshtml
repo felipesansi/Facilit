@@ -23,9 +23,7 @@
     }, 2000);
 </script>
 
-<header>
-    <link  rel="stylesheet" href="~/Scripts/Estilo.css"/>
-</header>
+
 
 <div class="container">
     <div class="row">
@@ -61,14 +59,14 @@
                     </div>
 
                     <p>
-                        @Html.ActionLink("Esqueci minha senha", "RecuperarSenha", "Usuario")
+                        @Html.ActionLink("Esqueci minha senha", "RecuperarSenha", "Usuario",null, new { @class = "btn btn-secundary" })
                     </p>
                     <br />
                     <div class="form-group">
                        
                         <input type="submit" value="Login" class="btn btn-primary" />
 
-                        @Html.ActionLink("Cadastre-se", "Cadastro", "Usuario", null, new { @class = "btn btn-success" })
+                        
 
                         <br />
 

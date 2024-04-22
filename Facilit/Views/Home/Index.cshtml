@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Index</title>
+    <style>
+        .section-padding {
+            padding-bottom: 60px;
+        }
+    </style>
+</head>
+<body class="index-page">
+    <div class="container position-relative">
+        <section class="section-padding">
+            <img src="~/imagens/Untitled.png" alt="imagem de um computador" class="img-home">
+
+            <div class="position-absolute top-50 start-50 translate-middle text-center">
+                <h1 class="text-light custom-text">Olá, bem-vindo(a) ao Sistema Facilit</h1>
+                <p class="text-light custom-text-small">O sistema que facilita sua vida</p>
+                <a href="@Url.Action("Cadastro", "Usuario")" class="btn btn-secondary">Cadastre-se </a>
+            </div>
+        </section>
+
+        <section class="row section-padding">
+            <div class="col-md-6">
+                <p style="padding-left:40px">
+                    Nosso sistema web oferece uma solução completa para gerenciar fotos na nuvem através do OneDrive, garantindo armazenamento seguro e acessível.<br />
+                    Além disso, automatizamos a emissão de PDFs personalizados, incluindo o nome do usuário do sistema, para uma experiência mais personalizada e profissional.<br /> Com a capacidade de redimensionamento para sites de terceiros, como impressão de notas fiscais e etiquetas,<br /> proporcionamos uma integração perfeita em diversas plataformas,<br />
+                    facilitando a gestão de documentos e otimizando processos de negócios.
+                </p>
+            </div>
+            <div class="col-md-6">
+                <img src="~/imagens/LOGO-2.png" alt="Descrição imagem" class="img-fluid"/>
+            </div>
+
+        </section>
+    </div>
+</body>
+</html>
