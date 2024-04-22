@@ -1,0 +1,73 @@
+﻿@model Facilit.Models.Usuario
+
+@{
+    ViewBag.Title = "Recuperar Senha";
+}
+
+@if (!String.IsNullOrEmpty(TempData["Mensagem"] as string))
+{
+    <div id="mensagem">
+        <div class="alert alert-danger">
+            @TempData["Mensagem"]
+        </div>
+    </div>
+}
+
+<script>
+    setTimeout(function () {
+        var caixa_mensagem = document.getElementById('mensagem');
+        if (caixa_mensagem) {
+            caixa_mensagem.style.display = 'none';
+
+        }
+
+    }, 2000);
+</script>
+
+
+<header>
+    <link rel="stylesheet"href="~/Scripts/Estilo.css"/>
+</header>
+<h2>Recuperar Senha</h2>
+
+@using (Html.BeginForm("EnviarEmail", "Usuario"))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    </div>
+    <h4>Informe o E-mail Cadastrado</h4>
+    <br />
+    <div class="form-group">
+        @Html.LabelFor(model => model.Email, "E-mail:", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "campo", placeholder = "Seu e-mail" } })
+            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+
+
+
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <br />
+            <input type="submit" value="Enviar E-mail" class="btn btn-success" />
+            @Html.ActionLink("Voltar ao login", "Index", "Usuario", null, new { @class = "btn btn-secondary" })
+        </div>
+    </div>
+
+}
+<br />
+<div>
+
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

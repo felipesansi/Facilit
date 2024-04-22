@@ -1,0 +1,73 @@
+﻿
+@{ 
+    ViewBag.Title = "Home";
+}
+<!DOCTYPE html>
+<html>
+<head>
+ 
+    <style>
+        .section-padding {
+           padding-bottom:60px;
+           background-color:aliceblue;
+           
+           width:98.9vw;
+        }
+
+        .cards{
+            padding-left:60px;
+            width:150px;
+
+        }
+    </style>
+</head>
+<body class="index-page">
+    <div class="container position-relative">
+        <section class="section-padding">
+            <img src="~/imagens/Untitled.png" alt="imagem de um computador" class="img-home">
+
+            <div class="position-absolute top-50 start-50 translate-middle text-center">
+                <h1 class="text-light custom-text">Olá, bem-vindo(a) ao Sistema Facilit</h1>
+                <p class="text-light custom-text-small">O sistema que facilita sua vida</p>
+                <a href="@Url.Action("Cadastro", "Usuario")" class="btn btn-secondary">Cadastre-se </a>
+            </div>
+        </section>
+
+        <section class="row section-padding" >
+            <div class="col-md-6">
+                <p style="padding-left:40px;margin-right:62px;">
+                    Nosso sistema web é uma solução completa para gerenciar fotos na nuvem.<br>
+                    Usamos o OneDrive para garantir um armazenamento seguro e acessível.<br>
+                    Além disso, automatizamos a emissão de PDFs personalizados.<br>
+                    Incluímos o nome do usuário do sistema para uma experiência mais personalizada.<br>
+                    Nosso objetivo é proporcionar uma experiência profissional.<br>
+                    Temos a capacidade de redimensionar para sites de terceiros.<br>
+                    Isso é útil para a impressão de notas fiscais e etiquetas.<br>
+                    Proporcionamos uma integração perfeita em diversas plataformas.<br>
+                    Nosso foco é facilitar a gestão de documentos.<br>
+                    Também nos esforçamos para otimizar processos de negócios.<br>
+                    Nosso sistema é projetado para ser fácil de usar.<br>
+                    Estamos sempre procurando maneiras de melhorar.<br>
+                    Valorizamos o feedback dos nossos usuários.<br>
+                    Estamos comprometidos em fornecer o melhor serviço possível.<br>
+                    Obrigado por escolher nosso sistema web.<br>
+                </p>
+
+            </div>
+            <div class="col-md-6">
+                <img src="~/imagens/Group 2(1).png" alt="logo foxer" class="img-fluid"/>
+            </div>
+
+        </section>
+
+        <section class="ferramentas">
+            <div class="cards" >
+                <p>
+                    Tiragem de fotos &amp; <br> armazenamento na nuvem.
+                </p>
+            </div>
+        </section>
+
+    </div>
+</body>
+</html>

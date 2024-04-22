@@ -1,0 +1,69 @@
+﻿
+.index-page .body-content {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    
+}
+
+
+.index-page .navbar-nav {
+    margin-right: 0;
+}
+
+.index-page .custom-text {
+    font-family: Arial, sans-serif;
+    font-size: 32px;
+}
+
+.index-page .custom-text-small {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+}
+
+.index-page .dl-horizontal dt {
+    white-space: normal;
+}
+
+.index-page input,
+.index-page select,
+.index-page textarea {
+    max-width: 280px;
+}
+.cards{
+    width:150px;
+    height:150px;
+    background-color:aqua;
+}
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    margin-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.campo {
+    border-radius: 10px;
+    margin: 10px 5px 20px;
+    font-size: 16px;
+    padding: 10px;
+    border: 1px solid #2f2fbe;
+    background: #D8D8D8;
+    color: blue;
+    width:300px;
+}
+
+
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}

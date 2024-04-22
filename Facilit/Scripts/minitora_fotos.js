@@ -1,0 +1,1 @@
+﻿const google_api_pasta_id = "1JUPyzMstKO3qSnYl04kc0P_tnbcPzvG3";
