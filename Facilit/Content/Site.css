@@ -30,13 +30,9 @@
 .index-page textarea {
     max-width: 280px;
 }
-.cards{
-    width:150px;
-    height:150px;
-    background-color:aqua;
-}
-/* Set padding to keep content from hitting the edges */
-.body-content {
+
+    /* Set padding to keep content from hitting the edges */
+    .body-content {
     margin-top: 15px;
     padding-left: 15px;
     padding-right: 15px;

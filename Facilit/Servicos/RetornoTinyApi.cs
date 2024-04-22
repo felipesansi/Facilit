@@ -26,21 +26,21 @@ namespace Facilit.Servicos
         public async Task<ProdutoTiny> ListarProdutos(string token)
         {
             var cliente = new HttpClient(); //intanciação de httpcliente
-            
+
             var requisicao = new HttpRequestMessage(HttpMethod.Get, $"https://api.tiny.com.br/api2/pdv.produtos.php?token={tokenTiny}&formato={formatoRetorno}");// requisiçao sem o número de pagina
-           
+
             var resposta = await cliente.SendAsync(requisicao); //enviando requisição
 
             if (resposta.IsSuccessStatusCode) //se a resposta for 200 entra no if
             {
                 var respostaJson = await resposta.Content.ReadAsStringAsync(); // le a resposta conseguida por  var resposta e transforma em string
-                
+
                 var retornoTinyDeserializado = JsonSerializer.Deserialize<ProdutoTiny>(respostaJson); //convetendo obj json em string e armazenando no produtotiny
-               
+
                 if (retornoTinyDeserializado.retorno != null && retornoTinyDeserializado.retorno.numero_paginas > 0) //se hover  retorno e tiver paginas 
                 {
                     var todosProdutos = new List<ProdutoTiny.Produto>(); //lista com as propiedades de produto
-                   
+
                     for (int i = 1; i < retornoTinyDeserializado.retorno.numero_paginas; i++)
                     {
                         var requisicaoPorPagina = new HttpRequestMessage(HttpMethod.Get, $"https://api.tiny.com.br/api2/pdv.produtos.php?token={tokenTiny}&formato={formatoRetorno}&pagina={i}");
@@ -48,7 +48,7 @@ namespace Facilit.Servicos
                         if (respostaPorPagina.IsSuccessStatusCode)
                         {
                             var respostaPorPaginaJson = await respostaPorPagina.Content.ReadAsStringAsync();
-                         
+
                             var retornoTinyDeserializadoPorPagina = JsonSerializer.Deserialize<ProdutoTiny>(respostaPorPaginaJson);
                             todosProdutos.AddRange(retornoTinyDeserializadoPorPagina.retorno.produtos.ToList());
                         }
@@ -66,10 +66,10 @@ namespace Facilit.Servicos
             }
             return default;
         }
-   
+
         private async Task SalvarProdutosNoBanco(IEnumerable<ProdutoTiny.Produto> produtos)
         {
-           
+
             string sql_insert_produtos = "insert into tb_produtos (codigo_tiny_produto, descricao, unidade, data_atualizacao_produto) values (@codigo_tiny_produto, @descricao, @unidade,@data_atualizacao_produto)";
 
 
@@ -83,9 +83,9 @@ namespace Facilit.Servicos
                     comando.Parameters.AddWithValue("@descricao", produto.descricao);
 
                     comando.Parameters.AddWithValue("@unidade", produto.unidade);
-                
+
                     comando.Parameters.AddWithValue("@data_atualizacao_produto", DateTime.Now);
-                    
+
                     await comando.ExecuteNonQueryAsync();
                 }
             }
@@ -118,8 +118,16 @@ namespace Facilit.Servicos
                         {
                             var respostaPorPaginaJson = await respostaPorPagina.Content.ReadAsStringAsync();
 
-                            var retornoTinyDeserializadoPorPagina = JsonSerializer.Deserialize<ClienteTiny>(respostaPorPaginaJson);
-                            todosClientes.AddRange(retornoTinyDeserializadoPorPagina.retorno.contatos.Select(c => c.contato));
+                            try
+                            {
+                                var retornoTinyDeserializadoPorPagina = JsonSerializer.Deserialize<ClienteTiny>(respostaPorPaginaJson);
+                                todosClientes.AddRange(retornoTinyDeserializadoPorPagina.retorno.contatos.Select(c => c.contato));
+                            }
+                            catch (Exception ex)
+                            {
+                                var erro = ex.Message;
+                            }
+
                         }
                     }
                     if (todosClientes.Any())

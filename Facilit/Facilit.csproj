@@ -251,6 +251,7 @@
     <Content Include="imagens\Cadastro.png" />
     <Content Include="imagens\Group 2%281%29.png" />
     <Content Include="imagens\Group 2.png" />
+    <Content Include="imagens\Group_2_1_-removebg-preview.png" />
     <Content Include="imagens\imagem cadastrar.png" />
     <Content Include="imagens\imagem login.png" />
     <Content Include="imagens\editar.png" />
@@ -351,9 +352,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>54188</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:44377</IISUrl>
-          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
-          <IISAppRootUrl>http://localhost:44377</IISAppRootUrl>
+          <IISUrl>http://localhost:44377//</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
