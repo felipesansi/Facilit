@@ -44,4 +44,11 @@ namespace Facilit.Models.ClienteTiny
         public string situacao { get; set; }
         public string data_criacao { get; set; }
     }
+    public class Client
+    {
+        public int id { get; set; }
+        public int codigo_tiny_cliente { get; set; }
+         public string nome { get; set; }
+        public DateTime data_atualizacao_cliente { get; set; }
+    }
 }

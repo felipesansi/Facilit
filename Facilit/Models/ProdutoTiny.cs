@@ -69,6 +69,17 @@ namespace Facilit.Models
             public string st { get; set; }
             public string aliquotaAplicavelCredito { get; set; }
         }
+        public class Produts
+        {
+            public int id { get; set; }
+            public int codigo_tiny { get; set; }
+            public string descricao { get; set; }
+            public string unidade { get; set; }
+            public DateTime data_atualizacao { get; set; }
+
+
+        }
 
     }
+  
 }

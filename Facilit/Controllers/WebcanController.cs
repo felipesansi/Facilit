@@ -1,9 +1,11 @@
 ﻿using Facilit.Models;
+using Facilit.Models.ClienteTiny;
 using Facilit.Servicos;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using MySql.Data.MySqlClient;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -17,19 +19,88 @@ namespace Facilit.Controllers
         string tokenTiny = "02011b49e5399d62d999007a8952642c85cca50bc310b49fdd6c3674fdff4b2a";
         string mensagem;
         int usuario_id;
+
+        public async Task Verificar_produtos()
+        {
+           
+            using (var conexao = new Conexao())
+            {
+                string select_produto = "select * from tb_produtos";
+                using(MySqlCommand comando = new MySqlCommand(select_produto,conexao._conn))
+                {
+                    MySqlDataReader leitura = comando.ExecuteReader();
+                    if (leitura.HasRows)
+                    {
+                        var listaProdutos = new List<ProdutoTiny.Produts>();
+                        while (leitura.Read())
+                        {
+                            var produts = new ProdutoTiny.Produts()
+                            {
+                                id = Convert.ToInt32(leitura["id"]),
+                                codigo_tiny = Convert.ToInt32(leitura["codigo_tiny_produto"]),
+                                descricao = Convert.ToString(leitura["descricao"]),
+                                unidade = Convert.ToString(leitura["unidade"]),
+                                data_atualizacao = Convert.ToDateTime(leitura["data_atualizacao_produto"]),
+                            };
+                            listaProdutos.Add(produts);
+                            
+                        }
+                        ViewBag.listaProdutos.AddRange(listaProdutos);
+                        ViewBag.ListaProdutos = new SelectList(listaProdutos, "id", "descricao");
+                    }
+                    else
+                    {
+                        RetornoTinyApi produto = new RetornoTinyApi();
+                        var produtos = await produto.ListarProdutos(tokenTiny);
+                        var dropdown_produto = produtos.retorno.produtos.Select(s => new { Id = s.id, Produto = s.descricao + " | " + s.tipoVariacao, Descricao = s.descricao }).ToList();
+                        ViewBag.Produtos = new SelectList(dropdown_produto, "Descricao", "Produto");
+                    }
+                }
+            }
+        }
+        
+        public async Task Verificar_clientes()
+        {
+            string sql_select_clientes = "select * from tb_clientes";
+            using(var conexao = new Conexao())
+            {
+                using(MySqlCommand comando = new MySqlCommand(sql_select_clientes,conexao._conn))
+                {
+                    MySqlDataReader leitura = comando.ExecuteReader();
+
+                    if (leitura.HasRows)
+                    {
+                        var lista_cliente = new List<Client>();
+                        while(leitura.Read())
+                        {
+                            var client = new Client {
+                                codigo_tiny_cliente = Convert.ToInt32(leitura["codigo_tiny_cliente"]),
+                                nome = Convert.ToString(leitura["nome"]),
+                                data_atualizacao_cliente = Convert.ToDateTime(leitura["data_atualizacao_cliente"])
+                            };
+                            lista_cliente.Add(client);
+
+                        }
+                        ViewBag.listarClientes.AddRange(lista_cliente);
+                        ViewBag.listarClientes =new SelectList(lista_cliente, "Nome", "Cliente");
+                    }
+                    else
+                    {
+                        RetornoTinyApi cliente = new RetornoTinyApi();
+                        var clientes = await cliente.ListarClientes(tokenTiny);
+                        var dropdown_cliente = clientes.retorno.contatos.Select(s => new { Id = s.contato.id, cliente = s.contato.nome, Nome = s.contato.nome }).ToList();
+                        ViewBag.Clientes = new SelectList(dropdown_cliente, "Nome", "Cliente");
+                    }
+                }
+            }
+        }
         public async Task<ActionResult> Registro()
         {
-            RetornoTinyApi produto = new RetornoTinyApi();
-            var produtos = await produto.ListarProdutos(tokenTiny);
-            var dropdown_produto = produtos.retorno.produtos.Select(s => new { Id = s.id, Produto = s.descricao + " | " + s.tipoVariacao, Descricao = s.descricao }).ToList();
-            ViewBag.Produtos = new SelectList(dropdown_produto, "Descricao", "Produto");
+            await Verificar_produtos();
 
-            //clientes
+           await Verificar_clientes();
 
-            RetornoTinyApi cliente = new RetornoTinyApi();
-            var clientes = await cliente.ListarClientes(tokenTiny);
-            var dropdown_cliente = clientes.retorno.contatos.Select(s => new { Id = s.contato.id, cliente = s.contato.nome, Nome = s.contato.nome }).ToList();
-            ViewBag.Clientes = new SelectList(dropdown_cliente, "Nome", "Cliente");
+           
             return View();
         }
         [HttpPost]
