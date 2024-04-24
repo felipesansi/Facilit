@@ -36,12 +36,12 @@
         <div class="col-md-6">
             <h6>Produtos</h6>
             <input type="text" id="searchProdutos" class="form-control" placeholder="Pesquisar produtos...">
-            @Html.DropDownList("Produtos", ViewBag.Produtos as SelectList, "-- Selecione aqui o Produto", htmlAttributes: new { @class = "form-control", @id = "drop_produtos" })
+            @Html.DropDownList("Produtos", ViewBag.listaProdutos as SelectList, "-- Selecione aqui o Produto", htmlAttributes: new { @class = "form-control", @id = "drop_produtos" })
         </div>
         <div class="col-md-6">
             <h6>Clientes</h6>
             <input type="text" id="searchClientes" class="form-control" placeholder="Pesquisar clientes...">
-            @Html.DropDownList("Clientes", ViewBag.Clientes as SelectList, "-- Selecione aqui o Cliente", htmlAttributes: new { @class = "form-control", @id = "drop_clientes" })
+            @Html.DropDownList("Clientes", ViewBag.listarClientes as SelectList, "-- Selecione aqui o Cliente", htmlAttributes: new { @class = "form-control", @id = "drop_clientes" })
         </div>
     </div>
 

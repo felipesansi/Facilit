@@ -22,58 +22,67 @@ namespace Facilit.Controllers
 
         public async Task Verificar_produtos()
         {
-           
+
             using (var conexao = new Conexao())
             {
                 string select_produto = "select * from tb_produtos";
-                using(MySqlCommand comando = new MySqlCommand(select_produto,conexao._conn))
+                using (MySqlCommand comando = new MySqlCommand(select_produto, conexao._conn))
                 {
                     MySqlDataReader leitura = comando.ExecuteReader();
                     if (leitura.HasRows)
                     {
                         var listaProdutos = new List<ProdutoTiny.Produts>();
-                        while (leitura.Read())
+                        try
                         {
-                            var produts = new ProdutoTiny.Produts()
+                            while (leitura.Read())
                             {
-                                id = Convert.ToInt32(leitura["id"]),
-                                codigo_tiny = Convert.ToInt32(leitura["codigo_tiny_produto"]),
-                                descricao = Convert.ToString(leitura["descricao"]),
-                                unidade = Convert.ToString(leitura["unidade"]),
-                                data_atualizacao = Convert.ToDateTime(leitura["data_atualizacao_produto"]),
-                            };
-                            listaProdutos.Add(produts);
-                            
+                                var produts = new ProdutoTiny.Produts()
+                                {
+                                    id = Convert.ToInt32(leitura["id"]),
+                                    codigo_tiny = Convert.ToInt32(leitura["codigo_tiny_produto"]),
+                                    descricao = Convert.ToString(leitura["descricao"]),
+                                    unidade = Convert.ToString(leitura["unidade"]),
+                                    data_atualizacao = Convert.ToDateTime(leitura["data_atualizacao_produto"]),
+                                };
+                                listaProdutos.Add(produts);
+
+                            }
+                            ViewBag.listaProdutos.AddRange(listaProdutos);
+                            ViewBag.ListaProdutos = new SelectList(listaProdutos, "id", "descricao");
                         }
-                        ViewBag.listaProdutos.AddRange(listaProdutos);
-                        ViewBag.ListaProdutos = new SelectList(listaProdutos, "id", "descricao");
+                        catch (Exception ex)
+                        {
+
+                            var erro = ex.Message;
+                        }
                     }
                     else
                     {
                         RetornoTinyApi produto = new RetornoTinyApi();
                         var produtos = await produto.ListarProdutos(tokenTiny);
                         var dropdown_produto = produtos.retorno.produtos.Select(s => new { Id = s.id, Produto = s.descricao + " | " + s.tipoVariacao, Descricao = s.descricao }).ToList();
-                        ViewBag.Produtos = new SelectList(dropdown_produto, "Descricao", "Produto");
+                        ViewBag.ListaProdutos = new SelectList(dropdown_produto, "Descricao", "Produto");
                     }
                 }
             }
         }
-        
+
         public async Task Verificar_clientes()
         {
             string sql_select_clientes = "select * from tb_clientes";
-            using(var conexao = new Conexao())
+            using (var conexao = new Conexao())
             {
-                using(MySqlCommand comando = new MySqlCommand(sql_select_clientes,conexao._conn))
+                using (MySqlCommand comando = new MySqlCommand(sql_select_clientes, conexao._conn))
                 {
                     MySqlDataReader leitura = comando.ExecuteReader();
 
                     if (leitura.HasRows)
                     {
                         var lista_cliente = new List<Client>();
-                        while(leitura.Read())
+                        while (leitura.Read())
                         {
-                            var client = new Client {
+                            var client = new Client
+                            {
                                 codigo_tiny_cliente = Convert.ToInt32(leitura["codigo_tiny_cliente"]),
                                 nome = Convert.ToString(leitura["nome"]),
                                 data_atualizacao_cliente = Convert.ToDateTime(leitura["data_atualizacao_cliente"])
@@ -82,14 +91,14 @@ namespace Facilit.Controllers
 
                         }
                         ViewBag.listarClientes.AddRange(lista_cliente);
-                        ViewBag.listarClientes =new SelectList(lista_cliente, "Nome", "Cliente");
+                        ViewBag.listarClientes = new SelectList(lista_cliente, "Nome", "Cliente");
                     }
                     else
                     {
                         RetornoTinyApi cliente = new RetornoTinyApi();
                         var clientes = await cliente.ListarClientes(tokenTiny);
                         var dropdown_cliente = clientes.retorno.contatos.Select(s => new { Id = s.contato.id, cliente = s.contato.nome, Nome = s.contato.nome }).ToList();
-                        ViewBag.Clientes = new SelectList(dropdown_cliente, "Nome", "Cliente");
+                        ViewBag.listarClientes = new SelectList(dropdown_cliente, "Nome", "Cliente");
                     }
                 }
             }
@@ -98,9 +107,9 @@ namespace Facilit.Controllers
         {
             await Verificar_produtos();
 
-           await Verificar_clientes();
+            await Verificar_clientes();
 
-           
+
             return View();
         }
         [HttpPost]
