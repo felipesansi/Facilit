@@ -12,6 +12,8 @@ namespace Facilit.Servicos
 {
 
 
+
+
     public class RetornoTinyApi
     {
         string tokenTiny = "02011b49e5399d62d999007a8952642c85cca50bc310b49fdd6c3674fdff4b2a";
@@ -104,7 +106,7 @@ namespace Facilit.Servicos
 
                 var retornoTinyDeserializado = JsonSerializer.Deserialize<ClienteTiny>(respostaJson);
 
-                if (retornoTinyDeserializado.retorno != null && retornoTinyDeserializado.retorno.pagina > 0)
+                if (retornoTinyDeserializado.retorno != null && retornoTinyDeserializado.retorno.numero_paginas > 0)
                 {
                     var todosClientes = new List<Contato1>();
 
@@ -164,4 +166,3 @@ namespace Facilit.Servicos
 
 
 }
-

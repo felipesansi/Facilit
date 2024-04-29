@@ -25,7 +25,8 @@ namespace Facilit.Controllers
 
             using (var conexao = new Conexao())
             {
-                string select_produto = "select * from tb_produtos";
+                string select_produto = "select id, codigo_tiny_produto, descricao, unidade, data_atualizacao_produto " +
+                    "from tb_produtos limit 500";
                 using (MySqlCommand comando = new MySqlCommand(select_produto, conexao._conn))
                 {
                     MySqlDataReader leitura = comando.ExecuteReader();
@@ -47,8 +48,8 @@ namespace Facilit.Controllers
                                 listaProdutos.Add(produts);
 
                             }
-                            ViewBag.listaProdutos.AddRange(listaProdutos);
-                            ViewBag.ListaProdutos = new SelectList(listaProdutos, "id", "descricao");
+
+                            ViewData["ListaProdutos"] = new SelectList(listaProdutos, "id", "descricao");
                         }
                         catch (Exception ex)
                         {
@@ -60,8 +61,17 @@ namespace Facilit.Controllers
                     {
                         RetornoTinyApi produto = new RetornoTinyApi();
                         var produtos = await produto.ListarProdutos(tokenTiny);
-                        var dropdown_produto = produtos.retorno.produtos.Select(s => new { Id = s.id, Produto = s.descricao + " | " + s.tipoVariacao, Descricao = s.descricao }).ToList();
-                        ViewBag.ListaProdutos = new SelectList(dropdown_produto, "Descricao", "Produto");
+                        var dropdown_produto = produtos.retorno.produtos
+                            .Select(s => new
+                            {
+                                Id = s.id,
+                                Produto = s.descricao + " | "
+                                + s.tipoVariacao,
+                                Descricao = s.descricao
+                            })
+                            .Take(500)
+                            .ToList();
+                        ViewData["ListaProdutos"] = new SelectList(dropdown_produto, "Descricao", "Produto");
                     }
                 }
             }
@@ -69,7 +79,8 @@ namespace Facilit.Controllers
 
         public async Task Verificar_clientes()
         {
-            string sql_select_clientes = "select * from tb_clientes";
+            string sql_select_clientes = "select codigo_tiny_cliente,nome,data_atualizacao_cliente" +
+                " from tb_clientes limit 100";
             using (var conexao = new Conexao())
             {
                 using (MySqlCommand comando = new MySqlCommand(sql_select_clientes, conexao._conn))
@@ -90,15 +101,22 @@ namespace Facilit.Controllers
                             lista_cliente.Add(client);
 
                         }
-                        ViewBag.listarClientes.AddRange(lista_cliente);
-                        ViewBag.listarClientes = new SelectList(lista_cliente, "Nome", "Cliente");
+
+                        ViewData["listarClientes"] = new SelectList(lista_cliente, "Nome", "Cliente");
                     }
                     else
                     {
                         RetornoTinyApi cliente = new RetornoTinyApi();
                         var clientes = await cliente.ListarClientes(tokenTiny);
-                        var dropdown_cliente = clientes.retorno.contatos.Select(s => new { Id = s.contato.id, cliente = s.contato.nome, Nome = s.contato.nome }).ToList();
-                        ViewBag.listarClientes = new SelectList(dropdown_cliente, "Nome", "Cliente");
+                        var dropdown_cliente = clientes.retorno.contatos
+                            .Select(s => new
+                            {
+                                Id = s.contato.id,
+                                Nome = s.contato.nome
+                            })
+                          .Take(200)
+                          .ToList();
+                        ViewData["listarClientes"] = new SelectList(dropdown_cliente, "Id", "Nome");
                     }
                 }
             }

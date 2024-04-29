@@ -11,7 +11,7 @@ namespace Facilit.Models.ClienteTiny
     {
         public string status_processamento { get; set; }
         public string status { get; set; }
-        public int pagina { get; set; }
+        public object pagina { get; set; }
         public int numero_paginas { get; set; }
         public Contato[] contatos { get; set; }
     }
@@ -48,7 +48,7 @@ namespace Facilit.Models.ClienteTiny
     {
         public int id { get; set; }
         public int codigo_tiny_cliente { get; set; }
-         public string nome { get; set; }
+        public string nome { get; set; }
         public DateTime data_atualizacao_cliente { get; set; }
     }
 }

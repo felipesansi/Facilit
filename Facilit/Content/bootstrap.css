@@ -307,15 +307,15 @@ figure {
 }
 
 .img-home {
-    width: 100%;
+    width:98.9vw;
     height: 543px;
 
 }
 
 img,
 svg {
-    vertical-align: middle;
-    
+
+   
 }
 
 table {
