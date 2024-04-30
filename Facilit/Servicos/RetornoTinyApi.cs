@@ -138,6 +138,7 @@ namespace Facilit.Servicos
                     }
 
                 }
+             
 
                 return retornoTinyDeserializado;
             }
@@ -157,6 +158,7 @@ namespace Facilit.Servicos
                     comando.Parameters.AddWithValue("@nome", cliente.nome);
                     comando.Parameters.AddWithValue(" @data_atualizacao_cliente", DateTime.Now);
                     await comando.ExecuteNonQueryAsync();
+         
                 }
             }
         }

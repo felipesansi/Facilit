@@ -49,7 +49,7 @@ namespace Facilit.Controllers
 
                             }
 
-                            ViewData["ListaProdutos"] = new SelectList(listaProdutos, "id", "descricao");
+                            ViewData["ListaProdutos"] = new SelectList(listaProdutos, "descricao", "descricao");
                         }
                         catch (Exception ex)
                         {
@@ -116,7 +116,7 @@ namespace Facilit.Controllers
                             })
                           .Take(200)
                           .ToList();
-                        ViewData["listarClientes"] = new SelectList(dropdown_cliente, "Id", "Nome");
+                        ViewData["listarClientes"] = new SelectList(dropdown_cliente, "Nome", "Nome");
                     }
                 }
             }

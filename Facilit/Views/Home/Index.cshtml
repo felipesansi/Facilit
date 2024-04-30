@@ -8,14 +8,50 @@
 <head>
 
     <style>
-        .section-padding {
+        .ferramentas 
+        {
+            display: flex;
+            justify-content: space-around;
             padding-bottom: 60px;
-            width: 100vw;
+         
+        }
+        
+        .section-padding 
+        {
+            padding-bottom: 60px;
+         
         }
 
-        .ferramentas {
+        #card-foto 
+        {
             background-color: whitesmoke;
+            height: 310px;
+            width: 250px;
+            padding: 20px 35px ;
+            border-radius: 30px;
+            text-align: center;
         }
+        #card-pdf 
+        {
+            background-color: whitesmoke;
+            height: 310px;
+            width: 250px;
+            padding: 20px 35px;
+            border-radius: 30px;
+            text-align: center;
+        }
+        #card-tiny 
+        {
+            background-color: whitesmoke;
+            height: 310px;
+            width: 250px;
+            padding: 20px 35px;
+            border-radius: 30px;
+            text-align: center;
+        }
+        
+
+
     </style>
 </head>
 <body class="index-page">
@@ -32,7 +68,7 @@
 
         <section class="row section-padding">
             <div class="col-md-6">
-                <p style="padding-left:40px;margin-right:62px;">
+                <p style="padding-left:40px;margin-right:62px;" class="">
                     Nosso sistema web é uma solução completa para gerenciar fotos na nuvem.<br>
                     Usamos o OneDrive para garantir um armazenamento seguro e acessível.<br>
                     Além disso, automatizamos a emissão de PDFs personalizados.<br>
@@ -56,7 +92,7 @@
             </div>
 
         </section>
-
+           <h1 class="text-center" >Recursos </h1>
         <section class="ferramentas">
             <div id="card-foto">
 
@@ -67,7 +103,29 @@
 
 
             </div>
+
+
+            <div id="card-tiny">
+
+                <img src="~/imagens/icons8-camera-50.png" alt="Ícone de câmera">
+                <p>
+                    Tiragem de fotos & <br> armazenamento na nuvem.
+                </p>
+
+
+            </div>
+
+            <div id="card-pdf">
+
+                <img src="~/imagens/icons8-camera-50.png" alt="Ícone de câmera">
+                <p>
+                    Tiragem de fotos & <br> armazenamento na nuvem.
+                </p>
+
+
+            </div>
         </section>
+        
 
     </div>
 </body>

@@ -215,6 +215,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\Notas_tinyController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="Controllers\WebcanController.cs" />
     <Compile Include="Global.asax.cs">
@@ -224,6 +225,7 @@
     <Compile Include="Models\Conexao.cs" />
     <Compile Include="Models\NF_Tiny.cs" />
     <Compile Include="Models\ProdutoTiny.cs" />
+    <Compile Include="Models\Resqest_NF_tiny.cs" />
     <Compile Include="Models\Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Servicos\RetornoTinyApi.cs" />
@@ -304,6 +306,7 @@
     <Content Include="Views\Usuario\NovaSenha.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Webcan\Gerador_pdf.cshtml" />
+    <Content Include="Views\Notas_tiny\Notas.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
