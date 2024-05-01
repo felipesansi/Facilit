@@ -121,8 +121,13 @@ namespace Facilit.Controllers
                 }
             }
         }
+
         public async Task<ActionResult> Registro()
         {
+            var teste = new RetornoTinyApi();
+
+            await teste.ConsultaNota();
+
             await Verificar_produtos();
 
             await Verificar_clientes();

@@ -5,8 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Web.Helpers;
 
 namespace Facilit.Servicos
 {
@@ -92,6 +94,7 @@ namespace Facilit.Servicos
                 }
             }
         }
+
         public async Task<ClienteTiny> ListarClientes(string token)
         {
             var cliente = new HttpClient();
@@ -138,7 +141,7 @@ namespace Facilit.Servicos
                     }
 
                 }
-             
+
 
                 return retornoTinyDeserializado;
             }
@@ -158,13 +161,52 @@ namespace Facilit.Servicos
                     comando.Parameters.AddWithValue("@nome", cliente.nome);
                     comando.Parameters.AddWithValue(" @data_atualizacao_cliente", DateTime.Now);
                     await comando.ExecuteNonQueryAsync();
-         
+
                 }
             }
         }
 
+        public async Task<string> ConsultaNota()
+        {
+            var numeroNota = "033550";
+            var url = $"https://api.tiny.com.br/api2/notas.fiscais.pesquisa.php?token={tokenTiny}&formato={formatoRetorno}&numero={numeroNota}";
+            var responseApi = string.Empty;
+
+            HttpClient client = new HttpClient();
+
+            var requisicao = new HttpRequestMessage(HttpMethod.Post, url);
+
+            HttpResponseMessage response = await client.SendAsync(requisicao);
+
+            if (response.IsSuccessStatusCode)
+            {
+                responseApi = await response.Content.ReadAsStringAsync();
+
+                var retornoConsultaApi = JsonSerializer.Deserialize<NotaFiscalPesquisa>(responseApi);
+                var idNota = string.Empty;
+                List<NotaFiscalPesquisa.Notas_Fiscais> notas = retornoConsultaApi.retorno.notas_fiscais.ToList();
+
+                foreach (var nota in notas)
+                {
+                    idNota = nota.nota_fiscal.id;
+                }
+
+                var urlNotaFiscal = $"https://api.tiny.com.br/api2/nota.fiscal.obter.link.php?token={tokenTiny}&id={idNota}&formato={formatoRetorno}";
+                var responseNotaFiscal = string.Empty;
+
+                var requisicaoNota = new HttpRequestMessage(HttpMethod.Post, urlNotaFiscal);
+
+                HttpResponseMessage responseNota = await client.SendAsync(requisicaoNota);
+
+                if (responseNota.IsSuccessStatusCode)
+                {
+                    var retorno = await responseNota.Content.ReadAsStringAsync();
+
+                    var objetoNota = JsonSerializer.Deserialize<NotaFiscalLink>(retorno);
+                }
+            }
+
+            return "";
+        }
     }
-
-
-
 }
