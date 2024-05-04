@@ -124,14 +124,18 @@ namespace Facilit.Controllers
 
         public async Task<ActionResult> Registro()
         {
-            var teste = new RetornoTinyApi();
+            if (Session["logado"] !=null )
+            {
+                await Verificar_produtos();
 
-            await teste.ConsultaNota();
+                await Verificar_clientes();
 
-            await Verificar_produtos();
-
-            await Verificar_clientes();
-
+            }
+            else
+            {
+                RedirectToAction("Index","usuario");
+            }
+           
 
             return View();
         }

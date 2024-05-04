@@ -1,5 +1,6 @@
 ﻿using Facilit.Models;
 using Facilit.Models.ClienteTiny;
+using Microsoft.Ajax.Utilities;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -165,48 +166,42 @@ namespace Facilit.Servicos
                 }
             }
         }
-
-        public async Task<string> ConsultaNota()
+     
+        public async Task<string> ConsultaNota(NF_Tiny nf)
         {
-            var numeroNota = "033550";
-            var url = $"https://api.tiny.com.br/api2/notas.fiscais.pesquisa.php?token={tokenTiny}&formato={formatoRetorno}&numero={numeroNota}";
-            var responseApi = string.Empty;
+            var url = $"https://api.tiny.com.br/api2/notas.fiscais.pesquisa.php?token={tokenTiny}&formato={formatoRetorno}&numero={nf.numero}";
 
-            HttpClient client = new HttpClient();
-
-            var requisicao = new HttpRequestMessage(HttpMethod.Post, url);
-
-            HttpResponseMessage response = await client.SendAsync(requisicao);
-
-            if (response.IsSuccessStatusCode)
+            using (var client = new HttpClient())
             {
-                responseApi = await response.Content.ReadAsStringAsync();
+                var response = await client.PostAsync(url, null);
 
-                var retornoConsultaApi = JsonSerializer.Deserialize<NotaFiscalPesquisa>(responseApi);
-                var idNota = string.Empty;
-                List<NotaFiscalPesquisa.Notas_Fiscais> notas = retornoConsultaApi.retorno.notas_fiscais.ToList();
-
-                foreach (var nota in notas)
+                if (response.IsSuccessStatusCode)
                 {
-                    idNota = nota.nota_fiscal.id;
-                }
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var retornoConsultaApi = JsonSerializer.Deserialize<NotaFiscalPesquisa>(responseContent);
 
-                var urlNotaFiscal = $"https://api.tiny.com.br/api2/nota.fiscal.obter.link.php?token={tokenTiny}&id={idNota}&formato={formatoRetorno}";
-                var responseNotaFiscal = string.Empty;
+                    if (retornoConsultaApi != null && retornoConsultaApi.retorno != null && retornoConsultaApi.retorno.notas_fiscais.Any())
+                    {
+                        var idNota = retornoConsultaApi.retorno.notas_fiscais.First().nota_fiscal.id;
+                        var urlNotaFiscal = $"https://api.tiny.com.br/api2/nota.fiscal.obter.link.php?token={tokenTiny}&id={idNota}&formato={formatoRetorno}";
 
-                var requisicaoNota = new HttpRequestMessage(HttpMethod.Post, urlNotaFiscal);
+                        var responseNota = await client.PostAsync(urlNotaFiscal, null);
 
-                HttpResponseMessage responseNota = await client.SendAsync(requisicaoNota);
+                        if (responseNota.IsSuccessStatusCode)
+                        {
+                            var retorno = await responseNota.Content.ReadAsStringAsync();
+                            var objetoNota = JsonSerializer.Deserialize<NotaFiscalLink>(retorno);
 
-                if (responseNota.IsSuccessStatusCode)
-                {
-                    var retorno = await responseNota.Content.ReadAsStringAsync();
 
-                    var objetoNota = JsonSerializer.Deserialize<NotaFiscalLink>(retorno);
+                            return objetoNota.retorno.link_nfe;
+                        }
+                    }
                 }
             }
 
-            return "";
+          
+            return null;
         }
+
     }
 }

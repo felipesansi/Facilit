@@ -14,7 +14,7 @@ namespace Facilit.Models
         private readonly string _port = "3306";
         private readonly string _database = "bd_facilit";
         private readonly string _uid = "root";
-        private readonly string _pwd = "cursoads";
+        private readonly string _pwd = "felipe123";
 
         public Conexao()
         {

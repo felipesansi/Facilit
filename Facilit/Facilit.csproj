@@ -251,12 +251,14 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="imagens\camera_video_icon.png" />
+    <Content Include="imagens\icon_aquivos.png" />
     <Content Include="imagens\amico.png" />
     <Content Include="imagens\Cadastro.png" />
     <Content Include="imagens\Group 2%281%29.png" />
     <Content Include="imagens\Group 2.png" />
     <Content Include="imagens\Group_2_1_-removebg-preview.png" />
-    <Content Include="imagens\icons8-camera-50.png" />
+    <Content Include="imagens\icon-tiny.png" />
     <Content Include="imagens\imagem cadastrar.png" />
     <Content Include="imagens\imagem login.png" />
     <Content Include="imagens\editar.png" />
@@ -358,7 +360,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>54188</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:44377</IISUrl>
+          <IISUrl>http://localhost:44377/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

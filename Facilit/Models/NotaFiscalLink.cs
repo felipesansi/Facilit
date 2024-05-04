@@ -10,6 +10,8 @@
             public string status { get; set; }
             public string codigo_erro { get; set; }
             public string link_nfe { get; set; }
+       
         }
+     
     }
 }
