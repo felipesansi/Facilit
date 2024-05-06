@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web.Helpers;
+using static Facilit.Models.PesquisaExpedicao;
 
 namespace Facilit.Servicos
 {
@@ -203,5 +204,28 @@ namespace Facilit.Servicos
             return null;
         }
 
+      /* public async Task <PesquisaExpedicao>PesquisaExpedicao()
+        {
+            List<Expedicao> lista_expedicaos = new List<Expedicao>();
+
+            EtiquetasTiny etiquetasTiny = new EtiquetasTiny();
+          
+            HttpClient client = new HttpClient();
+
+             var request = new HttpRequestMessage(HttpMethod.Post,$"https://api.tiny.com.br/api2/expedicao.pesquisa.php?token{tokenTiny}&formato={formatoRetorno}&formaEnvio={etiquetasTiny.formato_envio}");
+            
+             var response = await client.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseJSON = await response.Content.ReadAsStringAsync();
+
+                var retornoTinyDeserializado =JsonSerializer.Deserialize<PesquisaExpedicao>(responseJSON);
+                lista_expedicaos.AddRange
+            }
+
+        }*/
+    
     }
+
 }

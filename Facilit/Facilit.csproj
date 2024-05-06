@@ -214,6 +214,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\EtiquetasController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\Notas_tinyController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
@@ -223,9 +224,11 @@
     </Compile>
     <Compile Include="Models\ClienteTiny.cs" />
     <Compile Include="Models\Conexao.cs" />
+    <Compile Include="Models\EtiquetasTiny.cs" />
     <Compile Include="Models\NF_Tiny.cs" />
     <Compile Include="Models\NotaFiscalLink.cs" />
     <Compile Include="Models\NotaFiscalPesquisa.cs" />
+    <Compile Include="Models\PesquisaExpedicao.cs" />
     <Compile Include="Models\ProdutoTiny.cs" />
     <Compile Include="Models\Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -310,6 +313,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Webcan\Gerador_pdf.cshtml" />
     <Content Include="Views\Notas_tiny\Notas.cshtml" />
+    <Content Include="Views\Etiquetas\Etiquetas.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
