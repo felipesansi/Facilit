@@ -80,7 +80,7 @@ namespace Facilit.Controllers
         public async Task Verificar_clientes()
         {
             string sql_select_clientes = "select codigo_tiny_cliente,nome,data_atualizacao_cliente" +
-                " from tb_clientes limit 100";
+                " from tb_clientes limit 500";
             using (var conexao = new Conexao())
             {
                 using (MySqlCommand comando = new MySqlCommand(sql_select_clientes, conexao._conn))
@@ -102,7 +102,7 @@ namespace Facilit.Controllers
 
                         }
 
-                        ViewData["listarClientes"] = new SelectList(lista_cliente, "Nome", "Cliente");
+                        ViewData["listarClientes"] = new SelectList(lista_cliente, "Nome", "Nome");
                     }
                     else
                     {
@@ -114,7 +114,7 @@ namespace Facilit.Controllers
                                 Id = s.contato.id,
                                 Nome = s.contato.nome
                             })
-                          .Take(200)
+                          .Take(500)
                           .ToList();
                         ViewData["listarClientes"] = new SelectList(dropdown_cliente, "Nome", "Nome");
                     }
@@ -203,6 +203,59 @@ namespace Facilit.Controllers
                 TempData["mensagem"] = "Ocorreu um erro: " + erro.Message;
             }
             return mensagem;
+        }
+
+         public async Task Atualizar_Dados_Clientes() 
+        {
+            string sql_delete = "delete from tb_clientes";
+            try
+            {
+            using(var conexao = new Conexao())
+                {
+                    using(var comando = new MySqlCommand(sql_delete, conexao._conn))
+                    {
+
+                        await comando.ExecuteNonQueryAsync();
+                        RedirectToAction("Index", "Usuario");
+                        await Verificar_clientes();
+                   
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                TempData["mesangem"] = "Ocorreu um erro:"+ex.Message;
+            }
+        }
+        public async Task Atualizar_Dados_Produtos()
+        {
+            string sql_delete = "delete from tb_produtos";
+            try
+            {
+                using (var conexao = new Conexao())
+                {
+                    using (var comando = new MySqlCommand(sql_delete, conexao._conn))
+                    {
+
+                        await comando.ExecuteNonQueryAsync();
+                        RedirectToAction("Index", "Usuario");
+                        await Verificar_produtos();
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                TempData["mesangem"] = "Ocorreu um erro:" + ex.Message;
+            }
+        }
+        public async Task Atualizar_Dados() 
+        {
+            await Atualizar_Dados_Clientes();
+            await Atualizar_Dados_Produtos();
         }
         public ActionResult Gerador_pdf()
         {

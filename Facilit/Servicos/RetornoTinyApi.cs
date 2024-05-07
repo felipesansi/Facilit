@@ -129,6 +129,7 @@ namespace Facilit.Servicos
                             {
                                 var retornoTinyDeserializadoPorPagina = JsonSerializer.Deserialize<ClienteTiny>(respostaPorPaginaJson);
                                 todosClientes.AddRange(retornoTinyDeserializadoPorPagina.retorno.contatos.Select(c => c.contato));
+                                await SalvarClientesNoBanco(todosClientes);
                             }
                             catch (Exception ex)
                             {
@@ -161,7 +162,7 @@ namespace Facilit.Servicos
                 {
                     comando.Parameters.AddWithValue("@codigo_tiny_cliente", cliente.id);
                     comando.Parameters.AddWithValue("@nome", cliente.nome);
-                    comando.Parameters.AddWithValue(" @data_atualizacao_cliente", DateTime.Now);
+                    comando.Parameters.AddWithValue("@data_atualizacao_cliente", DateTime.Now);
                     await comando.ExecuteNonQueryAsync();
 
                 }
