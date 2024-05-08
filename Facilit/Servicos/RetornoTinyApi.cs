@@ -205,28 +205,28 @@ namespace Facilit.Servicos
             return null;
         }
 
-      /* public async Task <PesquisaExpedicao>PesquisaExpedicao()
+        public async Task<List<PesquisaExpedicao>> PesquisaExpedicao(EtiquetasTiny etiquetas)
         {
-            List<Expedicao> lista_expedicaos = new List<Expedicao>();
+            List<PesquisaExpedicao> lista_expedicaos = new List<PesquisaExpedicao>();
 
-            EtiquetasTiny etiquetasTiny = new EtiquetasTiny();
-          
+            EtiquetasTiny etiquetasTiny= new EtiquetasTiny();
+            etiquetasTiny = etiquetas;
+
             HttpClient client = new HttpClient();
 
-             var request = new HttpRequestMessage(HttpMethod.Post,$"https://api.tiny.com.br/api2/expedicao.pesquisa.php?token{tokenTiny}&formato={formatoRetorno}&formaEnvio={etiquetasTiny.formato_envio}");
-            
-             var response = await client.SendAsync(request);
+            var request = new HttpRequestMessage(HttpMethod.Post, $"https://api.tiny.com.br/api2/expedicao.pesquisa.php?token{tokenTiny}&formato={formatoRetorno}&formaEnvio={etiquetasTiny.formato_envio}");
+
+            var response = await client.SendAsync(request);
 
             if (response.IsSuccessStatusCode)
             {
                 var responseJSON = await response.Content.ReadAsStringAsync();
 
-                var retornoTinyDeserializado =JsonSerializer.Deserialize<PesquisaExpedicao>(responseJSON);
-                lista_expedicaos.AddRange
+                var retornoTinyDeserializado = JsonSerializer.Deserialize<PesquisaExpedicao>(responseJSON);
+                lista_expedicaos.Add(retornoTinyDeserializado);
             }
+            return lista_expedicaos;
+        }
 
-        }*/
-    
     }
-
 }
