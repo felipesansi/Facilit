@@ -59,6 +59,7 @@ namespace Facilit.Controllers
                     }
                     else
                     {
+                        TempData["Mensagem"] = "Carregando Dados dos Produtos AGUARDE ATÉ FINALIZAR";
                         RetornoTinyApi produto = new RetornoTinyApi();
                         var produtos = await produto.ListarProdutos(tokenTiny);
                         var dropdown_produto = produtos.retorno.produtos
@@ -106,7 +107,9 @@ namespace Facilit.Controllers
                     }
                     else
                     {
+                        TempData["Mensagem"] = "Carregando Dados dos Clientes AGUARDE ATÉ FINALIZAR";
                         RetornoTinyApi cliente = new RetornoTinyApi();
+
                         var clientes = await cliente.ListarClientes(tokenTiny);
                         var dropdown_cliente = clientes.retorno.contatos
                             .Select(s => new
@@ -226,7 +229,7 @@ namespace Facilit.Controllers
             catch (Exception ex)
             {
 
-                TempData["mesangem"] = "Ocorreu um erro:"+ex.Message;
+                TempData["mensagem"] = "Ocorreu um erro:"+ex.Message;
             }
         }
         public async Task Atualizar_Dados_Produtos()
@@ -249,7 +252,7 @@ namespace Facilit.Controllers
             catch (Exception ex)
             {
 
-                TempData["mesangem"] = "Ocorreu um erro:" + ex.Message;
+                TempData["mensagem"] = "Ocorreu um erro:" + ex.Message;
             }
         }
         public async Task Atualizar_Dados() 

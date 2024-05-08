@@ -1,16 +1,12 @@
 ﻿using Facilit.Models;
 using Facilit.Models.ClienteTiny;
-using Microsoft.Ajax.Utilities;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Web.Helpers;
-using static Facilit.Models.PesquisaExpedicao;
 
 namespace Facilit.Servicos
 {
@@ -21,9 +17,12 @@ namespace Facilit.Servicos
     public class RetornoTinyApi
     {
         string tokenTiny = "02011b49e5399d62d999007a8952642c85cca50bc310b49fdd6c3674fdff4b2a";
+        
         string formatoRetorno = "json";
+      
         private readonly Conexao conexao;
-
+       
+        public string mensagem =string.Empty;
         public RetornoTinyApi()
         {
             conexao = new Conexao();
@@ -31,44 +30,71 @@ namespace Facilit.Servicos
 
         public async Task<ProdutoTiny> ListarProdutos(string token)
         {
+            var url = string.Empty;
+     
+            var url2=string.Empty;
+           
+            url = $"https://api.tiny.com.br/api2/pdv.produtos.php?token={tokenTiny}&formato={formatoRetorno}";
+         
             var cliente = new HttpClient(); //intanciação de httpcliente
 
-            var requisicao = new HttpRequestMessage(HttpMethod.Get, $"https://api.tiny.com.br/api2/pdv.produtos.php?token={tokenTiny}&formato={formatoRetorno}");// requisiçao sem o número de pagina
+            var requisicao = new HttpRequestMessage(HttpMethod.Get,url);// requisiçao sem o número de pagina
 
             var resposta = await cliente.SendAsync(requisicao); //enviando requisição
 
-            if (resposta.IsSuccessStatusCode) //se a resposta for 200 entra no if
+            try
             {
-                var respostaJson = await resposta.Content.ReadAsStringAsync(); // le a resposta conseguida por  var resposta e transforma em string
-
-                var retornoTinyDeserializado = JsonSerializer.Deserialize<ProdutoTiny>(respostaJson); //convetendo obj json em string e armazenando no produtotiny
-
-                if (retornoTinyDeserializado.retorno != null && retornoTinyDeserializado.retorno.numero_paginas > 0) //se hover  retorno e tiver paginas 
+                if (resposta.IsSuccessStatusCode) //se a resposta for 200 entra no if
                 {
-                    var todosProdutos = new List<ProdutoTiny.Produto>(); //lista com as propiedades de produto
+                    var respostaJson = await resposta.Content.ReadAsStringAsync(); // le a resposta conseguida por  var resposta e transforma em string
 
-                    for (int i = 1; i < retornoTinyDeserializado.retorno.numero_paginas; i++)
+                    var retornoTinyDeserializado = JsonSerializer.Deserialize<ProdutoTiny>(respostaJson); //convetendo obj json em string e armazenando no produtotiny
+
+                    if (retornoTinyDeserializado.retorno != null && retornoTinyDeserializado.retorno.numero_paginas > 0) //se hover  retorno e tiver paginas 
                     {
-                        var requisicaoPorPagina = new HttpRequestMessage(HttpMethod.Get, $"https://api.tiny.com.br/api2/pdv.produtos.php?token={tokenTiny}&formato={formatoRetorno}&pagina={i}");
-                        var respostaPorPagina = await cliente.SendAsync(requisicaoPorPagina);
-                        if (respostaPorPagina.IsSuccessStatusCode)
+                        var todosProdutos = new List<ProdutoTiny.Produto>(); //lista com as propiedades de produto
+
+                        for (int i = 1; i < retornoTinyDeserializado.retorno.numero_paginas; i++)
                         {
-                            var respostaPorPaginaJson = await respostaPorPagina.Content.ReadAsStringAsync();
+                            url2 = $"https://api.tiny.com.br/api2/pdv.produtos.php?token={tokenTiny}&formato={formatoRetorno}&pagina={i}";
 
-                            var retornoTinyDeserializadoPorPagina = JsonSerializer.Deserialize<ProdutoTiny>(respostaPorPaginaJson);
-                            todosProdutos.AddRange(retornoTinyDeserializadoPorPagina.retorno.produtos.ToList());
+                            var requisicaoPorPagina = new HttpRequestMessage(HttpMethod.Get, url2);
+
+                            var respostaPorPagina = await cliente.SendAsync(requisicaoPorPagina);
+
+                            if (respostaPorPagina.IsSuccessStatusCode)
+                            {
+                                var respostaPorPaginaJson = await respostaPorPagina.Content.ReadAsStringAsync();
+
+                                var retornoTinyDeserializadoPorPagina = JsonSerializer.Deserialize<ProdutoTiny>(respostaPorPaginaJson);
+
+                                todosProdutos.AddRange(retornoTinyDeserializadoPorPagina.retorno.produtos.ToList());
+                            }
+                            continue;
                         }
-                        continue;
+                        if (todosProdutos.Any())
+                        {
+                            retornoTinyDeserializado.retorno.produtos = todosProdutos.ToArray();
+                        }
                     }
-                    if (todosProdutos.Any())
+                    else
                     {
-                        retornoTinyDeserializado.retorno.produtos = todosProdutos.ToArray();
+                        mensagem = $"Erro ao consultar a API: {resposta.StatusCode}";
                     }
+
+                    await SalvarProdutosNoBanco(retornoTinyDeserializado.retorno.produtos);
+
+                    return retornoTinyDeserializado;
                 }
+                else
+                {
+                    mensagem = $"Erro ao consultar a API: {resposta.StatusCode}";
+                }
+            }
+            catch (Exception ex)
+            {
 
-                await SalvarProdutosNoBanco(retornoTinyDeserializado.retorno.produtos);
-
-                return retornoTinyDeserializado;
+                mensagem = $"Ocorreu um erro: {ex.Message}";
             }
             return default;
         }
@@ -78,30 +104,40 @@ namespace Facilit.Servicos
 
             string sql_insert_produtos = "insert into tb_produtos (codigo_tiny_produto, descricao, unidade, data_atualizacao_produto) values (@codigo_tiny_produto, @descricao, @unidade,@data_atualizacao_produto)";
 
-
-            foreach (var produto in produtos)
+            try
             {
-                using (var comando = new MySqlCommand(sql_insert_produtos, conexao._conn))
+
+                foreach (var produto in produtos)
                 {
+                    using (var comando = new MySqlCommand(sql_insert_produtos, conexao._conn))
+                    {
 
-                    comando.Parameters.AddWithValue("@codigo_tiny_produto", produto.id);
+                        comando.Parameters.AddWithValue("@codigo_tiny_produto", produto.id);
 
-                    comando.Parameters.AddWithValue("@descricao", produto.descricao);
+                        comando.Parameters.AddWithValue("@descricao", produto.descricao);
 
-                    comando.Parameters.AddWithValue("@unidade", produto.unidade);
+                        comando.Parameters.AddWithValue("@unidade", produto.unidade);
 
-                    comando.Parameters.AddWithValue("@data_atualizacao_produto", DateTime.Now);
+                        comando.Parameters.AddWithValue("@data_atualizacao_produto", DateTime.Now);
 
-                    await comando.ExecuteNonQueryAsync();
+                        await comando.ExecuteNonQueryAsync();
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+
+                mensagem = $"Ocorreu um erro: {ex.Message}";
             }
         }
 
         public async Task<ClienteTiny> ListarClientes(string token)
         {
+            var url = $"https://api.tiny.com.br/api2/contatos.pesquisa.php?token={token}&formato={formatoRetorno}";
+          
             var cliente = new HttpClient();
 
-            var requisicao = new HttpRequestMessage(HttpMethod.Get, $"https://api.tiny.com.br/api2/contatos.pesquisa.php?token={token}&formato={formatoRetorno}");
+            var requisicao = new HttpRequestMessage(HttpMethod.Get,url);
 
             var resposta = await cliente.SendAsync(requisicao);
 
@@ -117,7 +153,9 @@ namespace Facilit.Servicos
 
                     for (int i = 1; i <= retornoTinyDeserializado.retorno.numero_paginas; i++)
                     {
-                        var requisicaoPorPagina = new HttpRequestMessage(HttpMethod.Get, $"https://api.tiny.com.br/api2/contatos.pesquisa.php?token={token}&formato={formatoRetorno}&pagina={i}");
+                        var url2 = $"https://api.tiny.com.br/api2/contatos.pesquisa.php?token={token}&formato={formatoRetorno}&pagina={i}";
+                      
+                        var requisicaoPorPagina = new HttpRequestMessage(HttpMethod.Get,url2 );
 
                         var respostaPorPagina = await cliente.SendAsync(requisicaoPorPagina);
 
@@ -128,14 +166,20 @@ namespace Facilit.Servicos
                             try
                             {
                                 var retornoTinyDeserializadoPorPagina = JsonSerializer.Deserialize<ClienteTiny>(respostaPorPaginaJson);
+                               
                                 todosClientes.AddRange(retornoTinyDeserializadoPorPagina.retorno.contatos.Select(c => c.contato));
+                                
                                 await SalvarClientesNoBanco(todosClientes);
                             }
                             catch (Exception ex)
                             {
-                                var erro = ex.Message;
+                                mensagem = ex.Message;
                             }
 
+                        }
+                        else
+                        {
+                                  mensagem = $"Erro ao consultar a API: {resposta.StatusCode}";
                         }
                     }
                     if (todosClientes.Any())
@@ -148,6 +192,10 @@ namespace Facilit.Servicos
 
                 return retornoTinyDeserializado;
             }
+            else
+            {
+                mensagem = $"Erro ao consultar a API: {resposta.StatusCode}";
+            }
 
             return default;
         }
@@ -155,53 +203,85 @@ namespace Facilit.Servicos
         private async Task SalvarClientesNoBanco(IEnumerable<Contato1> clientes)
         {
             string sql_insert_cliente = "insert into tb_clientes(codigo_tiny_cliente, nome, data_atualizacao_cliente) values" +
-                "(@codigo_tiny_cliente, @nome, @data_atualizacao_cliente) ";
-            foreach (var cliente in clientes)
-            {
-                using (var comando = new MySqlCommand(sql_insert_cliente, conexao._conn))
-                {
-                    comando.Parameters.AddWithValue("@codigo_tiny_cliente", cliente.id);
-                    comando.Parameters.AddWithValue("@nome", cliente.nome);
-                    comando.Parameters.AddWithValue("@data_atualizacao_cliente", DateTime.Now);
-                    await comando.ExecuteNonQueryAsync();
+            "(@codigo_tiny_cliente, @nome, @data_atualizacao_cliente) ";
 
+            try
+            {
+                foreach (var cliente in clientes)
+                {
+                    using (var comando = new MySqlCommand(sql_insert_cliente, conexao._conn))
+                    {
+                        comando.Parameters.AddWithValue("@codigo_tiny_cliente", cliente.id);
+                        comando.Parameters.AddWithValue("@nome", cliente.nome);
+                        comando.Parameters.AddWithValue("@data_atualizacao_cliente", DateTime.Now);
+                       
+                        await comando.ExecuteNonQueryAsync();
+
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                mensagem = ($"Ocorreu um erro: {ex.Message}");
+
+
+            }
         }
-     
+
         public async Task<string> ConsultaNota(NF_Tiny nf)
         {
             var url = $"https://api.tiny.com.br/api2/notas.fiscais.pesquisa.php?token={tokenTiny}&formato={formatoRetorno}&numero={nf.numero}";
 
-            using (var client = new HttpClient())
+            try
             {
-                var response = await client.PostAsync(url, null);
 
-                if (response.IsSuccessStatusCode)
+                using (var client = new HttpClient())
                 {
-                    var responseContent = await response.Content.ReadAsStringAsync();
-                    var retornoConsultaApi = JsonSerializer.Deserialize<NotaFiscalPesquisa>(responseContent);
+                    var resposta = await client.PostAsync(url, null);
 
-                    if (retornoConsultaApi != null && retornoConsultaApi.retorno != null && retornoConsultaApi.retorno.notas_fiscais.Any())
+                    if (resposta.IsSuccessStatusCode)
                     {
-                        var idNota = retornoConsultaApi.retorno.notas_fiscais.First().nota_fiscal.id;
-                        var urlNotaFiscal = $"https://api.tiny.com.br/api2/nota.fiscal.obter.link.php?token={tokenTiny}&id={idNota}&formato={formatoRetorno}";
+                        var respostaContent = await resposta.Content.ReadAsStringAsync();
+                    
+                        var retornoConsultaApi = JsonSerializer.Deserialize<NotaFiscalPesquisa>(respostaContent);
 
-                        var responseNota = await client.PostAsync(urlNotaFiscal, null);
-
-                        if (responseNota.IsSuccessStatusCode)
+                        if (retornoConsultaApi != null && retornoConsultaApi.retorno != null && retornoConsultaApi.retorno.notas_fiscais.Any())
                         {
-                            var retorno = await responseNota.Content.ReadAsStringAsync();
-                            var objetoNota = JsonSerializer.Deserialize<NotaFiscalLink>(retorno);
+                            var idNota = retornoConsultaApi.retorno.notas_fiscais.First().nota_fiscal.id;
+
+                            var urlNotaFiscal = $"https://api.tiny.com.br/api2/nota.fiscal.obter.link.php?token={tokenTiny}&id={idNota}&formato={formatoRetorno}";
+
+                            var respostaNota = await client.PostAsync(urlNotaFiscal, null);
+
+                            if (respostaNota.IsSuccessStatusCode)
+                            {
+                                var retorno = await respostaNota.Content.ReadAsStringAsync();
+                                var objetoNota = JsonSerializer.Deserialize<NotaFiscalLink>(retorno);
 
 
-                            return objetoNota.retorno.link_nfe;
+                                return objetoNota.retorno.link_nfe;
+                            }
+                            else
+                            {
+
+                                mensagem = $"Erro ao consultar a API: {resposta.StatusCode}";
+                            }
+                        }
+                        else
+                        {
+
+                            mensagem = $"Erro ao consultar a API: {resposta.StatusCode}";
                         }
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                mensagem = ($"Ocorreu um erro: {ex.Message}");
 
-          
+            }
+
+
             return null;
         }
 
@@ -209,24 +289,41 @@ namespace Facilit.Servicos
         {
             List<PesquisaExpedicao> lista_expedicaos = new List<PesquisaExpedicao>();
 
-            EtiquetasTiny etiquetasTiny= new EtiquetasTiny();
-            etiquetasTiny = etiquetas;
-
-            HttpClient client = new HttpClient();
-
-            var request = new HttpRequestMessage(HttpMethod.Post, $"https://api.tiny.com.br/api2/expedicao.pesquisa.php?token{tokenTiny}&formato={formatoRetorno}&formaEnvio={etiquetasTiny.formato_envio}");
-
-            var response = await client.SendAsync(request);
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var responseJSON = await response.Content.ReadAsStringAsync();
+                EtiquetasTiny etiquetasTiny = etiquetas;
 
-                var retornoTinyDeserializado = JsonSerializer.Deserialize<PesquisaExpedicao>(responseJSON);
-                lista_expedicaos.Add(retornoTinyDeserializado);
+                HttpClient client = new HttpClient();
+
+                var request = new HttpRequestMessage(HttpMethod.Post, $"https://api.tiny.com.br/api2/expedicao.pesquisa.php?token={tokenTiny}&formato={formatoRetorno}&formaEnvio={etiquetasTiny.formato_envio}");
+
+                var resposta = await client.SendAsync(request);
+
+                if (resposta.IsSuccessStatusCode)
+                {
+                    var respostaJSON = await resposta.Content.ReadAsStringAsync();
+
+
+                    var retornoTinyDeserializado = JsonSerializer.Deserialize<PesquisaExpedicao>(respostaJSON);
+
+
+                    lista_expedicaos.Add(retornoTinyDeserializado);
+                }
+                else
+                {
+
+                  mensagem =  $"Erro ao consultar a API: {resposta.StatusCode}";
+                }
             }
+            catch (Exception ex)
+            {
+
+               mensagem = ($"Ocorreu um erro: {ex.Message}");
+            }
+
             return lista_expedicaos;
         }
+
 
     }
 }
