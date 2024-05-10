@@ -7,7 +7,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-
 namespace Facilit.Servicos
 {
 
@@ -230,7 +229,7 @@ namespace Facilit.Servicos
 
         public async Task<string> ConsultaNota(NF_Tiny nf)
         {
-            var url = $"https://api.tiny.com.br/api2/notas.fiscais.pesquisa.php?token={tokenTiny}&formato={formatoRetorno}&numero={nf.numero}";
+            var url = $"https://api.tiny.com.br/api2/notas.fiscais.pesquisa.php?token={tokenTiny}&formato={formatoRetorno}&numero={nf}";
 
             try
             {
@@ -284,45 +283,87 @@ namespace Facilit.Servicos
 
             return null;
         }
-
-        public async Task<List<PesquisaExpedicao>> PesquisaExpedicao(EtiquetasTiny etiquetas)
-        {
-            List<PesquisaExpedicao> lista_expedicaos = new List<PesquisaExpedicao>();
+        public async Task<string> ObterEtiqueta(EtiquetasTiny et)
+        { string codigo = "C";
+            var url = $"https://api.tiny.com.br/api2/expedicao.obter.etiquetas.impressao.php?token={tokenTiny}&formato={formatoRetorno}&formaEnvio={codigo}&idExpedicao={et.id_expedicao}";
 
             try
             {
-                EtiquetasTiny etiquetasTiny = etiquetas;
 
-                HttpClient client = new HttpClient();
-
-                var request = new HttpRequestMessage(HttpMethod.Post, $"https://api.tiny.com.br/api2/expedicao.pesquisa.php?token={tokenTiny}&formato={formatoRetorno}&formaEnvio={etiquetasTiny.formato_envio}");
-
-                var resposta = await client.SendAsync(request);
-
-                if (resposta.IsSuccessStatusCode)
+                using (var client = new HttpClient())
                 {
-                    var respostaJSON = await resposta.Content.ReadAsStringAsync();
+                    var resposta = await client.PostAsync(url, null);
+
+                    if (resposta.IsSuccessStatusCode)
+                    {
+                        var respostaContent = await resposta.Content.ReadAsStringAsync();
+
+                        var objetoNota = JsonSerializer.Deserialize<Link_Etiqueta_Tiny>(respostaContent);
 
 
-                    var retornoTinyDeserializado = JsonSerializer.Deserialize<PesquisaExpedicao>(respostaJSON);
+                    
+                        return objetoNota.retorno.links[0].link;
+                    }
+                            else
+                            {
 
-
-                    lista_expedicaos.Add(retornoTinyDeserializado);
-                }
-                else
-                {
-
-                  mensagem =  $"Erro ao consultar a API: {resposta.StatusCode}";
+                                mensagem = $"Erro ao consultar a API: {resposta.StatusCode}";
+                            }
+                        
+                      
+                    
                 }
             }
             catch (Exception ex)
             {
+                mensagem = ($"Ocorreu um erro: {ex.Message}");
 
-               mensagem = ($"Ocorreu um erro: {ex.Message}");
             }
 
-            return lista_expedicaos;
+
+            return null;
+        
         }
+
+
+        //public async Task<List<PesquisaExpedicao>> PesquisaExpedicao(EtiquetasTiny etiquetas)
+        //{
+        //    List<PesquisaExpedicao> lista_expedicaos = new List<PesquisaExpedicao>();
+
+        //    try
+        //    {
+        //        EtiquetasTiny etiquetasTiny = etiquetas;
+
+        //        HttpClient client = new HttpClient();
+
+        //        var request = new HttpRequestMessage(HttpMethod.Post, $"https://api.tiny.com.br/api2/expedicao.pesquisa.php?token={tokenTiny}&formato={formatoRetorno}&formaEnvio={etiquetasTiny.formato_envio}");
+
+        //        var resposta = await client.SendAsync(request);
+
+        //        if (resposta.IsSuccessStatusCode)
+        //        {
+        //            var respostaJSON = await resposta.Content.ReadAsStringAsync();
+
+
+        //            var retornoTinyDeserializado = JsonSerializer.Deserialize<PesquisaExpedicao>(respostaJSON);
+
+
+        //            lista_expedicaos.Add(retornoTinyDeserializado);
+        //        }
+        //        else
+        //        {
+
+        //          mensagem =  $"Erro ao consultar a API: {resposta.StatusCode}";
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //       mensagem = ($"Ocorreu um erro: {ex.Message}");
+        //    }
+
+        //    return lista_expedicaos;
+        //}
 
 
     }

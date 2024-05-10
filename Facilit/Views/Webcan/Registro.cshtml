@@ -1,15 +1,12 @@
 ﻿@model Facilit.Models.Usuario
 @{
     ViewBag.Title = "Registro";
-
-
 }
+
 @if (!String.IsNullOrEmpty(TempData["Mensagem"] as string))
 {
-    <div id="mensagem">
-        <div class="alert alert-danger">
-            @TempData["Mensagem"]
-        </div>
+    <div id="mensagem" class="alert alert-danger">
+        @TempData["Mensagem"]
     </div>
 }
 
@@ -18,88 +15,76 @@
         var caixa_mensagem = document.getElementById('mensagem');
         if (caixa_mensagem) {
             caixa_mensagem.style.display = 'none';
-
         }
-
     }, 2000);
 </script>
 
-
-
-
-<h1 class="text-center" style="background-color: lightblue;">Tire sua Fotografia</h1>
-
-<html>
-<body>
-
-    <div class="form-group row">
-        <div class="col-md-6">
-            <h6>Produtos</h6>
-            <input type="text" id="searchProdutos" class="form-control" placeholder="Pesquisar produtos...">
-            @Html.DropDownList("Produtos", ViewBag.listaProdutos as SelectList, "-- Selecione aqui o Produto", htmlAttributes: new { @class = "form-control", @id = "drop_produtos" })
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="list-group bg-primary">
+                <a href="https://accounts.tiny.com.br/realms/tiny/protocol/openid-connect/auth?client_id=tiny-webapp&redirect_uri=https://erp.tiny.com.br/login&scope=openid&response_type=code" class="list-group-item list-group-item-action list-group-item-info" target="_blank">Imprimir etiquetas</a>
+                <button id="btn_salvar" class="list-group-item list-group-item-action list-group-item-success">Tirar e salvar foto</button>
+                @Html.ActionLink("Gerar PDF", "Gerador_pdf", "Webcan", null, new { @class = "list-group-item list-group-item-action list-group-item-secondary" })
+                @Html.ActionLink("Notas", "Notas", "Notas_tiny", null, new { @class = "list-group-item list-group-item-action list-group-item-secondary" })
+                @Html.ActionLink("Etiquetas", "ObterEtiquitas", "Etiquetas", null, new { @class = "list-group-item list-group-item-action list-group-item-secondary" })
+            </div>
         </div>
-        <div class="col-md-6">
-            <h6>Clientes</h6>
-            <input type="text" id="searchClientes" class="form-control" placeholder="Pesquisar clientes...">
-            @Html.DropDownList("Clientes", ViewBag.listarClientes as SelectList, "-- Selecione aqui o Cliente", htmlAttributes: new { @class = "form-control", @id = "drop_clientes" })
+        <div class="col-md-9">
+            <h1 class="text-center mb-4">Tire sua Fotografia</h1>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>Produtos</h6>
+                    <input type="text" id="searchProdutos" class="form-control" placeholder="Pesquisar produtos...">
+                    @Html.DropDownList("Produtos", ViewBag.listaProdutos as SelectList, "-- Selecione aqui o Produto", htmlAttributes: new { @class = "form-control", @id = "drop_produtos" })
+                </div>
+                <div class="col-md-6">
+                    <h6>Clientes</h6>
+                    <input type="text" id="searchClientes" class="form-control" placeholder="Pesquisar clientes...">
+                    @Html.DropDownList("Clientes", ViewBag.listarClientes as SelectList, "-- Selecione aqui o Cliente", htmlAttributes: new { @class = "form-control", @id = "drop_clientes" })
+                </div>
+            </div>
+
+            <div class="row justify-content-center mt-4">
+                <div class="col-md-8">
+                    <video class="img-fluid" autoplay></video>
+                </div>
+            </div>
+            <div class="row justify-content-center mt-2">
+                <div class="col-md-6">
+                    <canvas class="img-fluid"></canvas>
+                </div>
+            </div>
         </div>
     </div>
+</div>
 
-    @section Scripts {
-        <script>
-            $(document).ready(function () {
-                $('#searchProdutos').on('keyup', function () {
-                    var searchText = $(this).val().toLowerCase();
-                    $('#drop_produtos option').each(function () {
-                        if ($(this).text().toLowerCase().indexOf(searchText) === -1) {
-                            $(this).hide();
-                        } else {
-                            $(this).show();
-                        }
-                    });
-                });
-
-                $('#searchClientes').on('keyup', function () {
-                    var searchText = $(this).val().toLowerCase();
-                    $('#drop_clientes option').each(function () {
-                        if ($(this).text().toLowerCase().indexOf(searchText) === -1) {
-                            $(this).hide();
-                        } else {
-                            $(this).show();
-                        }
-                    });
+@section Scripts {
+    <script src="~/Scripts/webcan.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#searchProdutos').on('keyup', function () {
+                var searchText = $(this).val().toLowerCase();
+                $('#drop_produtos option').each(function () {
+                    if ($(this).text().toLowerCase().indexOf(searchText) === -1) {
+                        $(this).hide();
+                    } else {
+                        $(this).show();
+                    }
                 });
             });
-        </script>
-    }
 
-    <br />
-
-    <div class="container ">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <video class="img-fluid" autoplay></video>
-            </div>
-        </div>
-        <div class="row justify-content-center" style="width: 500px">
-            <div class="col-md-6">
-                <canvas class="img-fluid"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <a href="https://accounts.tiny.com.br/realms/tiny/protocol/openid-connect/auth?client_id=tiny-webapp&redirect_uri=https://erp.tiny.com.br/login&scope=openid&response_type=code" class="btn btn-info" target="_blank">Imprimir etiquetas</a>
-
-    <button id="btn_salvar" class="btn btn-outline-success">Tirar e salvar foto</button>
-
-    @Html.ActionLink("gerar PDF ", "Gerador_pdf", "Webcan", null, new { @class = "btn btn-secondary" })
-
-    @Html.ActionLink("Notas", "Notas", "Notas_tiny", null, new { @class = "btn btn-secondary" })
-    
-    @Html.ActionLink("Etiquetas", "Etiquetas", "Etiquetas", null, new { @class = "btn btn-secondary" })
-
-    <script src="~/Scripts/webcan.js"></script>
-
-</body>
-
-</html>
+            $('#searchClientes').on('keyup', function () {
+                var searchText = $(this).val().toLowerCase();
+                $('#drop_clientes option').each(function () {
+                    if ($(this).text().toLowerCase().indexOf(searchText) === -1) {
+                        $(this).hide();
+                    } else {
+                        $(this).show();
+                    }
+                });
+            });
+        });
+    </script>
+}

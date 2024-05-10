@@ -225,6 +225,7 @@
     <Compile Include="Models\ClienteTiny.cs" />
     <Compile Include="Models\Conexao.cs" />
     <Compile Include="Models\EtiquetasTiny.cs" />
+    <Compile Include="Models\Link_Etiqueta_Tiny.cs" />
     <Compile Include="Models\NF_Tiny.cs" />
     <Compile Include="Models\NotaFiscalLink.cs" />
     <Compile Include="Models\NotaFiscalPesquisa.cs" />
@@ -314,6 +315,9 @@
     <Content Include="Views\Webcan\Gerador_pdf.cshtml" />
     <Content Include="Views\Notas_tiny\Notas.cshtml" />
     <Content Include="Views\Etiquetas\Etiquetas.cshtml" />
+    <Content Include="Views\Etiquetas\Escolha.cshtml" />
+    <Content Include="Views\Etiquetas\ObterEtiquitas.cshtml" />
+    <Content Include="Views\Shared\NovaAba.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

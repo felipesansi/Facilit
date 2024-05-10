@@ -7,6 +7,8 @@ namespace Facilit.Models
 {
     public class PesquisaExpedicao
     {
+        public object IdExpedicao { get; internal set; }
+        public string NomeExpedicao { get; internal set; }
 
         public class Rootobject
         {

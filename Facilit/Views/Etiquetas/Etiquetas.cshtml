@@ -6,8 +6,6 @@
 
 <h2 class="text-center">Etiquetas</h2>
 
-
-
 @using (Html.BeginForm("ObterExpedicao", "Etiquetas"))
 {
     @Html.AntiForgeryToken()
@@ -45,7 +43,6 @@
                     <td>X</td>
                     <td>Customizada</td>
                 </tr>
-
             </tbody>
         </table>
 
@@ -55,21 +52,21 @@
             @Html.LabelFor(model => model.formato_envio, "Formato de envio: ", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.formato_envio, new { htmlAttributes = new { @class = "campo", placeholder = "M" } })
-
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Proxima tela" class="btn btn-outline-primary" />
+                <input type="submit" value="Próxima tela" class="btn btn-outline-primary" />
             </div>
         </div>
+        
     </div>
 }
 
 <div>
     <br />
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Voltar para a Lista", "Index")
 </div>
 
 @section Scripts {
