@@ -18,16 +18,7 @@
 </div>
 }
 
-<script>
-    setTimeout(function () {
-        var caixa_mensagem = document.getElementById('mensagem');
-        if (caixa_mensagem) {
-            caixa_mensagem.style.display = 'none';
-
-        }
-
-    }, 2000);
-</script>
+<script src="~/Scripts/Mensagem.js"></script>
 
 @using (Html.BeginForm("PesqusarUsuario", "Usuario", FormMethod.Get))
 {

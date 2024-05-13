@@ -10,25 +10,35 @@
     </div>
 }
 
-<script>
-    setTimeout(function () {
-        var caixa_mensagem = document.getElementById('mensagem');
-        if (caixa_mensagem) {
-            caixa_mensagem.style.display = 'none';
-        }
-    }, 2000);
-</script>
+<script src="~/Scripts/Mensagem.js"></script>
 
 <div class="container">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <div class="row">
         <div class="col-md-3">
-            <div class="list-group bg-primary">
-                <a href="https://accounts.tiny.com.br/realms/tiny/protocol/openid-connect/auth?client_id=tiny-webapp&redirect_uri=https://erp.tiny.com.br/login&scope=openid&response_type=code" class="list-group-item list-group-item-action list-group-item-info" target="_blank">Imprimir etiquetas</a>
-                <button id="btn_salvar" class="list-group-item list-group-item-action list-group-item-success">Tirar e salvar foto</button>
-                @Html.ActionLink("Gerar PDF", "Gerador_pdf", "Webcan", null, new { @class = "list-group-item list-group-item-action list-group-item-secondary" })
-                @Html.ActionLink("Notas", "Notas", "Notas_tiny", null, new { @class = "list-group-item list-group-item-action list-group-item-secondary" })
-                @Html.ActionLink("Etiquetas", "ObterEtiquitas", "Etiquetas", null, new { @class = "list-group-item list-group-item-action list-group-item-secondary" })
-            </div>
+            <nav class="list-group bg-success bg-gradient" style="height:75%;">
+                <button id="btn_salvar" class="btn btn-primary mb-2 mt-8 rounded">
+                    <i class="fas fa-camera"></i> Tirar e salvar foto
+                </button>
+                <div class="btn-group-vertical">
+                    <a href="@Url.Action("Gerador_pdf", "Webcan")" class="btn btn-success mb-2 rounded">
+                        <i class="fas fa-file-pdf"></i> Gerar PDF
+                    </a>
+                    <a href="@Url.Action("Notas", "Notas_tiny")" class="btn btn-info mb-2 rounded">
+                        <i class="fas fa-search"></i> Pesquisar notas
+                    </a>
+                    <a href="@Url.Action("ObterEtiquitas", "Etiquetas")" class="btn btn-info mb-2 rounded">
+                        <i class="fas fa-tags"></i> Pesquisar etiquetas
+                    </a>
+                </div>
+            </nav>
+
+
+
+
+
+
         </div>
         <div class="col-md-9">
             <h1 class="text-center mb-4">Tire sua Fotografia</h1>

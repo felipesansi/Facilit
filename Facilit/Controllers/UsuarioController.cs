@@ -263,7 +263,6 @@ namespace Facilit.Controllers
             }
         }
 
-
         public ActionResult Excluir(int id)
         {
             string str_editar = "select * from tb_usuarios where id = @id";
@@ -304,8 +303,6 @@ namespace Facilit.Controllers
 
 
         }
-
-
 
         public ActionResult Softdelete(Usuario usuario)
         {
@@ -396,16 +393,12 @@ namespace Facilit.Controllers
             }
         }
 
-
-
         [HttpPost]
         public ActionResult Logout()
         {
             Session.Clear();
             return RedirectToAction("Index", "Usuario");
         }
-
-
 
         public ActionResult NovaSenha(string token, Usuario usuario)
         {

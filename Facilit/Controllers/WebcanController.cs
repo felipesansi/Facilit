@@ -127,7 +127,7 @@ namespace Facilit.Controllers
 
         public async Task<ActionResult> Registro()
         {
-            if (Session["logado"] !=null )
+            if (Session["logado"] != null)
             {
                 await Verificar_produtos();
 
@@ -136,9 +136,9 @@ namespace Facilit.Controllers
             }
             else
             {
-                RedirectToAction("Index","usuario");
+                RedirectToAction("Index", "usuario");
             }
-           
+
 
             return View();
         }
@@ -152,28 +152,44 @@ namespace Facilit.Controllers
             else
             {
                 byte[] vet_bytes = Convert.FromBase64String(dados_imagem);
-                string caminho_diretorio = Server.MapPath("~/Fotos");
+                string documentosPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                string fotosPath = Path.Combine(documentosPath, "Fotos - Sistema Facilit");
 
-                if (!Directory.Exists(caminho_diretorio))
+                if (!Directory.Exists(fotosPath))
                 {
-                    Directory.CreateDirectory(caminho_diretorio);
+                    try
+                    {
+                        Directory.CreateDirectory(fotosPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        return Json(new { sucesso = false, mensagem = "Erro ao criar a pasta 'Fotos': " + ex.Message });
+                    }
                 }
+
                 DateTime data = DateTime.Now;
-                string nome_arquivo = $"Produto_{produto_selecionado}_Cliente_{cliente_selecionado}.jpg";
+                string nome_arquivo = $"Produto_{produto_selecionado}_Cliente_{cliente_selecionado}_{data.ToString("yyyyMMddHHmmss")}.jpg";
                 nome_arquivo = Remover_caracteres(nome_arquivo);
-                usuario_id = (int)Session["id_usuario"];
-                string caminho_imagem = Path.Combine(caminho_diretorio, nome_arquivo);
-                System.IO.File.WriteAllBytes(caminho_imagem, vet_bytes);
+                int usuario_id = (int)Session["id_usuario"];
+                string caminho_imagem = Path.Combine(fotosPath, nome_arquivo);
+
+                try
+                {
+                    System.IO.File.WriteAllBytes(caminho_imagem, vet_bytes);
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { sucesso = false, mensagem = "Erro ao salvar a foto: " + ex.Message });
+                }
 
                 Salvar_dados(produto_selecionado, cliente_selecionado, usuario_id, data);
 
                 return Json(new { sucesso = true, mensagem = "Foto salva com sucesso! \n" + nome_arquivo });
-
             }
 
             return Json(new { sucesso = false, mensagem = "Erro ao salvar a foto. Produto ou cliente não selecionados." });
-
         }
+
 
         private string Remover_caracteres(string caracter)
         {
@@ -208,20 +224,20 @@ namespace Facilit.Controllers
             return mensagem;
         }
 
-         public async Task Atualizar_Dados_Clientes() 
+        public async Task Atualizar_Dados_Clientes()
         {
             string sql_delete = "delete from tb_clientes";
             try
             {
-            using(var conexao = new Conexao())
+                using (var conexao = new Conexao())
                 {
-                    using(var comando = new MySqlCommand(sql_delete, conexao._conn))
+                    using (var comando = new MySqlCommand(sql_delete, conexao._conn))
                     {
 
                         await comando.ExecuteNonQueryAsync();
                         RedirectToAction("Index", "Usuario");
                         await Verificar_clientes();
-                   
+
 
                     }
                 }
@@ -229,7 +245,7 @@ namespace Facilit.Controllers
             catch (Exception ex)
             {
 
-                TempData["mensagem"] = "Ocorreu um erro:"+ex.Message;
+                TempData["mensagem"] = "Ocorreu um erro:" + ex.Message;
             }
         }
         public async Task Atualizar_Dados_Produtos()
@@ -255,7 +271,7 @@ namespace Facilit.Controllers
                 TempData["mensagem"] = "Ocorreu um erro:" + ex.Message;
             }
         }
-        public async Task Atualizar_Dados() 
+        public async Task Atualizar_Dados()
         {
             await Atualizar_Dados_Clientes();
             await Atualizar_Dados_Produtos();
