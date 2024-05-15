@@ -397,7 +397,7 @@ namespace Facilit.Controllers
         public ActionResult Logout()
         {
             Session.Clear();
-            return RedirectToAction("Index", "Usuario");
+            return RedirectToAction("Index", "Home");
         }
 
         public ActionResult NovaSenha(string token, Usuario usuario)

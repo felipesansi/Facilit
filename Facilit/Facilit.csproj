@@ -256,6 +256,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="imagens\camera_video_icon.png" />
+    <Content Include="imagens\Error 404.png" />
     <Content Include="imagens\icon_aquivos.png" />
     <Content Include="imagens\amico.png" />
     <Content Include="imagens\Cadastro.png" />
@@ -266,6 +267,7 @@
     <Content Include="imagens\imagem cadastrar.png" />
     <Content Include="imagens\imagem login.png" />
     <Content Include="imagens\editar.png" />
+    <Content Include="imagens\imagem_pc.jpg" />
     <Content Include="imagens\LOGO-2.png" />
     <Content Include="imagens\Untitled.png" />
     <Content Include="Scripts\bootstrap.bundle.js" />
@@ -288,6 +290,7 @@
     <Content Include="Scripts\Mensagem.js" />
     <Content Include="Scripts\minitora_fotos.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\mostrar_senha.js" />
     <Content Include="Scripts\webcan.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

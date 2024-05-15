@@ -8,16 +8,7 @@
     </div>
 }
 
-<script>
-    setTimeout(function () {
-        var caixa_mensagem = document.getElementById('mensagem');
-        if (caixa_mensagem) {
-            caixa_mensagem.style.display = 'none';
-
-        }
-
-    }, 2000);
-</script>
+<script src="~/Scripts/Mensagem.js"></script>
 
 @{
     ViewBag.Title = "Editar usuário";
@@ -26,12 +17,7 @@
 {
     @Html.AntiForgeryToken()
 
-    <header>
-        <link rel="stylesheet" href="~/Scripts/Estilo.css"/>
-    </header>
-
     <div class="form-horizontal">
-
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Id)
@@ -39,9 +25,7 @@
         <h2>Editar usuário</h2>
         <div class="row">
             <div class="col-md-6">
-
                 <div class="form-horizontal">
-
                     <hr />
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     <div class="form-group">
@@ -71,30 +55,26 @@
                     <div class="form-group">
                         @Html.LabelFor(model => model.Senha_Usuario, "Senha:", htmlAttributes: new { @class = "control-label col-md-6" })
                         <div class="col-md-10">
-                           @Html.EditorFor(model => model.Senha_Usuario, new { htmlAttributes = new { @class = "campo" } })
+                            @Html.EditorFor(model => model.Senha_Usuario, new { htmlAttributes = new { @class = "campo" } })
                             @Html.ValidationMessageFor(model => model.Senha_Usuario, "", new { @class = "text-danger" })
                         </div>
                     </div>
-
-
                 </div>
-
-               
-
-            </div>
-        </div>
-            <br />
-            <div class="form-group">
-
-                <div class="col-md-offset-2 col-md-10">
-
-                    @Html.ActionLink("Voltar", "Perfis_usuario", "Usuario", null, new { @class = "btn btn-secondary" })
-                    <input type="submit" value="Atualizar" class="btn btn-success" />
-
-                </div>
-
-
             </div>
 
+            <div class="col-md-6">
+                <div class="text-right">
+                    <img src="~/imagens/editar.png" alt="Imagem ilústrativa de editar" class="img-fluid" />
+                </div>
+            </div>
         </div>
+
+        <br />
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ActionLink("Voltar", "Perfis_usuario", "Usuario", null, new { @class = "btn btn-secondary" })
+                <input type="submit" value="Atualizar" class="btn btn-success" />
+            </div>
+        </div>
+    </div>
 }

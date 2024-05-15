@@ -1,81 +1,127 @@
-﻿
-
-@{
+﻿@{
     ViewBag.Title = "Home";
 }
-<!DOCTYPE html>
-<html>
 <head>
-</head>
-<body class="index-page">
-    <div class="container position-relative">
-        <section class="section-padding">
-            <img src="~/imagens/Untitled.png" alt="imagem de um computador" class="img-home">
 
-            <div class="position-absolute top-50 start-50 translate-middle text-center">
+   
+    <style>
+
+        .custom-text {
+            font-size: 2.5rem;
+        }
+
+        .custom-text-small {
+            font-size: 1.2rem;
+        }
+
+        .section-padding {
+            padding: 50px 0;
+        }
+
+        .container {
+            margin-top: -100px;
+        }
+
+
+        .img-container {
+            position: relative;
+            text-align: center;
+            width: 100%;
+            height: calc(100vh - 100px);
+            margin-top: -50px;
+        }
+
+            .img-container img {
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+                width: max-content auto;
+                height: calc(100% - 50px);
+            }
+
+
+        .img-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .ferramentas {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+            .ferramentas div {
+                text-align: center;
+                width: 30%;
+            }
+
+            .ferramentas img {
+                width: 50%;
+                height: auto;
+                margin-bottom: 20px;
+            }
+
+            .ferramentas p {
+                font-size: 1rem;
+            }
+
+        .texto-imagem img {
+            max-width: 50%;
+            height: auto;
+        }
+
+
+        .ferramentas img {
+            width: 12%;
+        }
+    </style>
+</head>
+<div class="container">
+    <section class="section-padding">
+        <div class="img-container">
+            <img src="~/imagens/imagem_pc.jpg" alt="imagem de um computador" class="img-home">
+            <div class="img-overlay">
                 <h1 class="text-light custom-text">Olá, bem-vindo(a) ao Sistema Facilit</h1>
                 <p class="text-light custom-text-small">O sistema que facilita sua vida</p>
-                <a href="@Url.Action("Cadastro", "Usuario")" class="btn btn-secondary w-100">Cadastre-se </a>
+                <a href="@Url.Action("Cadastro", "Usuario")" class="btn btn-primary">Cadastre-se</a>
+                @Html.ActionLink("Login", "Index", "Usuario", null, new { @class = "btn btn-success" })
             </div>
-        </section>
+        </div>
+    </section>
+</div>
 
-        <section class="row section-padding">
-            <div class="col-md-6">
-                <p style="padding-left:40px;margin-right:62px;text-align:justify;line-height:33px;">
-                    Nosso sistema web é uma solução completa para gerenciar fotos na nuvem.<br>
-                    Usamos o OneDrive para garantir um armazenamento seguro e acessível.<br>
-                    Além disso, automatizamos a emissão de PDFs personalizados.<br>
-                    Incluímos o nome do usuário do sistema para uma experiência mais personalizada.<br>
-                    Nosso objetivo é proporcionar uma experiência profissional.<br>
-                    Temos a capacidade de redimensionar para sites de terceiros.<br>
-                    Isso é útil para a impressão de notas fiscais e etiquetas.<br>
-                    Proporcionamos uma integração perfeita em diversas plataformas.<br>
-                    Nosso foco é facilitar a gestão de documentos.<br>
-                    Também nos esforçamos para otimizar processos de negócios.<br>
-                    Nosso sistema é projetado para ser fácil de usar.<br>
-                    Estamos sempre procurando maneiras de melhorar.<br>
-                    Valorizamos o feedback dos nossos usuários.<br>
-                    Estamos comprometidos em fornecer o melhor serviço possível.<br>
-                    Obrigado por escolher nosso sistema web.<br>
-                </p>
-
-            </div>
-            <div class="col-md-6">
-                <img src="~/imagens/Group_2_1_-removebg-preview.png" alt="logo foxer" class="img-fluid" />
-            </div>
-
-        </section>
-           <h1 class="text-center section-padding" >Recursos </h1>
-        <section class="ferramentas">
-            <div id="card-foto">
-
-                <img src="~/imagens/camera_video_icon.png" alt="Ícone de câmera">
-                <p>
-                    Tiragem de fotos & <br> armazenamento na nuvem.
-                </p>
-
-
-            </div>
-
-
-            <div id="card-tiny">
-
-                <img src="~/imagens/icon-tiny.png" alt="Ícone do erp tiny">
-                <p>
-                    Interação com ERP tiny.
-                </p>
-
-
-            </div>
-
-            <div id="card-pdf">
-
-                <img src="~/imagens/icon_aquivos.png" alt="Ícone de PDF">
-                <p>
-                    Emissão de PDF contendo dados de das fotos tiradas.
-                </p>
-            </div>
-        </section>
+<section class="row section-padding">
+    <div class="col-md-6">
+        <p style="padding-left:40px;margin-right:62px;text-align:justify;line-height:33px;">
+            Nosso sistema oferece solução completa para gerenciar fotos na nuvem, com armazenamento seguro e acessível.
+            Emitimos PDFs personalizados, simplificando impressões de notas fiscais e etiquetas.
+            Constantemente aprimorado com feedback dos usuários, refletindo nosso compromisso em fornecer o melhor serviço.
+            Agradecemos por escolher nosso sistema web
+        </p>
     </div>
-</body>
-</html>
+    <div class="col-md-6">
+        <div class="texto-imagem">
+            <img src="~/imagens/Group_2_1_-removebg-preview.png" alt="logo foxer" class="img-fluid">
+        </div>
+    </div>
+</section>
+
+<h1 class="text-center section-padding">Recursos</h1>
+<section class="ferramentas">
+    <div>
+        <img src="~/imagens/camera_video_icon.png" alt="Ícone de câmera">
+        <p>Captura de fotos & <br> armazenamentos na nuvem.</p>
+    </div>
+    <div>
+        <img src="~/imagens/icon-tiny.png" alt="Ícone do erp tiny">
+        <p>Integrações com ERP tiny.</p>
+    </div>
+    <div>
+        <img src="~/imagens/icon_aquivos.png" alt="Ícone de PDF">
+        <p>Emissão de PDF com dados recentes.</p>
+    </div>
+</section>

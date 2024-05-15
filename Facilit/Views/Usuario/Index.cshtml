@@ -5,23 +5,16 @@
 }
 @if (!String.IsNullOrEmpty(TempData["Mensagem"] as string))
 {
-<div id="mensagem">
-    <div class="alert alert-danger">
-        @TempData["Mensagem"]
+    <div id="mensagem">
+        <div class="alert alert-danger">
+            @TempData["Mensagem"]
+        </div>
     </div>
-</div>
 }
 
-<script>
-    setTimeout(function () {
-        var caixa_mensagem = document.getElementById('mensagem');
-        if (caixa_mensagem) {
-            caixa_mensagem.style.display = 'none';
-
-        }
-
-    }, 5000);
-</script>
+<script src="~/Scripts/Mensagem.js"></script>
+<script src="~/Scripts/mostrar_senha.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 
 
@@ -53,20 +46,22 @@
                         @Html.LabelFor(model => model.Senha_Usuario, "Senha:", htmlAttributes: new { @class = "control-label col-md-6" })
                         <div class="col-md-10">
                             @Html.PasswordFor(model => model.Senha_Usuario, new { @class = "campo" })
-
+                            <button type="button" class="btn btn-secondary" onclick="mostrarSenha()">
+                                <i id="iconeSenha" class="fas fa-eye"></i>
+                            </button>
                             @Html.ValidationMessageFor(model => model.Senha_Usuario, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
                     <p>
-                        @Html.ActionLink("Esqueci minha senha", "RecuperarSenha", "Usuario",null, new { @class = "btn btn-secundary" })
+                        @Html.ActionLink("Esqueci minha senha", "RecuperarSenha", "Usuario", null, new { @class = "btn btn-secundary" })
                     </p>
                     <br />
                     <div class="form-group">
-                       
+
                         <input type="submit" value="Login" class="btn btn-primary" />
 
-                        
+
 
                         <br />
 
