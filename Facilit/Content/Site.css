@@ -45,10 +45,8 @@
     border: 1px solid #2f2fbe;
     background: #D8D8D8;
     color: blue;
-    width:300px;
+    width: 300px;
 }
-
-
 
 /* Override the default bootstrap behavior where horizontal description lists 
    will truncate terms that are too long to fit in the left column 

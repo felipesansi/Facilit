@@ -269,6 +269,7 @@
     <Content Include="imagens\editar.png" />
     <Content Include="imagens\imagem_pc.jpg" />
     <Content Include="imagens\LOGO-2.png" />
+    <Content Include="imagens\notas.png" />
     <Content Include="imagens\Untitled.png" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
