@@ -1,38 +1,127 @@
-﻿<!DOCTYPE html>
-<html>
+﻿@{
+    ViewBag.Title = "Home";
+}
 <head>
-    <title>Index</title>
+    <title>@ViewBag.Title</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
+
+        .custom-text {
+            font-size: 2.5rem;
+        }
+
+        .custom-text-small {
+            font-size: 1.2rem;
+        }
+
         .section-padding {
-            padding-bottom: 60px;
+            padding: 50px 0;
+        }
+
+        .container {
+            margin-top: -100px;
+        }
+
+
+        .img-container {
+            position: relative;
+            text-align: center;
+            width: 100%;
+            height: calc(100vh - 100px);
+            margin-top: -50px;
+        }
+
+            .img-container img {
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+                width: max-content auto;
+                height: calc(100% - 50px);
+            }
+
+
+        .img-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .ferramentas {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+            .ferramentas div {
+                text-align: center;
+                width: 30%;
+            }
+
+            .ferramentas img {
+                width: 50%;
+                height: auto;
+                margin-bottom: 20px;
+            }
+
+            .ferramentas p {
+                font-size: 1rem;
+            }
+
+        .texto-imagem img {
+            max-width: 50%;
+            height: auto;
+        }
+
+
+        .ferramentas img {
+            width: 12%;
         }
     </style>
 </head>
-<body class="index-page">
-    <div class="container position-relative">
-        <section class="section-padding">
-            <img src="~/imagens/Untitled.png" alt="imagem de um computador" class="img-home">
-
-            <div class="position-absolute top-50 start-50 translate-middle text-center">
+<div class="container">
+    <section class="section-padding">
+        <div class="img-container">
+            <img src="~/imagens/imagem_pc.jpg" alt="imagem de um computador" class="img-home">
+            <div class="img-overlay">
                 <h1 class="text-light custom-text">Olá, bem-vindo(a) ao Sistema Facilit</h1>
                 <p class="text-light custom-text-small">O sistema que facilita sua vida</p>
-                <a href="@Url.Action("Cadastro", "Usuario")" class="btn btn-secondary">Cadastre-se </a>
+                <a href="@Url.Action("Cadastro", "Usuario")" class="btn btn-primary">Cadastre-se</a>
+                @Html.ActionLink("Login", "Index", "Usuario", null, new { @class = "btn btn-success" })
             </div>
-        </section>
+        </div>
+    </section>
+</div>
 
-        <section class="row section-padding">
-            <div class="col-md-6">
-                <p style="padding-left:40px">
-                    Nosso sistema web oferece uma solução completa para gerenciar fotos na nuvem através do OneDrive, garantindo armazenamento seguro e acessível.<br />
-                    Além disso, automatizamos a emissão de PDFs personalizados, incluindo o nome do usuário do sistema, para uma experiência mais personalizada e profissional.<br /> Com a capacidade de redimensionamento para sites de terceiros, como impressão de notas fiscais e etiquetas,<br /> proporcionamos uma integração perfeita em diversas plataformas,<br />
-                    facilitando a gestão de documentos e otimizando processos de negócios.
-                </p>
-            </div>
-            <div class="col-md-6">
-                <img src="~/imagens/LOGO-2.png" alt="Descrição imagem" class="img-fluid"/>
-            </div>
-
-        </section>
+<section class="row section-padding">
+    <div class="col-md-6">
+        <p style="padding-left:40px;margin-right:62px;text-align:justify;line-height:33px;">
+            Nosso sistema oferece solução completa para gerenciar fotos na nuvem, com armazenamento seguro e acessível.
+            Emitimos PDFs personalizados, simplificando impressões de notas fiscais e etiquetas.
+            Constantemente aprimorado com feedback dos usuários, refletindo nosso compromisso em fornecer o melhor serviço.
+            Agradecemos por escolher nosso sistema web
+        </p>
     </div>
-</body>
-</html>
+    <div class="col-md-6">
+        <div class="texto-imagem">
+            <img src="~/imagens/Group_2_1_-removebg-preview.png" alt="logo foxer" class="img-fluid">
+        </div>
+    </div>
+</section>
+
+<h1 class="text-center section-padding">Recursos</h1>
+<section class="ferramentas">
+    <div>
+        <img src="~/imagens/camera_video_icon.png" alt="Ícone de câmera">
+        <p>Captura de fotos & <br> armazenamentos na nuvem.</p>
+    </div>
+    <div>
+        <img src="~/imagens/icon-tiny.png" alt="Ícone do erp tiny">
+        <p>Integrações com ERP tiny.</p>
+    </div>
+    <div>
+        <img src="~/imagens/icon_aquivos.png" alt="Ícone de PDF">
+        <p>Emissão de PDF com dados recentes.</p>
+    </div>
+</section>
