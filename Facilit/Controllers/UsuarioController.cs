@@ -13,6 +13,10 @@ namespace Facilit.Controllers
 
         public ActionResult Index()
         {
+            if (Session["logado"]!=null)
+            {
+                Session.Clear();
+            }
             ViewBag.MostrarBotoes = true;
             return View();
         }

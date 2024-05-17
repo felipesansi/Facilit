@@ -229,7 +229,7 @@ namespace Facilit.Servicos
 
         public async Task<string> ConsultaNota(NF_Tiny nf)
         {
-            var url = $"https://api.tiny.com.br/api2/notas.fiscais.pesquisa.php?token={tokenTiny}&formato={formatoRetorno}&numero={nf}";
+            var url = $"https://api.tiny.com.br/api2/notas.fiscais.pesquisa.php?token={tokenTiny}&formato={formatoRetorno}&numero={nf.numero}";
 
             try
             {
