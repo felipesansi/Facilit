@@ -2,8 +2,8 @@
     ViewBag.Title = "Home";
 }
 <head>
-
-   
+    <title>@ViewBag.Title</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
 
         .custom-text {
@@ -22,7 +22,6 @@
             margin-top: -100px;
         }
 
-
         .img-container {
             position: relative;
             text-align: center;
@@ -35,10 +34,8 @@
                 position: absolute;
                 left: 50%;
                 transform: translateX(-50%);
-                width: max-content auto;
                 height: calc(100% - 50px);
             }
-
 
         .img-overlay {
             position: absolute;
@@ -52,7 +49,6 @@
             justify-content: space-around;
             align-items: center;
             margin-top: 50px;
-            background-color: #F2F2F2;
         }
 
             .ferramentas div {
@@ -75,9 +71,12 @@
             height: auto;
         }
 
-
         .ferramentas img {
             width: 12%;
+        }
+
+        body {
+            overflow-x: hidden; 
         }
     </style>
 </head>

@@ -564,6 +564,7 @@ namespace Facilit.Controllers
         public ActionResult EmailEnviado()
         {
             string email = TempData["Email"] as string;
+            //return é para retornar o email que msg foi enviada
             return View((object)email);
         }
 
@@ -577,7 +578,7 @@ namespace Facilit.Controllers
 
         private void SalvarToken(string email, string token)
         {
-            DateTime data_expedicao = DateTime.Now.AddHours(1);
+            DateTime data_expedicao = DateTime.Now.AddHours(2);
 
             string sql_updade = "update tb_usuarios set token = @token, token_expiracao = @expiracao where email = @email";
             using (Conexao conexao = new Conexao())

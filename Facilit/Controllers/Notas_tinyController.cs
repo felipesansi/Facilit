@@ -25,10 +25,6 @@ namespace Facilit.Controllers
 
         public async Task<ActionResult> ObterNotas(NF_Tiny tiny)
         {
-            if (tiny.numero==string.Empty)
-            {
-                TempData["Mensagem"] = "Atenção: Há algum campo vazio";
-            }
             var TinyApi = new RetornoTinyApi();
             string link = await TinyApi.ConsultaNota(tiny);
 
