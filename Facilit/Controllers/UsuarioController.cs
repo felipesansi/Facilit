@@ -1,78 +1,79 @@
 ﻿using Facilit.Models;
-using Microsoft.Ajax.Utilities;
 using MySql.Data.MySqlClient;
 using System;
-using System.Net.Mail;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Renci.SshNet;
 using System.Net;
-using System.Threading.Tasks;
-using Facilit.Servicos;
-using System.Data.SqlClient;
+using System.Net.Mail;
+using System.Web.Mvc;
 
 namespace Facilit.Controllers
 {
     public class UsuarioController : Controller
     {
-       
-        public ActionResult Index() 
+
+        public ActionResult Index()
         {
+            if (Session["logado"]!=null)
+            {
+                Session.Clear();
+            }
             ViewBag.MostrarBotoes = true;
+            ViewBag.MostrarHome = true;
+            ViewBag.MostrarLogin = false;
+
+            ViewBag.MostrarContato = true;
+
             return View();
         }
 
-        public ActionResult Perfis_usuario() 
+        public ActionResult Perfis_usuario()
         {
             try
             {
 
 
-                using (Conexao conexao = new Conexao()) 
+                using (Conexao conexao = new Conexao())
                 {
                     string sql_select = "select * from tb_usuarios where excluido = false  ";
 
-                    using (MySqlCommand comando = new MySqlCommand(sql_select, conexao._conn)) 
+                    using (MySqlCommand comando = new MySqlCommand(sql_select, conexao._conn))
                     {
-                        MySqlDataReader leitura = comando.ExecuteReader(); 
+                        MySqlDataReader leitura = comando.ExecuteReader();
 
-                        if (Session["logado"] != null) 
+                        if (Session["logado"] != null)
                         {
 
-                            if (leitura.HasRows) 
+                            if (leitura.HasRows)
                             {
                                 var listaUsuario = new List<Usuario>();
-                                while (leitura.Read()) 
+                                while (leitura.Read())
                                 {
-                                    var usuario = new Usuario 
+                                    var usuario = new Usuario
                                     {
-                                        Id = Convert.ToInt32(leitura["id"]), 
-                                        Nome_completo = Convert.ToString(leitura["nome_completo"]),  
-                                        Email = Convert.ToString(leitura["email"]), 
+                                        Id = Convert.ToInt32(leitura["id"]),
+                                        Nome_completo = Convert.ToString(leitura["nome_completo"]),
+                                        Email = Convert.ToString(leitura["email"]),
                                         Nome_Usuario = Convert.ToString(leitura["nome_usuario"]),
                                         Criado = Convert.ToDateTime(leitura["criado"]),
-                                        Alterado = Convert.ToDateTime(leitura["alterado"]) 
+                                        Alterado = Convert.ToDateTime(leitura["alterado"])
                                     };
                                     listaUsuario.Add(usuario);
 
                                 }
-                                return View(listaUsuario); 
+                                return View(listaUsuario);
 
                             }
 
 
-                            else 
+                            else
                             {
-                                return RedirectToAction("Index", "Webcan"); 
+                                return RedirectToAction("Index", "Webcan");
                             }
                         }
-                        else 
+                        else
                         {
-                            return RedirectToAction("Index", "Usuario"); 
-                           
+                            return RedirectToAction("Index", "Usuario");
+
                         }
                     }
 
@@ -116,7 +117,7 @@ namespace Facilit.Controllers
                                         Nome_Usuario = Convert.ToString(leitura["nome_usuario"]),
                                         Criado = Convert.ToDateTime(leitura["criado"]),
                                         Alterado = Convert.ToDateTime(leitura["alterado"]),
-                                        Senha_Usuario =  Convert.ToString(leitura["senha_usuario"])
+                                        Senha_Usuario = Convert.ToString(leitura["senha_usuario"])
 
                                     };
                                     listaUsuario.Add(usuario);
@@ -141,21 +142,21 @@ namespace Facilit.Controllers
                 }
 
             }
-            catch (Exception erro )
+            catch (Exception erro)
             {
 
                 TempData["Mensagem"] = "Ocorreu um erro" + erro;
                 return RedirectToAction("Index", "Usuario");
-            }  
+            }
 
         }
         public ActionResult atualizarUsuario(Usuario usuario)
         {
             try
             {
-                if (Session["logado"] != null) 
+                if (Session["logado"] != null)
                 {
-                    
+
                     if (string.IsNullOrWhiteSpace(usuario.Nome_Usuario) || string.IsNullOrWhiteSpace(usuario.Email) ||
                         string.IsNullOrWhiteSpace(usuario.Nome_Usuario) || string.IsNullOrWhiteSpace(usuario.Senha_Usuario))
                     {
@@ -171,7 +172,7 @@ namespace Facilit.Controllers
 
                     }
                     else
-                    { 
+                    {
 
                         string sql_insert = "update tb_usuarios set " +
                                 "nome_completo = @nc, email = @em , nome_usuario = @nu, senha_usuario = @su, alterado = @alterado where id = @id";
@@ -185,7 +186,7 @@ namespace Facilit.Controllers
                                 comando.Parameters.AddWithValue("@em", usuario.Email);
                                 comando.Parameters.AddWithValue("@nu", usuario.Nome_Usuario);
                                 comando.Parameters.AddWithValue("@su", usuario.Senha_Usuario);
-                                comando.Parameters.AddWithValue("@alterado", DateTime.Now); 
+                                comando.Parameters.AddWithValue("@alterado", DateTime.Now);
                                 comando.Parameters.AddWithValue("@id", usuario.Id);
 
                                 comando.ExecuteNonQuery();
@@ -231,7 +232,7 @@ namespace Facilit.Controllers
 
                             MySqlDataReader leitura = comando.ExecuteReader();
                             leitura.Read();
-                            
+
                             if (leitura.HasRows)
                             {
 
@@ -270,7 +271,6 @@ namespace Facilit.Controllers
                 return RedirectToAction("Index", "Usuario");
             }
         }
-
 
         public ActionResult Excluir(int id)
         {
@@ -313,17 +313,16 @@ namespace Facilit.Controllers
 
         }
 
-
-
         public ActionResult Softdelete(Usuario usuario)
         {
-          if (usuario.Id == 1)
+            if (usuario.Id == 1)
             {
                 TempData["Mensagem"] = "O Sistema mantém o usuário 1 como padrão.\n Este não pode ser excluido, mas você pode atualizar os dados";
                 return RedirectToAction("Perfis_usuario", "Usuario");
             }
-            else { 
-            string str_delete = "update tb_usuarios set excluido = true, alterado = @alterado where id = @id";
+            else
+            {
+                string str_delete = "update tb_usuarios set excluido = true, alterado = @alterado where id = @id";
                 using (Conexao conexao = new Conexao())
                 {
                     using (MySqlCommand comando = new MySqlCommand(str_delete, conexao._conn))
@@ -342,15 +341,21 @@ namespace Facilit.Controllers
 
         public ActionResult Cadastro()
         {
+            if (Session["logado"] != null)
+            {
+                Session.Clear();
+            }
+            ViewBag.MostrarHome = true;
+            ViewBag.MostrarBotoes = false;
+            ViewBag.MostrarLogin = true;
 
-            ViewBag.MostrarBotoes = true;
             return View();
         }
 
         bool existe = false;
 
         [HttpPost]
-        public ActionResult  VerificarLogin(Usuario class_usuario)
+        public ActionResult VerificarLogin(Usuario class_usuario)
         {
             using (var conexao = new Conexao())
             {
@@ -368,18 +373,18 @@ namespace Facilit.Controllers
                     leitura.Read();
                     if (leitura.HasRows)
                     {
-                        
-                         string nome = leitura["nome_completo"].ToString();
-                        
-                         string email = leitura["email"].ToString();
-                         int id = leitura.GetInt32("id");
-                      
+
+                        string nome = leitura["nome_completo"].ToString();
+
+                        string email = leitura["email"].ToString();
+                        int id = leitura.GetInt32("id");
+
                         Session["logado"] = true;
                         Session["nome"] = nome;
                         Session["email"] = email;
                         Session["id_usuario"] = id;
 
-                        if (Session["logado"] != null && Session["id_usuario"] !=null)
+                        if (Session["logado"] != null && Session["id_usuario"] != null)
                         {
                             int id_usuario = (int)Session["id_usuario"];
                             return RedirectToAction("Registro", "Webcan");
@@ -402,19 +407,15 @@ namespace Facilit.Controllers
                 }
             }
         }
- 
 
-
-     [HttpPost]
-      public ActionResult Logout()
+        [HttpPost]
+        public ActionResult Logout()
         {
             Session.Clear();
-            return RedirectToAction("Index", "Usuario");
+            return RedirectToAction("Index", "Home");
         }
-    
 
-
-      public ActionResult NovaSenha(string token, Usuario usuario)
+        public ActionResult NovaSenha(string token, Usuario usuario)
         {
             if (string.IsNullOrEmpty(token))
             {
@@ -433,15 +434,15 @@ namespace Facilit.Controllers
             }
             return View("NovaSenha");
         }
-        
+
         public ActionResult AtualizarSenha(Usuario usuario)
         {
 
 
 
-            if (usuario.Senha_Usuario == usuario.Confirmar_Senha )
+            if (usuario.Senha_Usuario == usuario.Confirmar_Senha)
             {
-                if (usuario.Senha_Usuario.Length >3 && usuario.Confirmar_Senha.Length >3  )
+                if (usuario.Senha_Usuario.Length > 3 && usuario.Confirmar_Senha.Length > 3)
                 {
                     string sql_atualizar = "update tb_usuarios set senha_usuario = @senha_usuario where email= @email";
                     using (Conexao conexao = new Conexao())
@@ -454,7 +455,7 @@ namespace Facilit.Controllers
                                 comando.Parameters.AddWithValue("@senha_usuario", usuario.Senha_Usuario);
                                 comando.ExecuteNonQuery();
                                 TempData["Sucesso"] = "Sua senha foi atualizada com sucesso!\n\n Volte ao login";
-                           
+
 
                             }
                             else
@@ -470,7 +471,7 @@ namespace Facilit.Controllers
                 {
                     TempData["Mensagem"] = "A senha deve ter mais de 3 caracteres";
                 }
-                
+
 
             }
             else
@@ -496,7 +497,7 @@ namespace Facilit.Controllers
 
                 return RedirectToAction("Cadastro", "Usuario");
             }
-            else if ( ExisteUsuario(usuario))
+            else if (ExisteUsuario(usuario))
             {
                 TempData["Mensagem"] = "Já existe uma conta com este usuário";
                 return RedirectToAction("Cadastro", "Usuario");
@@ -574,20 +575,21 @@ namespace Facilit.Controllers
         public ActionResult EmailEnviado()
         {
             string email = TempData["Email"] as string;
+            //return é para retornar o email que msg foi enviada
             return View((object)email);
         }
-      
+
         public static string GerarTokenUnico()
         {
             string token = Guid.NewGuid().ToString();
 
             return token;
         }
-      
-        
-        private void SalvarToken(string email , string token)
+
+
+        private void SalvarToken(string email, string token)
         {
-            DateTime data_expedicao = DateTime.Now.AddHours(1);
+            DateTime data_expedicao = DateTime.Now.AddHours(2);
 
             string sql_updade = "update tb_usuarios set token = @token, token_expiracao = @expiracao where email = @email";
             using (Conexao conexao = new Conexao())
@@ -602,8 +604,8 @@ namespace Facilit.Controllers
             }
 
         }
-    
-        
+
+
 
         private bool EmailExistente(Usuario usuario)
         {
@@ -634,11 +636,11 @@ namespace Facilit.Controllers
             return existe_email;
         }
 
-    
+
 
         public ActionResult EnviarEmail(Usuario usuario)
         {
-     
+
 
             if (EmailExistente(usuario))
             {
@@ -663,16 +665,15 @@ namespace Facilit.Controllers
                             string token = GerarTokenUnico();
 
                             SalvarToken(email, token);
-                            
+
                             string link_nova_senha = Url.Action("NovaSenha", "Usuario", new { token = token }, Request.Url.Scheme);
-                            string corpo = "Prezado " + nome +  "," +
-                                "\n\n nome de Usuário: " + nome_usuario +
-                                "\n\nEspero que esteja bem." +
-                                " \n\nEstamos entrando em contato porque foi solicitada uma recuperação de senha para a sua conta." +
-                                " \n\nPor favor, siga o link abaixo para redefinir sua senha:  " + link_nova_senha +
-                                "\n\nEste link tem a duração de  1  HORA.\b\b\n\n você não solicitou esta recuperação ou se precisar de assistência adicional, " +
-                                "não hesite em nos contatar imediatamente. Agradecemos sua atenção e cooperação. \n\nAtenciosamente, Felipe F. " +
-                                "\n\n Facilit";
+                            string corpo = "Prezado(a) " + nome + "," +
+                                "\n\nEspero que esteja bem!" +
+                                "\n\nNome de usuário: " + nome_usuario + "." +
+                                " \n\nEstamos entrando em contato, pois uma recuperação de senha foi solicitada." +
+                                " \n\nPor favor, siga o link abaixo para redefinir sua senha: " + link_nova_senha +
+                                "\n\nEste link tem a duração de uma hora.\b\b\n\nCaso não tenha solicitado essa recuperação, entre em contato conosco. " +
+                                "\n\nAtenciosamente, Equipe Facilit.";
 
 
 
@@ -683,35 +684,35 @@ namespace Facilit.Controllers
                                 SmtpClient client = new SmtpClient(Smtp);
 
                                 client.Port = 587;
-                                
+
                                 client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                                
+
                                 client.UseDefaultCredentials = false;
-                                
-                                NetworkCredential credential = new NetworkCredential(remetente,senha_email);
+
+                                NetworkCredential credential = new NetworkCredential(remetente, senha_email);
                                 client.EnableSsl = true;
                                 client.Credentials = credential;
                                 client.Timeout = 10000;
                                 MailMessage e_mail = new MailMessage();
-                                
+
                                 e_mail.From = new MailAddress(remetente);
                                 TempData["email"] = usuario.Email;
                                 e_mail.To.Add(usuario.Email);
 
                                 e_mail.Subject = "Solicitação de Recuperação de Senha - Facilit";
 
-                                e_mail.Body =corpo;
-                              
+                                e_mail.Body = corpo;
+
                                 e_mail.IsBodyHtml = false;
 
                                 client.Send(e_mail);
-                                 return RedirectToAction("EmailEnviado", "Usuario");
+                                return RedirectToAction("EmailEnviado", "Usuario");
                             }
                             catch (Exception ex)
                             {
 
                                 TempData["Mensagem"] = "Ocorreu um erro: " + ex;
-                                return RedirectToAction("RecuperarSenha","Usuario");
+                                return RedirectToAction("RecuperarSenha", "Usuario");
                             }
 
                         }
@@ -727,44 +728,44 @@ namespace Facilit.Controllers
 
             return RedirectToAction("RecuperarSenha", "Usuario");
         }
-      
-        
+
+
         private bool VerificarToken(string token)
         {
             bool verificado = false;
-           
+
             DateTime data_atual = DateTime.Now;
 
             string sql_contar = "select count(*) from tb_usuarios where token = @token and token_expiracao > @dataAtual";
 
             try
             {
-                using(Conexao conexao = new Conexao())
+                using (Conexao conexao = new Conexao())
                 {
-                    using(MySqlCommand comando = new MySqlCommand(sql_contar, conexao._conn))
-                    { 
+                    using (MySqlCommand comando = new MySqlCommand(sql_contar, conexao._conn))
+                    {
                         comando.Parameters.AddWithValue("@token", token);
                         comando.Parameters.AddWithValue("@dataAtual", data_atual);
 
-                         int contador = Convert.ToInt32(comando.ExecuteScalar());
+                        int contador = Convert.ToInt32(comando.ExecuteScalar());
                         verificado = contador > 0;
                     }
-               
-                    
+
+
                 }
-                
+
             }
             catch (Exception ex)
             {
                 TempData["Mensagem"] = "Ocorreu um erro: " + ex;
 
 
-                
+
             }
             return verificado;
         }
 
-        
+
 
     }
 }

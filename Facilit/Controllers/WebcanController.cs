@@ -1,19 +1,16 @@
 ﻿using Facilit.Models;
+using Facilit.Models.ClienteTiny;
 using Facilit.Servicos;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using MySql.Data.MySqlClient;
-using MySqlX.XDevAPI;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Web.Helpers;
 using System.Web.Mvc;
-using System.Web.UI.WebControls;
-using iTextSharp.text.pdf;
-using iTextSharp.text;
 
 namespace Facilit.Controllers
 {
@@ -22,19 +19,128 @@ namespace Facilit.Controllers
         string tokenTiny = "02011b49e5399d62d999007a8952642c85cca50bc310b49fdd6c3674fdff4b2a";
         string mensagem;
         int usuario_id;
+
+        public async Task Verificar_produtos()
+        {
+
+            using (var conexao = new Conexao())
+            {
+                string select_produto = "select id, codigo_tiny_produto, descricao, unidade, data_atualizacao_produto " +
+                    "from tb_produtos limit 100";
+                using (MySqlCommand comando = new MySqlCommand(select_produto, conexao._conn))
+                {
+                    MySqlDataReader leitura = comando.ExecuteReader();
+                    if (leitura.HasRows)
+                    {
+                        var listaProdutos = new List<ProdutoTiny.Produts>();
+                        try
+                        {
+                            while (leitura.Read())
+                            {
+                                var produts = new ProdutoTiny.Produts()
+                                {
+                                    id = Convert.ToInt32(leitura["id"]),
+                                    codigo_tiny = Convert.ToInt32(leitura["codigo_tiny_produto"]),
+                                    descricao = Convert.ToString(leitura["descricao"]),
+                                    unidade = Convert.ToString(leitura["unidade"]),
+                                    data_atualizacao = Convert.ToDateTime(leitura["data_atualizacao_produto"]),
+                                };
+                                listaProdutos.Add(produts);
+
+                            }
+
+                            ViewData["ListaProdutos"] = new SelectList(listaProdutos, "descricao", "descricao");
+                        }
+                        catch (Exception ex)
+                        {
+
+                            var erro = ex.Message;
+                        }
+                    }
+                    else
+                    {
+                        TempData["Mensagem"] = "Carregando Dados dos Produtos AGUARDE ATÉ FINALIZAR";
+                        RetornoTinyApi produto = new RetornoTinyApi();
+                        var produtos = await produto.ListarProdutos(tokenTiny);
+                        var dropdown_produto = produtos.retorno.produtos
+                            .Select(s => new
+                            {
+                                Id = s.id,
+                                Produto = s.descricao + " | "
+                                + s.tipoVariacao,
+                                Descricao = s.descricao
+                            })
+                            .Take(100)
+                            .ToList();
+                        ViewData["ListaProdutos"] = new SelectList(dropdown_produto, "Descricao", "Produto");
+                    }
+                }
+            }
+        }
+
+        public async Task Verificar_clientes()
+        {
+            string sql_select_clientes = "select codigo_tiny_cliente,nome,data_atualizacao_cliente" +
+                " from tb_clientes limit 500";
+            using (var conexao = new Conexao())
+            {
+                using (MySqlCommand comando = new MySqlCommand(sql_select_clientes, conexao._conn))
+                {
+                    MySqlDataReader leitura = comando.ExecuteReader();
+
+                    if (leitura.HasRows)
+                    {
+                        var lista_cliente = new List<Client>();
+                        while (leitura.Read())
+                        {
+                            var client = new Client
+                            {
+                                codigo_tiny_cliente = Convert.ToInt32(leitura["codigo_tiny_cliente"]),
+                                nome = Convert.ToString(leitura["nome"]),
+                                data_atualizacao_cliente = Convert.ToDateTime(leitura["data_atualizacao_cliente"])
+                            };
+                            lista_cliente.Add(client);
+
+                        }
+
+                        ViewData["listarClientes"] = new SelectList(lista_cliente, "Nome", "Nome");
+                    }
+                    else
+                    {
+                        TempData["Mensagem"] = "Carregando Dados dos Clientes AGUARDE ATÉ FINALIZAR";
+                        RetornoTinyApi cliente = new RetornoTinyApi();
+
+                        var clientes = await cliente.ListarClientes(tokenTiny);
+                        var dropdown_cliente = clientes.retorno.contatos
+                            .Select(s => new
+                            {
+                                Id = s.contato.id,
+                                Nome = s.contato.nome
+                            })
+                          .Take(500)
+                          .ToList();
+                        ViewData["listarClientes"] = new SelectList(dropdown_cliente, "Nome", "Nome");
+                    }
+                }
+            }
+        }
         public async Task<ActionResult> Registro()
         {
-            RetornoTinyApi produto = new RetornoTinyApi();
-            var produtos = await produto.ListarProdutos(tokenTiny);
-            var dropdown_produto = produtos.retorno.produtos.Select(s => new { Id = s.id, Produto = s.descricao + " | " + s.tipoVariacao, Descricao = s.descricao }).ToList();
-            ViewBag.Produtos = new SelectList(dropdown_produto, "Descricao", "Produto");
+            if (Session["logado"] != null)
+            {
+                await Verificar_produtos();
 
-            //clientes
+                await Verificar_clientes();
+                ViewBag.MostrarBotoes = false;
+                ViewBag.MostrarContato = true;
 
-            RetornoTinyApi cliente = new RetornoTinyApi();
-            var clientes = await cliente.ListarClientes(tokenTiny);
-            var dropdown_cliente = clientes.retorno.contatos.Select(s => new { Id = s.contato.id, cliente = s.contato.nome, Nome = s.contato.nome }).ToList();
-            ViewBag.Clientes = new SelectList(dropdown_cliente, "Nome", "Cliente");
+            }
+            else
+            {
+                RedirectToAction("Index", "usuario");
+            }
+
+
             return View();
         }
         [HttpPost]
@@ -47,28 +153,44 @@ namespace Facilit.Controllers
             else
             {
                 byte[] vet_bytes = Convert.FromBase64String(dados_imagem);
-                string caminho_diretorio = Server.MapPath("~/Fotos");
+                string documentosPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                string fotosPath = Path.Combine(documentosPath, "Fotos - Sistema Facilit");
 
-                if (!Directory.Exists(caminho_diretorio))
+                if (!Directory.Exists(fotosPath))
                 {
-                    Directory.CreateDirectory(caminho_diretorio);
+                    try
+                    {
+                        Directory.CreateDirectory(fotosPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        return Json(new { sucesso = false, mensagem = "Erro ao criar a pasta 'Fotos': " + ex.Message });
+                    }
                 }
+
                 DateTime data = DateTime.Now;
-                string nome_arquivo = $"Produto_{produto_selecionado}_Cliente_{cliente_selecionado}.jpg";
+                string nome_arquivo = $"Produto_{produto_selecionado}_Cliente_{cliente_selecionado}_{data.ToString("yyyyMMddHHmmss")}.jpg";
                 nome_arquivo = Remover_caracteres(nome_arquivo);
-                usuario_id = (int)Session["id_usuario"];
-                string caminho_imagem = Path.Combine(caminho_diretorio, nome_arquivo);
-                System.IO.File.WriteAllBytes(caminho_imagem, vet_bytes);
+                int usuario_id = (int)Session["id_usuario"];
+                string caminho_imagem = Path.Combine(fotosPath, nome_arquivo);
+
+                try
+                {
+                    System.IO.File.WriteAllBytes(caminho_imagem, vet_bytes);
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { sucesso = false, mensagem = "Erro ao salvar a foto: " + ex.Message });
+                }
 
                 Salvar_dados(produto_selecionado, cliente_selecionado, usuario_id, data);
 
                 return Json(new { sucesso = true, mensagem = "Foto salva com sucesso! \n" + nome_arquivo });
-
             }
 
             return Json(new { sucesso = false, mensagem = "Erro ao salvar a foto. Produto ou cliente não selecionados." });
-
         }
+
 
         private string Remover_caracteres(string caracter)
         {
@@ -102,6 +224,7 @@ namespace Facilit.Controllers
             }
             return mensagem;
         }
+
         public ActionResult Gerador_pdf()
         {
             try

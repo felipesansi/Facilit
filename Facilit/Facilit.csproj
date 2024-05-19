@@ -214,7 +214,9 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\EtiquetasController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\Notas_tinyController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="Controllers\WebcanController.cs" />
     <Compile Include="Global.asax.cs">
@@ -222,6 +224,12 @@
     </Compile>
     <Compile Include="Models\ClienteTiny.cs" />
     <Compile Include="Models\Conexao.cs" />
+    <Compile Include="Models\EtiquetasTiny.cs" />
+    <Compile Include="Models\Link_Etiqueta_Tiny.cs" />
+    <Compile Include="Models\NF_Tiny.cs" />
+    <Compile Include="Models\NotaFiscalLink.cs" />
+    <Compile Include="Models\NotaFiscalPesquisa.cs" />
+    <Compile Include="Models\PesquisaExpedicao.cs" />
     <Compile Include="Models\ProdutoTiny.cs" />
     <Compile Include="Models\Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -247,13 +255,35 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="imagens\778 branco.svg" />
+    <Content Include="imagens\bg-home.png" />
+    <Content Include="imagens\camera_video_icon.png" />
+    <Content Include="imagens\Error 404.png" />
+    <Content Include="imagens\icon_aquivos.png" />
     <Content Include="imagens\amico.png" />
     <Content Include="imagens\Cadastro.png" />
+    <Content Include="imagens\Group 2%281%29.png" />
+    <Content Include="imagens\Group 2.png" />
+    <Content Include="imagens\Group_2_1_-removebg-preview.png" />
+    <Content Include="imagens\icon-tiny.png" />
     <Content Include="imagens\imagem cadastrar.png" />
+    <Content Include="imagens\imagem criaçao de sites.png" />
+    <Content Include="imagens\imagem f alto.png" />
+    <Content Include="imagens\imagem f baixo.png" />
+    <Content Include="imagens\imagem gestao de  redes.png" />
+    <Content Include="imagens\imagem gestao de  redes2.png" />
     <Content Include="imagens\imagem login.png" />
     <Content Include="imagens\editar.png" />
+    <Content Include="imagens\imagem marketing.png" />
+    <Content Include="imagens\imagem matheus.png" />
+    <Content Include="imagens\imagem_pc.jpg" />
+    <Content Include="imagens\images png.png" />
+    <Content Include="imagens\images-sobre.svg" />
+    <Content Include="imagens\Logo 1 home.svg" />
     <Content Include="imagens\LOGO-2.png" />
+    <Content Include="imagens\notas.png" />
     <Content Include="imagens\Untitled.png" />
+    <Content Include="imagens\whatssapp.svg" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -271,8 +301,10 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\Mensagem.js" />
     <Content Include="Scripts\minitora_fotos.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\mostrar_senha.js" />
     <Content Include="Scripts\webcan.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -299,10 +331,14 @@
     <Content Include="Views\Usuario\NovaSenha.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Webcan\Gerador_pdf.cshtml" />
+    <Content Include="Views\Notas_tiny\Notas.cshtml" />
+    <Content Include="Views\Etiquetas\Etiquetas.cshtml" />
+    <Content Include="Views\Etiquetas\Escolha.cshtml" />
+    <Content Include="Views\Etiquetas\ObterEtiquitas.cshtml" />
+    <Content Include="Views\Shared\NovaAba.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Fotos\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
@@ -349,9 +385,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>54188</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:44377/</IISUrl>
-          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
-          <IISAppRootUrl>http://localhost:44377/</IISAppRootUrl>
+          <IISUrl>http://localhost:44377</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

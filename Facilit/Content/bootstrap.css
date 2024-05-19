@@ -307,12 +307,15 @@ figure {
 }
 
 .img-home {
-    width: 100vw;
+    width:98.9vw;
+    height: 543px;
+
 }
 
 img,
 svg {
-    vertical-align: middle;
+
+   
 }
 
 table {
@@ -7921,7 +7924,7 @@ textarea.form-control-lg {
 }
 
 .top-50 {
-    top: 46% !important;
+    top: 18% !important;
 }
 
 .top-100 {
@@ -8911,6 +8914,8 @@ textarea.form-control-lg {
 .text-light {
     --bs-text-opacity: 1;
     color: rgba(var(--bs-light-rgb), var(--bs-text-opacity)) !important;
+    top: 25px;
+    /*! align-content: ; */
 }
 
 .text-dark {

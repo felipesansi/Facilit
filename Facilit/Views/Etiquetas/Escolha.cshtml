@@ -1,0 +1,27 @@
+﻿@{
+    ViewBag.Title = "Escolha um cliente";
+}
+
+<h2 class="text-center">Escolha um cliente</h2>
+
+@using (Html.BeginForm("Escolha", "Etiquetas"))
+{
+    <div class="form-horizontal">
+        <div class="form-group">
+            @Html.Label("Selecione a Expedição: ", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("IdExpedicao", ViewBag.Expedicoes as SelectList, "Selecione...", new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Enviar" class="btn btn-outline-primary" />
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

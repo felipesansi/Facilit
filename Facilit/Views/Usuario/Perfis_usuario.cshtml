@@ -1,11 +1,11 @@
 ﻿@model IEnumerable<Facilit.Models.Usuario>
 
 @{
-    ViewBag.Title = "Listagem de usuários";
+    ViewBag.Title = "Lista de usuários";
 
 }
 
-<h2 style="text-align:center">Listagem os usuários</h2>
+<h2 style="text-align:center">Lista dos usuários</h2>
 
 <hr />
 
@@ -18,16 +18,7 @@
 </div>
 }
 
-<script>
-    setTimeout(function () {
-        var caixa_mensagem = document.getElementById('mensagem');
-        if (caixa_mensagem) {
-            caixa_mensagem.style.display = 'none';
-
-        }
-
-    }, 2000);
-</script>
+<script src="~/Scripts/Mensagem.js"></script>
 
 @using (Html.BeginForm("PesqusarUsuario", "Usuario", FormMethod.Get))
 {

@@ -1,0 +1,74 @@
+﻿@model Facilit.Models.EtiquetasTiny
+
+@{
+    ViewBag.Title = "Etiquetas";
+}
+
+<h2 class="text-center">Etiquetas</h2>
+
+@using (Html.BeginForm("ObterExpedicao", "Etiquetas"))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Origem</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>C</td>
+                    <td>Correios</td>
+                </tr>
+                <tr>
+                    <td>T</td>
+                    <td>Transportadora</td>
+                </tr>
+                <tr>
+                    <td>M</td>
+                    <td>Mercado Envios</td>
+                </tr>
+                <tr>
+                    <td>E</td>
+                    <td>Correios E-fulfillment</td>
+                </tr>
+                <tr>
+                    <td>B</td>
+                    <td>B2W Entrega</td>
+                </tr>
+                <tr>
+                    <td>X</td>
+                    <td>Customizada</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.formato_envio, "Formato de envio: ", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.formato_envio, new { htmlAttributes = new { @class = "campo", placeholder = "M" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Próxima tela" class="btn btn-outline-primary" />
+            </div>
+        </div>
+        
+    </div>
+}
+
+<div>
+    <br />
+    @Html.ActionLink("Voltar para a Lista", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

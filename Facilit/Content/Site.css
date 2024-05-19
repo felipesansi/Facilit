@@ -1,4 +1,4 @@
-﻿/* Estilos específicos para a página Index do HomeController */
+﻿
 .index-page .body-content {
     margin: 0;
     padding: 0;
@@ -8,7 +8,7 @@
 
 
 .index-page .navbar-nav {
-    margin-right: 0; /* Remove a margem à direita dos itens da navbar */
+    margin-right: 0;
 }
 
 .index-page .custom-text {
@@ -31,9 +31,8 @@
     max-width: 280px;
 }
 
-
-/* Set padding to keep content from hitting the edges */
-.body-content {
+    /* Set padding to keep content from hitting the edges */
+    .body-content {
     margin-top: 15px;
     padding-left: 15px;
     padding-right: 15px;
@@ -46,10 +45,8 @@
     border: 1px solid #2f2fbe;
     background: #D8D8D8;
     color: blue;
-    width:300px;
+    width: 300px;
 }
-
-
 
 /* Override the default bootstrap behavior where horizontal description lists 
    will truncate terms that are too long to fit in the left column 
@@ -63,4 +60,42 @@ input,
 select,
 textarea {
     max-width: 280px;
+}
+/* aqui em baixo está o CSS da index Home */
+
+.ferramentas {
+    display: flex;
+    justify-content: space-around;
+    padding-bottom: 60px;
+}
+
+.section-padding {
+    padding-bottom: 60px;
+}
+
+#card-foto {
+    background-color: whitesmoke;
+    height: 270px;
+    width: 250px;
+    padding: 50px 35px;
+    border-radius: 30px;
+    text-align: center;
+}
+
+#card-pdf {
+    background-color: whitesmoke;
+    height: 270px;
+    width: 250px;
+    padding: 50px 35px;
+    border-radius: 30px;
+    text-align: center;
+}
+
+#card-tiny {
+    background-color: whitesmoke;
+    height: 270px;
+    width: 250px;
+    padding: 50px 35px;
+    border-radius: 30px;
+    text-align: center;
 }
