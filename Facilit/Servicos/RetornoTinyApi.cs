@@ -283,47 +283,47 @@ namespace Facilit.Servicos
 
             return null;
         }
-        public async Task<string> ObterEtiqueta(EtiquetasTiny et)
-        { string codigo = "C";
-            var url = $"https://api.tiny.com.br/api2/expedicao.obter.etiquetas.impressao.php?token={tokenTiny}&formato={formatoRetorno}&formaEnvio={codigo}&idExpedicao={et.id_expedicao}";
+        //public async Task<string> ObterEtiqueta(EtiquetasTiny et)
+        //{ string codigo = "C";
+        //    var url = $"https://api.tiny.com.br/api2/expedicao.obter.etiquetas.impressao.php?token={tokenTiny}&formato={formatoRetorno}&formaEnvio={codigo}&idExpedicao={et.id_expedicao}";
 
-            try
-            {
+        //    try
+        //    {
 
-                using (var client = new HttpClient())
-                {
-                    var resposta = await client.PostAsync(url, null);
+        //        using (var client = new HttpClient())
+        //        {
+        //            var resposta = await client.PostAsync(url, null);
 
-                    if (resposta.IsSuccessStatusCode)
-                    {
-                        var respostaContent = await resposta.Content.ReadAsStringAsync();
+        //            if (resposta.IsSuccessStatusCode)
+        //            {
+        //                var respostaContent = await resposta.Content.ReadAsStringAsync();
 
-                        var objetoNota = JsonSerializer.Deserialize<Link_Etiqueta_Tiny>(respostaContent);
+        //                var objetoNota = JsonSerializer.Deserialize<Link_Etiqueta_Tiny>(respostaContent);
 
 
                     
-                        return objetoNota.retorno.links[0].link;
-                    }
-                            else
-                            {
+        //                return objetoNota.retorno.links[0].link;
+        //            }
+        //                    else
+        //                    {
 
-                                mensagem = $"Erro ao consultar a API: {resposta.StatusCode}";
-                            }
+        //                        mensagem = $"Erro ao consultar a API: {resposta.StatusCode}";
+        //                    }
                         
                       
                     
-                }
-            }
-            catch (Exception ex)
-            {
-                mensagem = ($"Ocorreu um erro: {ex.Message}");
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        mensagem = ($"Ocorreu um erro: {ex.Message}");
 
-            }
+        //    }
 
 
-            return null;
+        //    return null;
         
-        }
+        //}
 
 
         //public async Task<List<PesquisaExpedicao>> PesquisaExpedicao(EtiquetasTiny etiquetas)

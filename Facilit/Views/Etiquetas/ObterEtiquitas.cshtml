@@ -14,32 +14,31 @@
             @Html.AntiForgeryToken()
 
             <div class="form-horizontal">
-       
+
                 <hr />
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.id_expedicao, "Informe o ID da expedição:", htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.id_expedicao, "Digite ID da expedição:", htmlAttributes: new { @class = "col-md-2 col-form-label text-nowrap" })
                     <div class="col-md-10">
                         @Html.EditorFor(model => model.id_expedicao, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.id_expedicao, "", new { @class = "text-danger" })
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group mt-3">
                     <div class="col-md-offset-2 col-md-10">
-                       
+
                     </div>
                 </div>
             </div>
         }
-    <div>
-        <input type="submit" value="Ober etiquetas" class="btn btn-primary" />
-        @Html.ActionLink("VOLTAR", "Registro", "Webcan", null, new { @class = "btn btn-secondary" })
-    </div>
+        <!--<div class="mt-3">-->
+            @*@*@<!--*@Html.ActionLink("Obter Etiquetas", "ObterLinkEtiquita", "Etiquetas", null, new { @class = "btn btn-primary me-2" })*
+  
+        </div>-->
     </div>
 
     <div class="col-md-4">
-    
         <img src="~/imagens/notas.png" alt="Exemplo de Etiqueta de Código de Barras" class="img-responsive w-100" />
     </div>
 </div>

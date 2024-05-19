@@ -16,23 +16,23 @@ namespace Facilit.Controllers
         {
             return View();
         }
-        public async Task<ActionResult> ObterLinkEtiquita(EtiquetasTiny tiny)
-        {
-            var TinyApi = new RetornoTinyApi();
+        //public async Task<ActionResult> ObterLinkEtiquita(EtiquetasTiny tiny)
+        //{
+        //    var TinyApi = new RetornoTinyApi();
       
-            string link = await TinyApi.ObterEtiqueta(tiny);
+        //    string link = await TinyApi.ObterEtiqueta(tiny);
 
-            if (!string.IsNullOrEmpty(link))
-            {
+        //    if (!string.IsNullOrEmpty(link))
+        //    {
 
-                return Redirect(link);
-            }
-            else
-            {
+        //        return Redirect(link);
+        //    }
+        //    else
+        //    {
 
-                return View("Error");
-            }
-        }
+        //        return View("Error");
+        //    }
+        //}
 
         //public async Task<ActionResult> ObterExpedicao(EtiquetasTiny etiquetas)
         //{

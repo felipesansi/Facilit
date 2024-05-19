@@ -23,7 +23,10 @@ namespace Facilit.Controllers
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";
+            ViewBag.MostrarHome = true;
             ViewBag.MostrarBotoes = true;
+            ViewBag.MostrarContato = false;
+            ViewBag.MostrarLogin = true;
             return View();
         }
     }

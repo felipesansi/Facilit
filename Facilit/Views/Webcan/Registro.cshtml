@@ -1,5 +1,4 @@
-﻿@model Facilit.Models.Usuario
-@{
+﻿@{
     ViewBag.Title = "Registro";
 }
 
@@ -10,55 +9,92 @@
     </div>
 }
 
-<script src="~/Scripts/Mensagem.js"></script>
+<script>
+    setTimeout(function () {
+        var caixa_mensagem = document.getElementById('mensagem');
+        if (caixa_mensagem) {
+            caixa_mensagem.style.display = 'none';
+        }
+    }, 2000);
+</script>
+
+<style>
+    .teste {
+        display: none;
+    }
+
+    .titulo { /* titulo*/
+
+        display: flex;
+        margin-left: 170px;
+        padding-bottom: 20px
+    }
+
+    .center-text {
+        text-align: center;
+    }
+
+    .center-content {
+        display: flex;
+        justify-content: center;
+    }
+
+    .center-webcam {
+        display: block;
+        margin: 0 auto;
+        padding-bottom: 20px; /* Ajuste conforme necessário */
+    }
+
+    .center-left {
+        display: block;
+        margin: 0 auto;
+        position: relative;
+        left: -100px; /* Ajuste o valor conforme necessário */
+        padding-bottom: 20px;
+    }
+
+
+</style>
 
 <div class="container">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
     <div class="row">
         <div class="col-md-3">
-            <nav class="list-group bg-secondary" style="height:75%;">
-                <button id="btn_salvar" class="btn btn-primary mb-2 mt-8 rounded">
-                    <i class="fas fa-camera"></i> Tirar e salvar foto
-                </button>
-                <div class="btn-group-vertical">
-                    <a href="@Url.Action("Gerador_pdf", "Webcan")" class="btn btn-success mb-2 rounded">
-                        <i class="fas fa-file-pdf"></i> Gerar PDF
-                    </a>
-                    <a href="@Url.Action("Notas", "Notas_tiny")" class="btn btn-info mb-2 rounded">
-                        <i class="fas fa-search"></i> Pesquisar notas
-                    </a>
-                    <a href="@Url.Action("ObterEtiquitas", "Etiquetas")" class="btn btn-info mb-2 rounded">
-                        <i class="fas fa-tags"></i> Pesquisar etiquetas
-                    </a>
-                </div>
-            </nav>
+            <div class="list-group bg-primary">
+                <a href="https://erp.tiny.com.br/separacao" class="list-group-item list-group-item-action list-group-item-info" target="_blank">Imprimir etiquetas</a>
+                <button id="btn_salvar" class="list-group-item list-group-item-action list-group-item-success">Tirar e salvar foto</button>
+                <a href="https://drive.google.com/drive/my-drive?hl=pt-br" class="list-group-item list-group-item-action list-group-item-warning" target="_blank">Acessar Google Drive</a>
+                @Html.ActionLink("Gerar PDF", "Gerador_pdf", "Webcan", null, new { @class = "list-group-item list-group-item-action list-group-item-secondary" })
+                @Html.ActionLink("Obter nota específica", "Notas", "Notas_tiny", null, new { @class = "list-group-item list-group-item-action list-group-item-secondary", id = "notaLink" })
+                @*@Html.ActionLink("Obter etiqueta específica", "ObterEtiquitas", "Etiquetas", null, new { @class = "list-group-item list-group-item-action list-group-item-secondary", id = "etiquetaLink" })*@
 
+                <script>
+                    document.getElementById("notaLink").setAttribute("target", "_blank");
+                    document.getElementById("etiquetaLink").setAttribute("target", "_blank");
+                </script>
 
-
-
-
+            </div>
 
         </div>
-        <div class="col-md-9">
-            <h1 class="text-center mb-4">Tire sua Fotografia</h1>
+        <div class="col-md-8">
+            <h1 class="titulo">Tire sua fotografia</h1>
 
             <div class="row">
                 <div class="col-md-6">
                     <h6>Produtos</h6>
                     <input type="text" id="searchProdutos" class="form-control" placeholder="Pesquisar produtos...">
-                    @Html.DropDownList("Produtos", ViewBag.listaProdutos as SelectList, "-- Selecione aqui o Produto", htmlAttributes: new { @class = "form-control", @id = "drop_produtos" })
+                    @Html.DropDownList("Produtos", ViewBag.listaProdutos as SelectList, "-- Selecione aqui o Produto", htmlAttributes: new { @class = "form-control teste", @id = "drop_produtos" })
                 </div>
                 <div class="col-md-6">
                     <h6>Clientes</h6>
                     <input type="text" id="searchClientes" class="form-control" placeholder="Pesquisar clientes...">
-                    @Html.DropDownList("Clientes", ViewBag.listarClientes as SelectList, "-- Selecione aqui o Cliente", htmlAttributes: new { @class = "form-control", @id = "drop_clientes" })
+                    @Html.DropDownList("Clientes", ViewBag.listarClientes as SelectList, "-- Selecione aqui o Cliente", htmlAttributes: new { @class = "form-control teste", @id = "drop_clientes" })
                 </div>
             </div>
 
             <div class="row justify-content-center mt-4">
-                <div class="col-md-8">
-                    <video class="img-fluid" autoplay></video>
+                <div class="col-md-10">
+                    @*aumentei a câmera*@
+                    <video class="img-fluid center-left" autoplay></video>
                 </div>
             </div>
             <div class="row justify-content-center mt-2">
@@ -81,6 +117,7 @@
                         $(this).hide();
                     } else {
                         $(this).show();
+                        $('#drop_produtos').addClass('teste').css('display', 'block');
                     }
                 });
             });
@@ -92,6 +129,7 @@
                         $(this).hide();
                     } else {
                         $(this).show();
+                        $('#drop_clientes').addClass('teste').css('display', 'block');
                     }
                 });
             });

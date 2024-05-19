@@ -18,6 +18,11 @@ namespace Facilit.Controllers
                 Session.Clear();
             }
             ViewBag.MostrarBotoes = true;
+            ViewBag.MostrarHome = true;
+            ViewBag.MostrarLogin = false;
+
+            ViewBag.MostrarContato = true;
+
             return View();
         }
 
@@ -336,8 +341,14 @@ namespace Facilit.Controllers
 
         public ActionResult Cadastro()
         {
+            if (Session["logado"] != null)
+            {
+                Session.Clear();
+            }
+            ViewBag.MostrarHome = true;
+            ViewBag.MostrarBotoes = false;
+            ViewBag.MostrarLogin = true;
 
-            ViewBag.MostrarBotoes = true;
             return View();
         }
 
@@ -656,14 +667,13 @@ namespace Facilit.Controllers
                             SalvarToken(email, token);
 
                             string link_nova_senha = Url.Action("NovaSenha", "Usuario", new { token = token }, Request.Url.Scheme);
-                            string corpo = "Prezado " + nome + "," +
-                                "\n\n nome de Usuário: " + nome_usuario +
-                                "\n\nEspero que esteja bem." +
-                                " \n\nEstamos entrando em contato porque foi solicitada uma recuperação de senha para a sua conta." +
-                                " \n\nPor favor, siga o link abaixo para redefinir sua senha:  " + link_nova_senha +
-                                "\n\nEste link tem a duração de  1  HORA.\b\b\n\n você não solicitou esta recuperação ou se precisar de assistência adicional, " +
-                                "não hesite em nos contatar imediatamente. Agradecemos sua atenção e cooperação. \n\nAtenciosamente, Felipe F. " +
-                                "\n\n Facilit";
+                            string corpo = "Prezado(a) " + nome + "," +
+                                "\n\nEspero que esteja bem!" +
+                                "\n\nNome de usuário: " + nome_usuario + "." +
+                                " \n\nEstamos entrando em contato, pois uma recuperação de senha foi solicitada." +
+                                " \n\nPor favor, siga o link abaixo para redefinir sua senha: " + link_nova_senha +
+                                "\n\nEste link tem a duração de uma hora.\b\b\n\nCaso não tenha solicitado essa recuperação, entre em contato conosco. " +
+                                "\n\nAtenciosamente, Equipe Facilit.";
 
 
 

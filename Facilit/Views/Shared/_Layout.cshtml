@@ -3,7 +3,8 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" cont
+          ent="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Sistema Facilit</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
@@ -36,17 +37,49 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                        <li>@Html.ActionLink("Contato", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                        @if (ViewBag.MostrarBotoes == true)
-                        {
-                            <ul class="navbar-nav ml-auto">
-                                <li>@Html.ActionLink("Cadastre-se", "Cadastro", "Usuario", new { area = "" }, new { @class = "nav-link" })</li>
-                                <li>@Html.ActionLink("Login", "Index", "Usuario", new { area = "" }, new { @class = "nav-link" })</li>
-                            </ul>
-                        }
-                    </ul>
+
+                    @if (ViewBag.MostrarHome == true)
+                    {
+                        <ul class="navbar-nav ml-auto">
+                            <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+                        </ul>
+                    }
+
+                <ul class="navbar-nav flex-grow-1">
+
+
+                    @if (ViewBag.MostrarContato == true)
+                    {
+                        <ul class="navbar-nav ml-auto">
+
+                            <li>@Html.ActionLink("Contato", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+
+
+                        </ul>
+                    }
+          
+
+
+
+                    @if (ViewBag.MostrarBotoes == true)
+                    {
+                        <ul class="navbar-nav ml-auto">
+
+                            <li>@Html.ActionLink("Cadastre-se", "Cadastro", "Usuario", new { area = "" }, new { @class = "nav-link" })</li>
+
+
+                        </ul>
+                    }
+                    @if (ViewBag.MostrarLogin == true)
+                    {
+                        <ul class="navbar-nav ml-auto">
+
+
+                            <li>@Html.ActionLink("Login", "Index", "Usuario", new { area = "" }, new { @class = "nav-link" })</li>
+
+                        </ul>
+                    }
+                </ul>
                     @if (Session["logado"] != null && (bool)Session["logado"])
                     {
                         <ul class="navbar-nav">
@@ -58,16 +91,13 @@
                                     <p class="dropdown-item">@Session["email"]</p>
 
                                     <form id="logoutForm" action="@Url.Action("Perfis_usuario", "Usuario")" method="post">
-                                        <button type="submit" class="dropdown-item">Ver perfis</button>
+                                        <button type="submit" class="dropdown-item">Ver e atualizar dados dos perfis</button>
                                     </form>
 
                                     <form id="logoutForm" action="@Url.Action("Logout", "Usuario")" method="post">
                                         <button type="submit" class="dropdown-item">Encerrar sessão</button>
                                     </form>
 
-                                    <form id="logoutForm" action="@Url.Action("Atualizar_Dados", "Webcan")" method="post">
-                                        <button type="submit" class="dropdown-item">Atualizar dados</button>
-                                    </form>
                                 </div>
                             </li>
                         </ul>
