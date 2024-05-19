@@ -42,14 +42,14 @@
     .center-webcam {
         display: block;
         margin: 0 auto;
-        padding-bottom: 20px; /* Ajuste conforme necessário */
+        padding-bottom: 20px;
     }
 
     .center-left {
         display: block;
         margin: 0 auto;
         position: relative;
-        left: auto; /* Ajuste o valor conforme necessário */
+        left: -100px; 
         padding-bottom: 20px;
     }
 
@@ -65,7 +65,7 @@
                 <a href="https://drive.google.com/drive/my-drive?hl=pt-br" class="list-group-item list-group-item-action list-group-item-warning" target="_blank">Acessar Google Drive</a>
                 @Html.ActionLink("Gerar PDF", "Gerador_pdf", "Webcan", null, new { @class = "list-group-item list-group-item-action list-group-item-secondary" })
                 @Html.ActionLink("Obter nota específica", "Notas", "Notas_tiny", null, new { @class = "list-group-item list-group-item-action list-group-item-secondary", id = "notaLink" })
-                @*@Html.ActionLink("Obter etiqueta específica", "ObterEtiquitas", "Etiquetas", null, new { @class = "list-group-item list-group-item-action list-group-item-secondary", id = "etiquetaLink" })*@
+             
 
                 <script>
                     document.getElementById("notaLink").setAttribute("target", "_blank");
@@ -82,7 +82,7 @@
                 <div class="col-md-6">
                     <h6>Produtos</h6>
                     <input type="text" id="searchProdutos" class="form-control" placeholder="Pesquisar produtos...">
-               A     @Html.DropDownList("Produtos", ViewBag.listaProdutos as SelectList, "-- Selecione aqui o Produto", htmlAttributes: new { @class = "form-control teste", @id = "drop_produtos" })
+                   @Html.DropDownList("Produtos", ViewBag.listaProdutos as SelectList, "-- Selecione aqui o Produto", htmlAttributes: new { @class = "form-control teste", @id = "drop_produtos" })
                 </div>
                 <div class="col-md-6">
                     <h6>Clientes</h6>
