@@ -10,11 +10,11 @@ namespace Facilit.Models
     {
       public MySqlConnection _conn;
 
-        private readonly string _server = "127.0.0.1";
+        private readonly string _server = "server-facilit.mysql.database.azure.com";
         private readonly string _port = "3306";
         private readonly string _database = "bd_facilit";
-        private readonly string _uid = "root";
-        private readonly string _pwd = "felipe123";
+        private readonly string _uid = "Felipe";
+        private readonly string _pwd = "facilit27@";
 
         public Conexao()
         {
