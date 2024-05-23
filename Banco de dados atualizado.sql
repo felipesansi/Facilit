@@ -15,18 +15,30 @@ CREATE TABLE IF NOT EXISTS tb_usuarios
     token VARCHAR(255) NULL,
    token_expiracao DATETIME NULL
 );
-CREATE TABLE `bd_facilit`.`tb_fotos`
+CREATE TABLE tb_fotos
  (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `id_usuario` INT NOT NULL,
-  `nome_produto` VARCHAR(255) NULL,
-  `nome_cliente` VARCHAR(255) NULL,
-  `data_tirada` DATETIME NOT NULL,
-  `link_foto` VARCHAR(255)  NULL,
+  id INT NOT NULL AUTO_INCREMENT,
+  id_usuario INT NOT NULL,
+  nome_produto VARCHAR(255) NULL,
+  nome_cliente VARCHAR(255) NULL,
+  data_tirada DATETIME NOT NULL,
+  link_foto VARCHAR(255)  NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_usuario_idx` (`id_usuario` ASC) VISIBLE,
   CONSTRAINT `fk_usuario`
     FOREIGN KEY (`id_usuario`)
     REFERENCES `bd_facilit`.`tb_usuarios` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
+   );
+   create table tb_produtos(
+     id int primary key auto_increment,
+     codigo_tiny_produto int,
+     descricao varchar(255),
+     unidade varchar(255),
+     data_atualizacao_produto datetime
+   );
+create table tb_clientes(
+id int primary key auto_increment,
+codigo_tiny_cliente int,
+nome varchar(255),
+data_atualizacao_cliente datetime
+);
