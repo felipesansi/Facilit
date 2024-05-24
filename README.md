@@ -1,5 +1,6 @@
 <H1>Projeto TCC - Unifaat 2024</H1>
-# Sistema Facilit
+
+##Sistema Facilit
 
 ## Visão Geral
 O Sistema Facilit é uma aplicação que gerencia a interação com produtos e clientes, permite a captura de fotos e a geração de relatórios em PDF, além de gerenciar a exibição e consulta de notas fiscais.
