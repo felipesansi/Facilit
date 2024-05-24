@@ -1,6 +1,5 @@
 <H1>Projeto TCC - Unifaat 2024</H1>
 
-##Sistema Facilit
 
 ## Visão Geral
 O Sistema Facilit é uma aplicação que gerencia a interação com produtos e clientes, permite a captura de fotos e a geração de relatórios em PDF, além de gerenciar a exibição e consulta de notas fiscais.
@@ -63,6 +62,3 @@ A aplicação se integra com a API TinyERP para buscar dados relevantes de produ
 - Utilize as funcionalidades de registro de produtos, clientes e captura de fotos.
 - Gere relatórios em PDF com base nos dados capturados.
 - Consulte notas fiscais através da integração com a API TinyERP.
-
-## Licença
-Este projeto é licenciado sob os termos da licença MIT.
