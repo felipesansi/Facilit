@@ -7,10 +7,25 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .btn-whatsapp img {
+        .btn-whatsapp img 
+        {
             width: 30px;
             height: 30px;
         }
+        .titulo{
+            margin-bottom:70px ;
+        }
+        .resumo{
+            text-align:justify;
+                margin:44px;
+                line-height:35px;
+        }
+        .desenvolvedor{
+
+            margin-bottom:30px
+        }
+      
+     
     </style>
     @{
         ViewBag.title = "Contatos";
@@ -21,12 +36,12 @@
 
     <section class="sobre py-5">
         <div class="container text-center">
-            <h2>Sobre nós</h2>
+            <h2 class="titulo">Sobre nós</h2>
             <div class="row mt-4">
-                <div class="col-md-6">
+                <div class="col-md-6 " >
 
-                    <h4>Felipe Freitas</h4>
-                    <p>
+                    <h4 class="desenvolvedor">Felipe Freitas</h4>
+                    <p class="resumo">
                         Desenvolvedor Front-End, formado em Análise e Desenvolvimento de Sistemas, especializado em C#.
                         Possui conhecimentos intermediários em HTML, CSS, ASP.NET MVC, React Native e MySQL.
                         Apaixonado por tecnologia e comprometido com a excelência, desenvolve soluções inovadoras e de alta qualidade.
@@ -34,8 +49,8 @@
                 </div>
                 <div class="col-md-6">
 
-                    <h4>Matheus Pinheiro</h4>
-                    <p>
+                    <h4 class="desenvolvedor">Matheus Pinheiro</h4>
+                    <p class="resumo">
                         Desenvolvedor Full-Stack, formado em Análise e Desenvolvimento de Sistemas, especializado em C#.
                         Possui conhecimentos intermediários em ASP.NET MVC, HTML, CSS, SQL e Bootstrap.
                         Especialista em E-Commerce e Marketplace, realiza gestão de clientes e equipes, além de desenvolver anúncios criativos, descrições, e sites para E-Commerce.
@@ -66,6 +81,6 @@
         </a>
     </div>
 
-    <script src="script.js"></script>
+   
 </body>
 </html>

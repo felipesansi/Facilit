@@ -9,15 +9,8 @@
     </div>
 }
 
-<script>
-    setTimeout(function () {
-        var caixa_mensagem = document.getElementById('mensagem');
-        if (caixa_mensagem) {
-            caixa_mensagem.style.display = 'none';
-        }
-    }, 2000);
-</script>
-
+<script src="~/Scripts/Mensagem.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
 <style>
     .teste {
         display: none;
@@ -49,7 +42,7 @@
         display: block;
         margin: 0 auto;
         position: relative;
-        left: -100px; 
+        left:  auto;  /*-100px;*/
         padding-bottom: 20px;
     }
 
@@ -60,17 +53,27 @@
     <div class="row">
         <div class="col-md-3">
             <div class="list-group bg-primary">
-                <a href="https://erp.tiny.com.br/separacao" class="list-group-item list-group-item-action list-group-item-info" target="_blank">Imprimir etiquetas</a>
-                <button id="btn_salvar" class="list-group-item list-group-item-action list-group-item-success">Tirar e salvar foto</button>
-                <a href="https://drive.google.com/drive/my-drive?hl=pt-br" class="list-group-item list-group-item-action list-group-item-warning" target="_blank">Acessar Google Drive</a>
-                @Html.ActionLink("Gerar PDF", "Gerador_pdf", "Webcan", null, new { @class = "list-group-item list-group-item-action list-group-item-secondary" })
-                @Html.ActionLink("Obter nota específica", "Notas", "Notas_tiny", null, new { @class = "list-group-item list-group-item-action list-group-item-secondary", id = "notaLink" })
-             
-
+        
+                    <a href="https://erp.tiny.com.br/separacao" class="list-group-item list-group-item-action list-group-item-info" target="_blank">
+                        <i class="fas fa-print"></i> Imprimir etiquetas
+                    </a>
+                    <button id="btn_salvar" class="list-group-item list-group-item-action list-group-item-success">
+                        <i class="fas fa-camera"></i> Tirar e salvar foto
+                    </button>
+                    <a href="https://drive.google.com/drive/my-drive?hl=pt-br" class="list-group-item list-group-item-action list-group-item-warning" target="_blank">
+                        <i class="fas fa-cloud"></i> Acessar Google Drive
+                    </a>
+                    <a href="@Url.Action("Gerador_pdf", "Webcan")" class="list-group-item list-group-item-action list-group-item-secondary">
+                        <i class="fas fa-file-pdf"></i> Gerar PDF
+                    </a>
+                    <a href="@Url.Action("Notas", "Notas_tiny")" class="list-group-item list-group-item-action list-group-item-secondary" id="notaLink">
+                        <i class="fas fa-sticky-note"></i> Obter nota específica
+                    </a>
+                    
                 <script>
-                    document.getElementById("notaLink").setAttribute("target", "_blank");
-                    document.getElementById("etiquetaLink").setAttribute("target", "_blank");
-                </script>
+                        document.getElementById("notaLink").setAttribute("target", "_blank");
+                        document.getElementById("etiquetaLink").setAttribute("target", "_blank");
+                    </script>
 
             </div>
 
