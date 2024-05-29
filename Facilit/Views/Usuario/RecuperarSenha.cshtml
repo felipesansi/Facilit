@@ -19,7 +19,7 @@
 <header>
     <link rel="stylesheet"href="~/Scripts/Estilo.css"/>
 </header>
-<h2>Recuperar Senha</h2>
+<h2 class="fonte_normal">Recuperar Senha</h2>
 
 @using (Html.BeginForm("EnviarEmail", "Usuario"))
 {
@@ -31,10 +31,10 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
     </div>
-    <h4>Informe o E-mail Cadastrado</h4>
+    <h4 class="fonte_normal">Informe o E-mail Cadastrado</h4>
     <br />
     <div class="form-group">
-        @Html.LabelFor(model => model.Email, "E-mail:", htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.Email, "E-mail:", htmlAttributes: new { @class = "fonte_leve" })
         <div class="col-md-10">
             @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "campo", placeholder = "Seu e-mail" } })
             @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })

@@ -54,19 +54,19 @@
         <div class="col-md-3">
             <div class="list-group bg-primary">
         
-                    <a href="https://erp.tiny.com.br/separacao" class="list-group-item list-group-item-action list-group-item-info" target="_blank">
+                    <a href="https://erp.tiny.com.br/separacao" class="list-group-item list-group-item-action list-group-item-info fonte_bolder" target="_blank">
                         <i class="fas fa-print"></i> Imprimir etiquetas
                     </a>
-                    <button id="btn_salvar" class="list-group-item list-group-item-action list-group-item-success">
+                    <button id="btn_salvar" class="list-group-item list-group-item-action list-group-item-success fonte_bolder ">
                         <i class="fas fa-camera"></i> Tirar e salvar foto
                     </button>
-                    <a href="https://drive.google.com/drive/my-drive?hl=pt-br" class="list-group-item list-group-item-action list-group-item-warning" target="_blank">
+                    <a href="https://drive.google.com/drive/my-drive?hl=pt-br" class="list-group-item list-group-item-action list-group-item-warning fonte_bolder" target="_blank">
                         <i class="fas fa-cloud"></i> Acessar Google Drive
                     </a>
-                    <a href="@Url.Action("Gerador_pdf", "Webcan")" class="list-group-item list-group-item-action list-group-item-secondary">
+                    <a href="@Url.Action("Gerador_pdf", "Webcan")" class="list-group-item list-group-item-action list-group-item-secondary fonte_bolder">
                         <i class="fas fa-file-pdf"></i> Gerar PDF
                     </a>
-                    <a href="@Url.Action("Notas", "Notas_tiny")" class="list-group-item list-group-item-action list-group-item-secondary" id="notaLink">
+                    <a href="@Url.Action("Notas", "Notas_tiny")" class="list-group-item list-group-item-action list-group-item-secondary fonte_bolder" id="notaLink">
                         <i class="fas fa-sticky-note"></i> Obter nota específica
                     </a>
                     
@@ -79,16 +79,16 @@
 
         </div>
         <div class="col-md-8">
-            <h1 class="titulo">Tire sua fotografia</h1>
+            <h1 class="titulo fonte_bolder">Tire sua fotografia</h1>
 
             <div class="row">
                 <div class="col-md-6">
-                    <h6>Produtos</h6>
+                    <h6 class="fonte_leve">Produtos</h6>
                     <input type="text" id="searchProdutos" class="form-control" placeholder="Pesquisar produtos...">
                    @Html.DropDownList("Produtos", ViewBag.listaProdutos as SelectList, "-- Selecione aqui o Produto", htmlAttributes: new { @class = "form-control teste", @id = "drop_produtos" })
                 </div>
                 <div class="col-md-6">
-                    <h6>Clientes</h6>
+                    <h6 class="fonte_leve">Clientes</h6>
                     <input type="text" id="searchClientes" class="form-control" placeholder="Pesquisar clientes...">
                     @Html.DropDownList("Clientes", ViewBag.listarClientes as SelectList, "-- Selecione aqui o Cliente", htmlAttributes: new { @class = "form-control teste", @id = "drop_clientes" })
                 </div>

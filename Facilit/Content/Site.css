@@ -99,3 +99,17 @@ textarea {
     border-radius: 30px;
     text-align: center;
 }
+.fonte_normal {
+    font-size: 27px !important;
+    font-weight: normal;
+    line-height: 43px
+}
+.fonte_bolder {
+    font-size: 27px !important;
+    font-weight: bolder;
+}
+.fonte_leve {
+    font-size: 27px !important;
+    font-weight: 200;
+ 
+}

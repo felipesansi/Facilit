@@ -32,26 +32,26 @@
         <hr />
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Email, "E-mail:", htmlAttributes: new { @class = "control-label col-md-6" })
+            @Html.LabelFor(model => model.Email, "E-mail:", htmlAttributes: new { @class = "fonte_leve" })
             <div class="col-md-6">
-                @Html.EditorFor(model => model.Email,  new { htmlAttributes = new { @class = "form-control", placeholder = "falano@gmail.com" } })
+                @Html.EditorFor(model => model.Email,  new { htmlAttributes = new { @class = "campo", placeholder = "falano@gmail.com" } })
                 @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Senha_Usuario, "Nova Senha:",htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Senha_Usuario, "Nova Senha:",htmlAttributes: new { @class = "fonte_leve" })
             <div class="col-10">
-                @Html.PasswordFor(model => model.Senha_Usuario, new { htmlAttributes = new { @class = "form-control", placeholder = "Nova senha" } })
+                @Html.PasswordFor(model => model.Senha_Usuario, new { @class = "campo", placeholder = "Sua senha" })
                 @Html.ValidationMessageFor(model => model.Senha_Usuario, "", new { @class = "text-danger" })
 
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Confirmar_Senha,"Confirmar Senha:", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Confirmar_Senha,"Confirmar Senha:", htmlAttributes: new { @class = "fonte_leve" })
             <div class="col-10">
-                @Html.PasswordFor(model => model.Confirmar_Senha, new { htmlAttributes = new { @class = "form-control", placeholder = "Confimar Senha" } })
+                @Html.PasswordFor(model => model.Confirmar_Senha, new { @class = "campo", placeholder = " Confirmar Sua senha" })
                 @Html.ValidationMessageFor(model => model.Confirmar_Senha, "", new { @class = "text-danger" })
             </div>
         </div>

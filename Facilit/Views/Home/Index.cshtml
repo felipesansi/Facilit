@@ -86,8 +86,8 @@
         <div class="img-container">
             <img src="~/imagens/imagem_pc.jpg" alt="imagem de um computador" class="img-home">
             <div class="img-overlay">
-                <h1 class="text-light custom-text">Olá, bem-vindo(a) ao Sistema Facilit</h1>
-                <p class="text-light custom-text-small">O sistema que facilita sua vida</p>
+                <h1 class="text-light custom-text fonte_bolder">Olá, bem-vindo(a) ao Sistema Facilit</h1>
+                <p class="text-light custom-text-small fonte_leve">O sistema que facilita sua vida</p>
                 <a href="@Url.Action("Cadastro", "Usuario")" class="btn btn-primary">Cadastre-se</a>
                 @Html.ActionLink("Login", "Index", "Usuario", null, new { @class = "btn btn-success" })
             </div>
@@ -97,7 +97,7 @@
 
 <section class="row section-padding">
     <div class="col-md-6">
-        <p style="padding-left:40px;margin-right:62px;text-align:justify;line-height:33px;">
+        <p style="padding-left:40px;margin-right:62px;text-align:justify;line-height:33px;" class="fonte_leve">
             Nosso sistema oferece solução completa para gerenciar fotos na nuvem, com armazenamento seguro e acessível.
             Emitimos PDFs personalizados, simplificando impressões de notas fiscais e etiquetas.
             Constantemente aprimorado com feedback dos usuários, refletindo nosso compromisso em fornecer o melhor serviço.
@@ -111,18 +111,18 @@
     </div>
 </section>
 
-<h1 class="text-center section-padding">Recursos</h1>
+<h1 class="text-center section-padding fonte_normal" >Recursos</h1>
 <section class="ferramentas">
     <div>
         <img src="~/imagens/camera_video_icon.png" alt="Ícone de câmera">
-        <p>Captura de fotos & <br> armazenamentos na nuvem.</p>
+        <p class="fonte_normal">Captura de fotos & <br> armazenamentos na nuvem.</p>
     </div>
     <div>
         <img src="~/imagens/icon-tiny.png" alt="Ícone do erp tiny">
-        <p>Integrações com ERP tiny.</p>
+        <p class="fonte_normal">Integrações com ERP tiny.</p>
     </div>
     <div>
         <img src="~/imagens/icon_aquivos.png" alt="Ícone de PDF">
-        <p>Emissão de PDF com dados recentes.</p>
+        <p class="fonte_normal">Emissão de PDF com dados recentes.</p>
     </div>
 </section>

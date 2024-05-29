@@ -3,7 +3,8 @@
 @{
     ViewBag.Title = "_Frmlogin";
 }
-
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+<script src="~/Scripts/mostrar_senha.js"></script>
 <div class="container">
     <div class="row">
         <div class="col-md-6">
@@ -13,23 +14,23 @@
                 <hr />
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Nome_completo, "Nome completo:", htmlAttributes: new { @class = "control-label col-md-6" })
+                    @Html.LabelFor(model => model.Nome_completo, "Nome completo:", htmlAttributes: new { @class = "fonte_leve" })
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.Nome_completo, new { htmlAttributes = new { @class = "campo" ,placeholder ="Seu nome" } })
+                        @Html.EditorFor(model => model.Nome_completo, new { htmlAttributes = new { @class = "campo", placeholder = "Seu nome" } })
                         @Html.ValidationMessageFor(model => model.Nome_completo, "", new { @class = "text-danger" })
                     </div>
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Email, "E-mail:", htmlAttributes: new { @class = "control-label col-md-6" })
+                    @Html.LabelFor(model => model.Email, "E-mail:", htmlAttributes: new { @class = "fonte_leve" })
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "campo" ,placeholder = "Seu email" } })
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "campo", placeholder = "Seu email" } })
                         @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
                     </div>
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Nome_Usuario, "Nome de usuário:", htmlAttributes: new { @class = "control-label col-md-6" })
+                    @Html.LabelFor(model => model.Nome_Usuario, "Nome de usuário:", htmlAttributes: new { @class = "fonte_leve" })
                     <div class="col-md-10">
                         @Html.EditorFor(model => model.Nome_Usuario, new { htmlAttributes = new { @class = "campo", placeholder = "Nome de usuário" } })
                         @Html.ValidationMessageFor(model => model.Nome_Usuario, "", new { @class = "text-danger" })
@@ -37,9 +38,12 @@
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Senha_Usuario, "Senha:", htmlAttributes: new { @class = "control-label col-md-6" })
+                    @Html.LabelFor(model => model.Senha_Usuario, "Senha:", htmlAttributes: new { @class = "fonte_leve" })
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.Senha_Usuario, new { htmlAttributes = new { @class = "campo", placeholder = "Sua senha"} })
+                        @Html.PasswordFor(model => model.Senha_Usuario, new { @class = "campo", placeholder = "Sua senha" })
+                        <button type="button" class="btn btn-secondary" onclick="mostrarSenha()">
+                            <i id="iconeSenha" class="fas fa-eye"></i>
+                        </button>
                         @Html.ValidationMessageFor(model => model.Senha_Usuario, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -47,14 +51,14 @@
             </div>
 
         </div>
-      
+
         <div class="col-md-6 text-right">
             <img src="~/imagens/Cadastro.png" alt="Imagem ilústrativa de cadastro" class="img-fluid" />
         </div>
 
     </div>
-        </div>
-    
+</div>
+
 
 
 
