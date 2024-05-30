@@ -3,13 +3,11 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
-    <meta name="viewport" cont
-          ent="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Sistema Facilit</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
-
 <body>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -37,7 +35,6 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
-
                     @if (ViewBag.MostrarHome == true)
                     {
                         <ul class="navbar-nav ml-auto">
@@ -45,41 +42,29 @@
                         </ul>
                     }
 
-                <ul class="navbar-nav flex-grow-1">
+                    <ul class="navbar-nav flex-grow-1">
+                        @if (ViewBag.MostrarContato == true)
+                        {
+                            <ul class="navbar-nav ml-auto">
+                                <li>@Html.ActionLink("Contato", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+                            </ul>
+                        }
 
+                        @if (ViewBag.MostrarBotoes == true)
+                        {
+                            <ul class="navbar-nav ml-auto">
+                                <li>@Html.ActionLink("Cadastre-se", "Cadastro", "Usuario", new { area = "" }, new { @class = "nav-link" })</li>
+                            </ul>
+                        }
 
-                    @if (ViewBag.MostrarContato == true)
-                    {
-                        <ul class="navbar-nav ml-auto">
+                        @if (ViewBag.MostrarLogin == true)
+                        {
+                            <ul class="navbar-nav ml-auto">
+                                <li>@Html.ActionLink("Login", "Index", "Usuario", new { area = "" }, new { @class = "nav-link" })</li>
+                            </ul>
+                        }
+                    </ul>
 
-                            <li>@Html.ActionLink("Contato", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-
-
-                        </ul>
-                    }
-          
-
-
-
-                    @if (ViewBag.MostrarBotoes == true)
-                    {
-                        <ul class="navbar-nav ml-auto">
-
-                            <li>@Html.ActionLink("Cadastre-se", "Cadastro", "Usuario", new { area = "" }, new { @class = "nav-link" })</li>
-
-
-                        </ul>
-                    }
-                    @if (ViewBag.MostrarLogin == true)
-                    {
-                        <ul class="navbar-nav ml-auto">
-
-
-                            <li>@Html.ActionLink("Login", "Index", "Usuario", new { area = "" }, new { @class = "nav-link" })</li>
-
-                        </ul>
-                    }
-                </ul>
                     @if (Session["logado"] != null && (bool)Session["logado"])
                     {
                         <ul class="navbar-nav">
@@ -87,17 +72,14 @@
                                 <button class="btn btn-primary dropdown-toggle" type="button" id="usuarioDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     @Session["nome"]
                                 </button>
-                                <div class="dropdown-menu" aria-labelledby="usuarioDropdown">
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="usuarioDropdown">
                                     <p class="dropdown-item">@Session["email"]</p>
-
-                                    <form id="logoutForm" action="@Url.Action("Perfis_usuario", "Usuario")" method="post">
+                                    <form id="perfilForm" action="@Url.Action("Perfis_usuario", "Usuario")" method="post">
                                         <button type="submit" class="dropdown-item">Ver e atualizar dados dos perfis</button>
                                     </form>
-
                                     <form id="logoutForm" action="@Url.Action("Logout", "Usuario")" method="post">
                                         <button type="submit" class="dropdown-item">Encerrar sessão</button>
                                     </form>
-
                                 </div>
                             </li>
                         </ul>
