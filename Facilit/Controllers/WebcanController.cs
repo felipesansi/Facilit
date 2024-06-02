@@ -25,8 +25,8 @@ namespace Facilit.Controllers
         string tokenTiny = "02011b49e5399d62d999007a8952642c85cca50bc310b49fdd6c3674fdff4b2a";
         string mensagem;
         int usuario_id;
-        static string[] Scopes = { DriveService.Scope.DriveFile };
-        static string ApplicationName = "facilit";
+        static string[] escopo = { DriveService.Scope.DriveFile };
+        static string nomeApp = "facilit";
 
         public async Task Verificar_produtos()
         {
@@ -158,31 +158,31 @@ namespace Facilit.Controllers
                 byte[] vet_bytes = Convert.FromBase64String(dados_imagem);
 
                 
-                var clientSecrets = new ClientSecrets
+                var chave_secreta_cliente = new ClientSecrets
                 {
                     ClientId = "522323830839-ipd9htma7tcogfgjvna23kepp87tql30.apps.googleusercontent.com",
                     ClientSecret = "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"
                 };
 
-                UserCredential credential;
+                UserCredential credencial;
                 using (var stream = new MemoryStream())
                 {
-                    var tokenResponse = new TokenResponse
+                    var tokenResposta = new TokenResponse
                     {
                         RefreshToken = "1//04Od3Akb3yYrVCgYIARAAGAQSNwF-L9IrgII0Q6XgFGl-_Sz5THPZX039VaRgUjq6ISq6kut3h01lHeEeHJ8BxxxVPmn3qFET_Lg"
                     };
 
-                    credential = new UserCredential(new GoogleAuthorizationCodeFlow(
+                    credencial = new UserCredential(new GoogleAuthorizationCodeFlow(
                         new GoogleAuthorizationCodeFlow.Initializer
                         {
-                            ClientSecrets = clientSecrets,
+                            ClientSecrets = chave_secreta_cliente,
                             Scopes = new[] { DriveService.Scope.Drive },
-                        }), "user", tokenResponse);
+                        }), "user", tokenResposta);
                 }
 
-                var service = new DriveService(new BaseClientService.Initializer()
+                var servico = new DriveService(new BaseClientService.Initializer()
                 {
-                    HttpClientInitializer = credential,
+                    HttpClientInitializer = credencial,
                     ApplicationName = "facilit",
                 });
 
@@ -196,19 +196,19 @@ namespace Facilit.Controllers
                     Name = nome_arquivo
                 };
 
-                FilesResource.CreateMediaUpload request;
+                FilesResource.CreateMediaUpload requisicao;
                 using (var stream = new MemoryStream(vet_bytes))
                 {
-                    request = service.Files.Create(fileMetadata, stream, "image/jpeg");
-                    request.Fields = "id";
-                    request.Upload();
+                    requisicao = servico.Files.Create(fileMetadata, stream, "image/jpeg");
+                    requisicao.Fields = "id";
+                    requisicao.Upload();
                 }
 
-                var file = request.ResponseBody;
+                var arquivo = requisicao.ResponseBody;
 
                 Salvar_dados(produto_selecionado, cliente_selecionado, usuario_id, data);
 
-                return Json(new { sucesso = true, mensagem = "Foto salva com sucesso! \n Veja sua conta no Google Drive" + nome_arquivo });
+                return Json(new { sucesso = true, mensagem = "Foto salva com sucesso! \n Veja sua conta no Google Drive \n" + nome_arquivo });
             }
 
             return Json(new { sucesso = false, mensagem = "Erro ao salvar a foto. Produto ou cliente não selecionados." });
