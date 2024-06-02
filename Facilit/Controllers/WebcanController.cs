@@ -208,7 +208,7 @@ namespace Facilit.Controllers
 
                 Salvar_dados(produto_selecionado, cliente_selecionado, usuario_id, data);
 
-                return Json(new { sucesso = true, mensagem = "Foto salva com sucesso! \n Veja no GOOGLE DRIVE" + nome_arquivo });
+                return Json(new { sucesso = true, mensagem = "Foto salva com sucesso! \n Veja sua conta no Google Drive" + nome_arquivo });
             }
 
             return Json(new { sucesso = false, mensagem = "Erro ao salvar a foto. Produto ou cliente não selecionados." });
