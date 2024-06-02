@@ -1,6 +1,11 @@
 ﻿using Facilit.Models;
 using Facilit.Models.ClienteTiny;
 using Facilit.Servicos;
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Auth.OAuth2.Flows;
+using Google.Apis.Auth.OAuth2.Responses;
+using Google.Apis.Drive.v3;
+using Google.Apis.Services;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using MySql.Data.MySqlClient;
@@ -10,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 
 namespace Facilit.Controllers
@@ -19,14 +25,14 @@ namespace Facilit.Controllers
         string tokenTiny = "02011b49e5399d62d999007a8952642c85cca50bc310b49fdd6c3674fdff4b2a";
         string mensagem;
         int usuario_id;
+        static string[] Scopes = { DriveService.Scope.DriveFile };
+        static string ApplicationName = "facilit";
 
         public async Task Verificar_produtos()
         {
-
             using (var conexao = new Conexao())
             {
-                string select_produto = "select id, codigo_tiny_produto, descricao, unidade, data_atualizacao_produto " +
-                    "from tb_produtos limit 100";
+                string select_produto = "select id, codigo_tiny_produto, descricao, unidade, data_atualizacao_produto from tb_produtos limit 100";
                 using (MySqlCommand comando = new MySqlCommand(select_produto, conexao._conn))
                 {
                     MySqlDataReader leitura = comando.ExecuteReader();
@@ -46,14 +52,12 @@ namespace Facilit.Controllers
                                     data_atualizacao = Convert.ToDateTime(leitura["data_atualizacao_produto"]),
                                 };
                                 listaProdutos.Add(produts);
-
                             }
 
                             ViewData["ListaProdutos"] = new SelectList(listaProdutos, "descricao", "descricao");
                         }
                         catch (Exception ex)
                         {
-
                             var erro = ex.Message;
                         }
                     }
@@ -66,8 +70,7 @@ namespace Facilit.Controllers
                             .Select(s => new
                             {
                                 Id = s.id,
-                                Produto = s.descricao + " | "
-                                + s.tipoVariacao,
+                                Produto = s.descricao + " | " + s.tipoVariacao,
                                 Descricao = s.descricao
                             })
                             .Take(100)
@@ -80,8 +83,7 @@ namespace Facilit.Controllers
 
         public async Task Verificar_clientes()
         {
-            string sql_select_clientes = "select codigo_tiny_cliente,nome,data_atualizacao_cliente" +
-                " from tb_clientes limit 500";
+            string sql_select_clientes = "select codigo_tiny_cliente,nome,data_atualizacao_cliente from tb_clientes limit 500";
             using (var conexao = new Conexao())
             {
                 using (MySqlCommand comando = new MySqlCommand(sql_select_clientes, conexao._conn))
@@ -100,7 +102,6 @@ namespace Facilit.Controllers
                                 data_atualizacao_cliente = Convert.ToDateTime(leitura["data_atualizacao_cliente"])
                             };
                             lista_cliente.Add(client);
-
                         }
 
                         ViewData["listarClientes"] = new SelectList(lista_cliente, "Nome", "Nome");
@@ -124,26 +125,28 @@ namespace Facilit.Controllers
                 }
             }
         }
+
         public async Task<ActionResult> Registro()
         {
             if (Session["logado"] != null)
             {
                 await Verificar_produtos();
-
                 await Verificar_clientes();
                 ViewBag.MostrarBotoes = false;
                 ViewBag.MostrarContato = true;
-
             }
             else
             {
                 RedirectToAction("Index", "usuario");
             }
 
-
             return View();
         }
-        [HttpPost]
+
+     
+        
+            [HttpPost]
+
         public ActionResult SalvarFoto(string dados_imagem, string produto_selecionado, string cliente_selecionado)
         {
             if (string.IsNullOrWhiteSpace(produto_selecionado) || string.IsNullOrWhiteSpace(cliente_selecionado))
@@ -153,44 +156,63 @@ namespace Facilit.Controllers
             else
             {
                 byte[] vet_bytes = Convert.FromBase64String(dados_imagem);
-                string documentosPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                string fotosPath = Path.Combine(documentosPath, "Fotos - Sistema Facilit");
 
-                if (!Directory.Exists(fotosPath))
+                
+                var clientSecrets = new ClientSecrets
                 {
-                    try
+                    ClientId = "522323830839-ipd9htma7tcogfgjvna23kepp87tql30.apps.googleusercontent.com",
+                    ClientSecret = "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"
+                };
+
+                UserCredential credential;
+                using (var stream = new MemoryStream())
+                {
+                    var tokenResponse = new TokenResponse
                     {
-                        Directory.CreateDirectory(fotosPath);
-                    }
-                    catch (Exception ex)
-                    {
-                        return Json(new { sucesso = false, mensagem = "Erro ao criar a pasta 'Fotos': " + ex.Message });
-                    }
+                        RefreshToken = "1//04Od3Akb3yYrVCgYIARAAGAQSNwF-L9IrgII0Q6XgFGl-_Sz5THPZX039VaRgUjq6ISq6kut3h01lHeEeHJ8BxxxVPmn3qFET_Lg"
+                    };
+
+                    credential = new UserCredential(new GoogleAuthorizationCodeFlow(
+                        new GoogleAuthorizationCodeFlow.Initializer
+                        {
+                            ClientSecrets = clientSecrets,
+                            Scopes = new[] { DriveService.Scope.Drive },
+                        }), "user", tokenResponse);
                 }
 
+                var service = new DriveService(new BaseClientService.Initializer()
+                {
+                    HttpClientInitializer = credential,
+                    ApplicationName = "facilit",
+                });
+
+      
                 DateTime data = DateTime.Now;
                 string nome_arquivo = $"Produto_{produto_selecionado}_Cliente_{cliente_selecionado}_{data.ToString("yyyyMMddHHmmss")}.jpg";
                 nome_arquivo = Remover_caracteres(nome_arquivo);
-                int usuario_id = (int)Session["id_usuario"];
-                string caminho_imagem = Path.Combine(fotosPath, nome_arquivo);
 
-                try
+                var fileMetadata = new Google.Apis.Drive.v3.Data.File()
                 {
-                    System.IO.File.WriteAllBytes(caminho_imagem, vet_bytes);
-                }
-                catch (Exception ex)
+                    Name = nome_arquivo
+                };
+
+                FilesResource.CreateMediaUpload request;
+                using (var stream = new MemoryStream(vet_bytes))
                 {
-                    return Json(new { sucesso = false, mensagem = "Erro ao salvar a foto: " + ex.Message });
+                    request = service.Files.Create(fileMetadata, stream, "image/jpeg");
+                    request.Fields = "id";
+                    request.Upload();
                 }
+
+                var file = request.ResponseBody;
 
                 Salvar_dados(produto_selecionado, cliente_selecionado, usuario_id, data);
 
-                return Json(new { sucesso = true, mensagem = "Foto salva com sucesso! \n" + nome_arquivo });
+                return Json(new { sucesso = true, mensagem = "Foto salva com sucesso! \n Veja no GOOGLE DRIVE" + nome_arquivo });
             }
 
             return Json(new { sucesso = false, mensagem = "Erro ao salvar a foto. Produto ou cliente não selecionados." });
         }
-
 
         private string Remover_caracteres(string caracter)
         {
@@ -200,13 +222,11 @@ namespace Facilit.Controllers
 
         private string Salvar_dados(string produto, string cliente, int id, DateTime data)
         {
-
             try
             {
                 using (var conexao = new Conexao())
                 {
                     string sql_insert = "insert into tb_fotos(id_usuario,nome_produto,nome_cliente,data_tirada) values (@id_u, @np, @nc,@dt)";
-
                     using (MySqlCommand comando = new MySqlCommand(sql_insert, conexao._conn))
                     {
                         comando.Parameters.AddWithValue("@id_u", id);
@@ -219,12 +239,10 @@ namespace Facilit.Controllers
             }
             catch (Exception erro)
             {
-
                 TempData["mensagem"] = "Ocorreu um erro: " + erro.Message;
             }
-            return mensagem;
+            return "Dados salvos com sucesso";
         }
-
         public ActionResult Gerador_pdf()
         {
             try
