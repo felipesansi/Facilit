@@ -229,7 +229,7 @@ namespace Facilit.Controllers
 
                         Salvar_dados(produto_selecionado, cliente_selecionado, usuario_id.Value, DateTime.Now, nome_arquivo);
 
-                        return Json(new { sucesso = true, mensagem = "Foto salva com sucesso! \n" + nome_arquivo });
+                        return Json(new { sucesso = true, mensagem = "Foto salva com sucesso! \n\n\nA foto foi salva na sua conta no Google Drive...\n\n\n" + nome_arquivo });
                     }
                     else
                     {

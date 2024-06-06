@@ -156,48 +156,50 @@ namespace Facilit.Controllers
             {
                 if (Session["logado"] != null)
                 {
-
-                    if (string.IsNullOrWhiteSpace(usuario.Nome_Usuario) || string.IsNullOrWhiteSpace(usuario.Email) ||
-                        string.IsNullOrWhiteSpace(usuario.Nome_Usuario) || string.IsNullOrWhiteSpace(usuario.Senha_Usuario))
+                   
+                    if ((int)Session["id_usuario"] == 1)
                     {
-                        TempData["Mensagem"] = "Atenção: Há algum campo vazio";
-                        return RedirectToAction("Editar", "Usuario", new { id = usuario.Id });
-                    }
+                        if (string.IsNullOrWhiteSpace(usuario.Nome_Usuario) || string.IsNullOrWhiteSpace(usuario.Email) ||
+                            string.IsNullOrWhiteSpace(usuario.Nome_Usuario) || string.IsNullOrWhiteSpace(usuario.Senha_Usuario))
+                        {
+                            TempData["Mensagem"] = "Atenção: Há algum campo vazio";
+                            return RedirectToAction("Editar", "Usuario", new { id = usuario.Id });
+                        }
 
-                    else if (usuario.Nome_Usuario.Length < 4 || usuario.Senha_Usuario.Length < 4)
-                    {
-                        TempData["Mensagem"] = "Usuário ou senha com menos de 4 caracteres";
+                        else if (usuario.Nome_Usuario.Length < 4 || usuario.Senha_Usuario.Length < 4)
+                        {
+                            TempData["Mensagem"] = "Usuário ou senha com menos de 4 caracteres";
 
-                        return RedirectToAction("Editar", "Usuario", new { id = usuario.Id });
+                            return RedirectToAction("Editar", "Usuario", new { id = usuario.Id });
+                        }
+                        else
+                        {
+                            string sql_insert = "update tb_usuarios set " +
+                                                "nome_completo = @nc, email = @em , nome_usuario = @nu, senha_usuario = @su, alterado = @alterado where id = @id";
 
+                            using (var conexao = new Conexao())
+                            {
+                                using (MySqlCommand comando = new MySqlCommand(sql_insert, conexao._conn))
+                                {
+                                    comando.Parameters.AddWithValue("@nc", usuario.Nome_completo);
+                                    comando.Parameters.AddWithValue("@em", usuario.Email);
+                                    comando.Parameters.AddWithValue("@nu", usuario.Nome_Usuario);
+                                    comando.Parameters.AddWithValue("@su", usuario.Senha_Usuario);
+                                    comando.Parameters.AddWithValue("@alterado", DateTime.Now);
+                                    comando.Parameters.AddWithValue("@id", usuario.Id);
+
+                                    comando.ExecuteNonQuery();
+
+                                    return RedirectToAction("Index", "Usuario");
+                                }
+                            }
+                        }
                     }
                     else
                     {
-
-                        string sql_insert = "update tb_usuarios set " +
-                                "nome_completo = @nc, email = @em , nome_usuario = @nu, senha_usuario = @su, alterado = @alterado where id = @id";
-
-                        using (var conexao = new Conexao())
-                        {
-
-                            using (MySqlCommand comando = new MySqlCommand(sql_insert, conexao._conn))
-                            {
-                                comando.Parameters.AddWithValue("@nc", usuario.Nome_completo);
-                                comando.Parameters.AddWithValue("@em", usuario.Email);
-                                comando.Parameters.AddWithValue("@nu", usuario.Nome_Usuario);
-                                comando.Parameters.AddWithValue("@su", usuario.Senha_Usuario);
-                                comando.Parameters.AddWithValue("@alterado", DateTime.Now);
-                                comando.Parameters.AddWithValue("@id", usuario.Id);
-
-                                comando.ExecuteNonQuery();
-
-                                return RedirectToAction("Index", "Usuario");
-                            }
-
-
-                        }
+                        TempData["Mensagem"] = "Apenas o administrador pode atualizar usuários.";
+                        return RedirectToAction("Perfis_usuario", "Usuario");
                     }
-
                 }
                 else
                 {
@@ -206,28 +208,24 @@ namespace Facilit.Controllers
             }
             catch (Exception erro)
             {
-
                 TempData["Mensagem"] = "Ocorreu um erro" + erro;
                 return RedirectToAction("Index", "Usuario");
             }
         }
 
+
         public ActionResult Editar(int id)
         {
             try
             {
-
                 if (Session["logado"] != null)
                 {
                     string str_editar = "select * from tb_usuarios where id = @id";
 
                     using (Conexao conexao = new Conexao())
                     {
-
                         using (MySqlCommand comando = new MySqlCommand(str_editar, conexao._conn))
                         {
-
-
                             comando.Parameters.AddWithValue("@id", id);
 
                             MySqlDataReader leitura = comando.ExecuteReader();
@@ -235,7 +233,6 @@ namespace Facilit.Controllers
 
                             if (leitura.HasRows)
                             {
-
                                 var usuario = new Usuario
                                 {
                                     Id = Convert.ToInt32(leitura["id"]),
@@ -244,19 +241,16 @@ namespace Facilit.Controllers
                                     Nome_Usuario = Convert.ToString(leitura["nome_usuario"]),
                                     Senha_Usuario = Convert.ToString(leitura["senha_usuario"]),
                                 };
+                              
                                 return View(usuario);
-
+                                
                             }
                             else
                             {
-
                                 return RedirectToAction("Perfis_usuario", "Usuario");
                             }
                         }
                     }
-
-
-
                 }
                 else
                 {
@@ -265,79 +259,85 @@ namespace Facilit.Controllers
             }
             catch (Exception erro)
             {
-
-
-                TempData["Mensagem"] = "Ocorreu um erro" + erro;
+                TempData["Mensagem"] = "Ocorreu um erro: " + erro.Message;
                 return RedirectToAction("Index", "Usuario");
             }
         }
 
+
         public ActionResult Excluir(int id)
         {
-            string str_editar = "select * from tb_usuarios where id = @id";
-
-            using (Conexao conexao = new Conexao())
+            if (Session["logado"] != null && (int)Session["id_usuario"] == 1)
             {
+                string str_editar = "select * from tb_usuarios where id = @id";
 
-                using (MySqlCommand comando = new MySqlCommand(str_editar, conexao._conn))
+                using (Conexao conexao = new Conexao())
                 {
-
-
-                    comando.Parameters.AddWithValue("@id", id);
-
-                    MySqlDataReader leitura = comando.ExecuteReader();
-                    leitura.Read();
-                    if (leitura.HasRows)
+                    using (MySqlCommand comando = new MySqlCommand(str_editar, conexao._conn))
                     {
+                        comando.Parameters.AddWithValue("@id", id);
 
-                        var usuario = new Usuario
+                        MySqlDataReader leitura = comando.ExecuteReader();
+                        leitura.Read();
+                        if (leitura.HasRows)
                         {
-                            Id = Convert.ToInt32(leitura["id"]),
-                            Nome_completo = Convert.ToString(leitura["nome_completo"]),
-                            Email = Convert.ToString(leitura["email"]),
-                            Nome_Usuario = Convert.ToString(leitura["nome_usuario"]),
-                            Senha_Usuario = Convert.ToString(leitura["senha_usuario"]),
-                        };
-                        return View(usuario);
+                            var usuario = new Usuario
+                            {
+                                Id = Convert.ToInt32(leitura["id"]),
+                                Nome_completo = Convert.ToString(leitura["nome_completo"]),
+                                Email = Convert.ToString(leitura["email"]),
+                                Nome_Usuario = Convert.ToString(leitura["nome_usuario"]),
+                                Senha_Usuario = Convert.ToString(leitura["senha_usuario"]),
+                            };
 
-                    }
-                    else
-                    {
-
-                        return RedirectToAction("Perfis_usuario", "Usuario");
+                            return View(usuario);
+                        }
+                        else
+                        {
+                            return RedirectToAction("Perfis_usuario", "Usuario");
+                        }
                     }
                 }
-            }
-
-
-
-        }
-
-        public ActionResult Softdelete(Usuario usuario)
-        {
-            if (usuario.Id == 1)
-            {
-                TempData["Mensagem"] = "O Sistema mantém o usuário 1 como padrão.\n Este não pode ser excluido, mas você pode atualizar os dados";
-                return RedirectToAction("Perfis_usuario", "Usuario");
             }
             else
             {
-                string str_delete = "update tb_usuarios set excluido = true, alterado = @alterado where id = @id";
-                using (Conexao conexao = new Conexao())
+                TempData["Mensagem"] = "Apenas o administrador pode excluir usuários.";
+                return RedirectToAction("Perfis_usuario", "Usuario");
+            }
+        }
+
+
+        public ActionResult Softdelete(Usuario usuario)
+        {
+            if (Session["logado"] != null && (int)Session["id_usuario"] == 1)
+            {
+                if (usuario.Id == 1)
                 {
-                    using (MySqlCommand comando = new MySqlCommand(str_delete, conexao._conn))
+                    TempData["Mensagem"] = "O Sistema mantém o usuário 1 como padrão.\n Este não pode ser excluído, mas você pode atualizar os dados";
+                    return RedirectToAction("Perfis_usuario", "Usuario");
+                }
+                else
+                {
+                    string str_delete = "update tb_usuarios set excluido = true, alterado = @alterado where id = @id";
+                    using (Conexao conexao = new Conexao())
                     {
-                        comando.Parameters.AddWithValue("id", usuario.Id);
-
-                        comando.Parameters.AddWithValue("@alterado", DateTime.Now);
-
-                        comando.ExecuteNonQuery();
-
-                        return RedirectToAction("Perfis_usuario", "Usuario");
+                        using (MySqlCommand comando = new MySqlCommand(str_delete, conexao._conn))
+                        {
+                            comando.Parameters.AddWithValue("id", usuario.Id);
+                            comando.Parameters.AddWithValue("@alterado", DateTime.Now);
+                            comando.ExecuteNonQuery();
+                            return RedirectToAction("Perfis_usuario", "Usuario");
+                        }
                     }
                 }
             }
+            else
+            {
+                TempData["Mensagem"] = "Apenas o administrador pode excluir usuários.";
+                return RedirectToAction("Perfis_usuario", "Usuario");
+            }
         }
+
 
         public ActionResult Cadastro()
         {

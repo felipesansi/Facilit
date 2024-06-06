@@ -7,6 +7,15 @@
         </div>
     </div>
 }
+@if (!String.IsNullOrEmpty(TempData["Sucesso"] as string))
+{
+    <div id="mensagem2">
+        <div class="alert alert-success">
+            @TempData["Sucesso"]
+        </div>
+    </div>
+}
+
 
 <script src="~/Scripts/Mensagem.js"></script>
 
@@ -55,7 +64,7 @@
                     <div class="form-group">
                         @Html.LabelFor(model => model.Senha_Usuario, "Senha:", htmlAttributes: new { @class = "fonte_leve" })
                         <div class="col-md-10">
-                            @Html.EditorFor(model => model.Senha_Usuario, new { htmlAttributes = new { @class = "campo" } })
+                            @Html.EditorFor(model => model.Senha_Usuario, new { htmlAttributes = new { @class = "campo", id = "senhaUsuario" } })
                             @Html.ValidationMessageFor(model => model.Senha_Usuario, "", new { @class = "text-danger" })
                         </div>
                     </div>
@@ -78,3 +87,12 @@
         </div>
     </div>
 }
+
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        var senhaField = document.getElementById("senhaUsuario");
+        if (senhaField) {
+            senhaField.type = "password";
+        }
+    });
+</script>
