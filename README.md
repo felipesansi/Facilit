@@ -1,4 +1,4 @@
-<H1>Projeto TCC - Unifaat 2024</H1>
+<H1>Projeto PCC/TCC - Unifaat 2024</H1>
 
 
 ## Visão Geral
