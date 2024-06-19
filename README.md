@@ -1,4 +1,4 @@
-<H1>Projeto TCC - Unifaat 2024</H1>
+<H1>Projeto PCC/TCC - Unifaat 2024</H1>
 
 
 ## Visão Geral
@@ -51,11 +51,6 @@ A aplicação se integra com a API TinyERP para buscar dados relevantes de produ
 - .NET Framework
 - MySQL
 - API TinyERP
-
-## Configuração
-1. Configure a conexão com o banco de dados MySQL.
-2. Adicione as credenciais da API TinyERP.
-3. Compile e execute a aplicação.
 
 ## Uso
 - Acesse a aplicação e faça login.
