@@ -298,6 +298,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Chaves\facilit-415117-3b43cbc3ea24.json" />
     <Content Include="client_secret_522323830839-ipd9htma7tcogfgjvna23kepp87tql30.apps.googleusercontent.com.json" />
+    <None Include="Properties\PublishProfiles\facilitsistema - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -392,7 +393,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>54188</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:44377/</IISUrl>
+          <IISUrl>http://localhost:44377</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
