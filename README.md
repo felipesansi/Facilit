@@ -1,6 +1,6 @@
 # Projeto PCC/TCC - Unifaat 2024
 
-[![Imagem do Projeto](https://i.ibb.co/Xy2x0P8/Design-sem-nome-20240721-002756-0000.png)](https://ibb.co/ZHLz4rm)
+[![Imagem do Projeto](https://i.ibb.co/FhKSQth/Screenshot-2024-07-21-00-53-46-903-edit-com-canva-editor.jpg)](https://ibb.co/sg20Trg)
 
 ## Visão Geral
 
